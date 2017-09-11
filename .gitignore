@@ -1,5 +1,3 @@
-#ignore LongQt-model potentially being a link
-LongQt-model
 #executables and libraries
 *.so
 *.out
