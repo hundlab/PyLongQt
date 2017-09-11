@@ -6,15 +6,13 @@
 
 cmake_minimum_required(VERSION 2.8.11)
 
-project(modellib)
+project(LongQt-model)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
-
-include_directories(modellib modellib/cell modellib/protocol modellib/structure)
-link_directories(~/src/LongQt/build)
+include_directories(LongQt-model LongQt-model/cell LongQt-model/protocol LongQt-model/structure)
+link_directories(./LongQt-model/build)
 # Find the QtWidgets library
 find_package(Qt5Core)
 add_subdirectory(pybind11)
@@ -32,6 +30,14 @@ add_subdirectory(pybind11)
 #SET(GCC_COVERAGE_COMPILE_FLAGS "-DQT_NO_KEYWORDS")
 #SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
 #SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
+set(CMAKE_AUTOMOC ON)
+#add_custom_target(
+#    modellib
+#    COMMAND qmake ${CMAKE_CURRENT_SOURCE_DIR}/LongQt-model/modellib.pro
+#    COMMAND make -f ${CMAKE_CURRENT_SOURCE_DIR}/LongQt-model/Makefile
+#)
+
 pybind11_add_module(PyLongQt modellib.cpp)
+#add_dependencies(PyLongQt modellib)
 target_link_libraries(PyLongQt Qt5::Core)
 target_link_libraries(PyLongQt model-debug)
