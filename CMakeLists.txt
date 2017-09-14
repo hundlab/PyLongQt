@@ -6,16 +6,32 @@
 
 cmake_minimum_required(VERSION 2.8.11)
 
-project(LongQt-model)
+project(PyLongQt)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.
-include_directories(LongQt-model LongQt-model/cell LongQt-model/protocol LongQt-model/structure)
-link_directories(./LongQt-model/build)
 # Find the QtWidgets library
+#link_directories("/Qt/Static/5.7.0/lib")
 find_package(Qt5Core)
 add_subdirectory(pybind11)
+add_subdirectory(LongQt-model)
+
+set(PyLongQt_includes
+	${modellib_includes}
+)
+set(PyLongQt_headers
+	${modellib_headers}
+)
+set(PyLongQt_sources
+	${modellib_sources}
+	"modellib.cpp"
+)
+include_directories(${PyLongQt_includes})
+#link_directories(./build-modellib/release)
+#message("whyyyyyyy")
+#windows
+
 
 # Tell CMake to create the helloworld executable
 #add_executable(helloworld WIN32 main.cpp)
@@ -37,7 +53,7 @@ set(CMAKE_AUTOMOC ON)
 #    COMMAND make -f ${CMAKE_CURRENT_SOURCE_DIR}/LongQt-model/Makefile
 #)
 
-pybind11_add_module(PyLongQt modellib.cpp)
+pybind11_add_module(PyLongQt ${PyLongQt_sources}) 
 #add_dependencies(PyLongQt modellib)
-target_link_libraries(PyLongQt Qt5::Core)
-target_link_libraries(PyLongQt model-debug)
+#target_link_libraries(PyLongQt model)
+#target_link_libraries(PyLongQt Qt5::Core)
