@@ -170,7 +170,7 @@ PYBIND11_MODULE(PyLongQt, m) {
             .def_property("trial",(unsigned int(Protocol::*)(void)const)&Protocol::trial,(void(Protocol::*)(unsigned int))&Protocol::trial)
             .def("runTrial", &Protocol::runTrial,"Run the current trial")
 //            .def("setupTrial", &Protocol::setupTrial)
-            .def_property("cell",(shared_ptr<Cell>(Protocol::*)(void)const)&Protocol::cell,(void(Protocol::*)(shared_ptr<Cell>))&Protocol::cell,py::arg("cell"))
+            .def_property("cell",(shared_ptr<Cell>(Protocol::*)(void)const)&Protocol::cell,(void(Protocol::*)(shared_ptr<Cell>))&Protocol::cell)
             .def("setCellByName",(bool(Protocol::*)(const string&))&Protocol::cell)
             .def("cellOptions",&Protocol::cellOptions,"possible cells that can be set with .cell")
             .def_property_readonly("pvars",&Protocol::pvars,py::return_value_policy::reference_internal,"The property settings. Used to modify the cells constants at the beginning of each simulation.")
@@ -440,6 +440,7 @@ PYBIND11_MODULE(PyLongQt, m) {
             .def_readwrite("allowProtoChange",&SettingsIO::allowProtoChange)
             .def("readSettings", [](SettingsIO& s,shared_ptr<Protocol> proto,char* filename){s.readSettings(proto,filename);})
             .def("writeSettings", [](SettingsIO& s,shared_ptr<Protocol> proto,char* filename){s.writeSettings(proto,filename);});
+
 }
 // {
 //    m.doc() = "";
