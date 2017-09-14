@@ -24,12 +24,12 @@ set(PyLongQt_headers
 	${modellib_headers}
 )
 set(PyLongQt_sources
-	${modellib_sources}
 	"modellib.cpp"
+	${modellib_sources}
 )
 include_directories(${PyLongQt_includes})
 #link_directories(./build-modellib/release)
-#message("whyyyyyyy")
+#message(${PyLongQt_sources})
 #windows
 
 
@@ -53,7 +53,7 @@ set(CMAKE_AUTOMOC ON)
 #    COMMAND make -f ${CMAKE_CURRENT_SOURCE_DIR}/LongQt-model/Makefile
 #)
 
-pybind11_add_module(PyLongQt ${PyLongQt_sources}) 
+pybind11_add_module(PyLongQt ${PyLongQt_sources})
 #add_dependencies(PyLongQt modellib)
 #target_link_libraries(PyLongQt model)
-#target_link_libraries(PyLongQt Qt5::Core)
+target_link_libraries(PyLongQt Qt5::Core)
