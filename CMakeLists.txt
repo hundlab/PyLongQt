@@ -10,6 +10,7 @@ project(PyLongQt)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_BUILD_TYPE Debug)
 # Instruct CMake to run moc automatically when needed.
 # Find the QtWidgets library
 #link_directories("/Qt/Static/5.7.0/lib")
@@ -21,10 +22,15 @@ set(PyLongQt_includes
 	${modellib_includes}
 )
 set(PyLongQt_headers
+    "pylongqt.h"
 	${modellib_headers}
 )
 set(PyLongQt_sources
-	"modellib.cpp"
+	"pylongqt.cpp"
+    "cells.cpp"
+    "protocols.cpp"
+    "structures.cpp"
+    "misc.cpp"
 	${modellib_sources}
 )
 include_directories(${PyLongQt_includes})
