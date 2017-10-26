@@ -8,10 +8,11 @@ void init_structures(py::module &m) {
 
     py::class_<Node, std::shared_ptr<Node>>(m_Structures, "Node", "Finest unit in a multi-dimensional simulation, contains a cell")
         .def(py::init<>())
-        .def("setCondConst", &Node::setCondConst, "set the conductivity values", py::arg("X"),py::arg("dx"),py::arg("s"),py::arg("perc")=true,py::arg("val")=1)
+        .def("setCondConst", &Node::setCondConst, "set the conductivity value of a side", py::arg("dx"),py::arg("s"),py::arg("perc")=true,py::arg("val")=1)
+        .def("getCondConst", &Node::getCondConst, "get the conductivity value of a side", py::arg("s"))
         .def_readonly("cell", &Node::cell)
     //            .def_readwrite("rd",&Node::rd)
-        .def_readwrite("condConst", &Node::condConst)
+//        .def_readwrite("condConst", &Node::condConst)
         .def_readwrite("np",&Node::np,"number of cells represented by the node")
         .def_readwrite("type",&Node::nodeType)
         .def("__repr__",[](Node& n){return "<Node "+string(py::repr(py::cast(n.cell)))+">";});
@@ -19,7 +20,7 @@ void init_structures(py::module &m) {
         .def(py::init<int>())
         .def("updateVm",&Fiber::updateVm,"Update voltages for all nodes")
     //            .def_readwrite("nodes",&Fiber::nodes)
-        .def_readwrite("B",&Fiber::B)
+//        .def_readwrite("B",&Fiber::B)
         .def("__len__",&Fiber::size)
         .def("__getitem__",&Fiber::operator[])
         .def("__iter__", [](const Fiber& f)
@@ -52,10 +53,10 @@ void init_structures(py::module &m) {
 
     py::class_<Grid>(m_Structures, "Grid")
         .def(py::init<>())
-        .def("addRow",&Grid::addRow,py::arg("pos"))
-        .def("addRows",&Grid::addRows,py::arg("num"),py::arg("position")=0)
-        .def("addColumn",&Grid::addColumn,py::arg("pos"))
-        .def("addColumns",&Grid::addColumns,py::arg("num"),py::arg("position")=0)
+        .def("addRow",&Grid::addRow)
+        .def("addRows",&Grid::addRows,py::arg("num"))
+        .def("addColumn",&Grid::addColumn)
+        .def("addColumns",&Grid::addColumns,py::arg("num"))
         .def("removeRow",&Grid::removeRow,py::arg("pos"))
         .def("removeRows",&Grid::removeRows,py::arg("num"),py::arg("pos"))
         .def("removeColumn",&Grid::removeColumn,py::arg("pos"))
@@ -72,7 +73,7 @@ void init_structures(py::module &m) {
         .def("__iter__", [](const Grid& g)
             { return py::make_iterator(g.begin(), g.end()); },
             py::keep_alive<0, 1>())
-        .def("__getitem__",(shared_ptr<Node>(Grid::*)(const int, const int))&Grid::operator())
+        .def("__getitem__",(shared_ptr<Node>(Grid::*)(const pair<int,int>&))&Grid::operator())
         .def("__getitem__",[](Grid& g,list<pair<int,int>> l){
             list<shared_ptr<Node>> resList;
             for(auto& item: l) {
@@ -80,6 +81,8 @@ void init_structures(py::module &m) {
             }
             return resList;
         })
+        .def("getRow",[](Grid& g, int i) {return &g.rows[i];},py::return_value_policy::reference_internal)
+        .def("getColumn",[](Grid& g, int i) {return &g.columns[i];},py::return_value_policy::reference_internal)
         .def("__repr__",[](Grid& g){
              string repr = "Grid([";
              bool first = true;

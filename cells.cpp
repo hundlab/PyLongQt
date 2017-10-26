@@ -110,7 +110,8 @@ void init_cells(py::module &m) {
     py::class_<FR, std::shared_ptr<FR>, Cell>(m_Cells, "FaberRudy")
         .def(py::init<>());
     py::class_<GpbAtrialOnal17, std::shared_ptr<GpbAtrialOnal17>, Cell>(m_Cells, "GpbAtrialOnal17")
-        .def(py::init<>());
+        .def(py::init<>())
+        .def_readwrite("isoflag",&GpbAtrialOnal17::isoflag);
     py::class_<GridCell, std::shared_ptr<GridCell>, Cell>(m_Cells, "GridCell")
         .def(py::init<>())
         .def_property_readonly("grid", &GridCell::getGrid);
