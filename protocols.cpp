@@ -2,6 +2,7 @@
 #include "protocol/currentClampProtocol.h"
 #include "protocol/voltageClampProtocol.h"
 #include "protocol/gridProtocol.h"
+#include "settingsIO.h"
 #include "pylongqt.h"
 
 void init_protocols(py::module &m) {
@@ -52,6 +53,22 @@ void init_protocols(py::module &m) {
 
     py::class_<CurrentClamp, Protocol, std::shared_ptr<CurrentClamp>>(m_Protocols, "CurrentClamp")
         .def(py::init<>())
+        .def(py::pickle(
+        [] (shared_ptr<Protocol> p) {
+            QString str;
+            SettingsIO::getInstance()->writeSettingsStr(p,&str);
+            return str.toStdString();
+        },
+        [] (const string& s) {
+            QString str(s.c_str());
+            auto p = CellUtils::protoMap.at("Current Clamp Protocol")();
+            auto set = SettingsIO::getInstance();
+            set->allowProtoChange = false;
+            set->readSettingsStr(p, str);
+            set->allowProtoChange = true;
+            return *dynamic_pointer_cast<CurrentClamp>(p);
+        }
+        ))
         .def_readwrite("bcl",&CurrentClamp::bcl)
         .def_readwrite("paceflag",&CurrentClamp::paceflag)
         .def_readwrite("numstims",&CurrentClamp::numstims)
@@ -60,6 +77,22 @@ void init_protocols(py::module &m) {
         .def_readwrite("stimt",&CurrentClamp::stimt);
     py::class_<VoltageClamp, Protocol, std::shared_ptr<VoltageClamp>>(m_Protocols, "VoltageClamp")
         .def(py::init<>())
+        .def(py::pickle(
+        [] (shared_ptr<Protocol> p) {
+            QString str;
+            SettingsIO::getInstance()->writeSettingsStr(p,&str);
+            return str.toStdString();
+        },
+        [] (const string& s) {
+            QString str(s.c_str());
+            auto p = CellUtils::protoMap.at("Voltage Clamp Protocol")();
+            auto set = SettingsIO::getInstance();
+            set->allowProtoChange = false;
+            set->readSettingsStr(p, str);
+            set->allowProtoChange = true;
+            return *dynamic_pointer_cast<VoltageClamp>(p);
+        }
+        ))
         .def_readwrite("t1",&VoltageClamp::t1)
         .def_readwrite("t2",&VoltageClamp::t2)
         .def_readwrite("t3",&VoltageClamp::t3)
@@ -72,6 +105,22 @@ void init_protocols(py::module &m) {
         .def_readwrite("v5",&VoltageClamp::v5);
     py::class_<GridProtocol, CurrentClamp,std::shared_ptr<GridProtocol>>(m_Protocols, "GridProtocol")
         .def(py::init<>())
+        .def(py::pickle(
+        [] (shared_ptr<Protocol> p) {
+            QString str;
+            SettingsIO::getInstance()->writeSettingsStr(p,&str);
+            return str.toStdString();
+        },
+        [] (const string& s) {
+            QString str(s.c_str());
+            auto p = CellUtils::protoMap.at("Grid Protocol")();
+            auto set = SettingsIO::getInstance();
+            set->allowProtoChange = false;
+            set->readSettingsStr(p, str);
+            set->allowProtoChange = true;
+            return *dynamic_pointer_cast<GridProtocol>(p);
+        }
+        ))
         .def_property_readonly("grid", &GridProtocol::getGrid)
         .def_property_readonly("stimNodes", &GridProtocol::getStimNodes, "nodes to stimulate")
         .def_property("stim2", &GridProtocol::getStim2, &GridProtocol::setStim2,"enable a second stimulus")
