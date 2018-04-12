@@ -1,3 +1,5 @@
+#ifndef PYLONGQT
+#define PYLONGQT
 #include <cmath>
 #undef slots
 #include <pybind11/pybind11.h>
@@ -14,3 +16,5 @@ void init_cells(py::module &m);
 void init_protocols(py::module &m);
 void init_structures(py::module &m);
 void init_misc(py::module &m);
+
+#endif

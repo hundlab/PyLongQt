@@ -3,6 +3,7 @@
 *.out
 *.exe
 *.app
+*.pyd
 
 #objects and other compiled files
 moc_*
@@ -46,6 +47,7 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
+build.ps1
 
 #python
 .cache

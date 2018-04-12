@@ -6,3 +6,4 @@
 	path = LongQt-model
 	url = git@github.com:hundlab/LongQt-model.git
 	branch = master
+	ignore = all

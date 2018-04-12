@@ -114,6 +114,11 @@ void init_cells(py::module &m) {
         .def_readwrite("isoflag",&GpbAtrialOnal17::isoflag);
     py::class_<GridCell, std::shared_ptr<GridCell>, Cell>(m_Cells, "GridCell")
         .def(py::init<>())
-        .def_property_readonly("grid", &GridCell::getGrid);
+//windows compiler static issues
+#if !defined(_WIN32) && !defined(_WIN64)
+        .def_property_readonly("grid", &GridCell::getGrid)
+#endif
+        ;
+
 }
 

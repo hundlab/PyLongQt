@@ -9,22 +9,20 @@ cmake_minimum_required(VERSION 2.8.11)
 project(PyLongQt)
 
 # Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_BUILD_TYPE Debug)
-# Instruct CMake to run moc automatically when needed.
-# Find the QtWidgets library
-#link_directories("/Qt/Static/5.7.0/lib")
-find_package(Qt5Core)
+set(CMAKE_BUILD_TYPE Release)
+
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a")
 add_subdirectory(pybind11)
 add_subdirectory(LongQt-model)
+find_package(Qt5Core)
+set(CMAKE_AUTOMOC ON)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(PyLongQt_includes
 	${modellib_includes}
 )
-set(PyLongQt_headers
-    "pylongqt.h"
-	${modellib_headers}
-)
+include_directories(${PyLongQt_includes})
+
 set(PyLongQt_sources
 	"pylongqt.cpp"
     "cells.cpp"
@@ -33,33 +31,28 @@ set(PyLongQt_sources
     "misc.cpp"
 	${modellib_sources}
 )
-include_directories(${PyLongQt_includes})
-#link_directories(./build-modellib/release)
-#message(${PyLongQt_sources})
-#windows
 
-
-# Tell CMake to create the helloworld executable
-#add_executable(helloworld WIN32 main.cpp)
-
-# Use the Widgets module from Qt 5.
-#target_link_libraries(helloworld Qt5::Core)
-
-#set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x")
-#set(SOURCES
-#    main.cpp
-#)
-#SET(GCC_COVERAGE_COMPILE_FLAGS "-DQT_NO_KEYWORDS")
-#SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
-#SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}" )
-set(CMAKE_AUTOMOC ON)
-#add_custom_target(
-#    modellib
-#    COMMAND qmake ${CMAKE_CURRENT_SOURCE_DIR}/LongQt-model/modellib.pro
-#    COMMAND make -f ${CMAKE_CURRENT_SOURCE_DIR}/LongQt-model/Makefile
-#)
+if(${BUILD_QT_STATIC})
+	link_directories(${QT_LIB_DIR})
+	SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+	SET(BUILD_SHARED_LIBRARIES OFF)
+	SET(GCC_COVERAGE_LINK_FLAGS "-static")
+endif()
 
 pybind11_add_module(PyLongQt ${PyLongQt_sources})
-#add_dependencies(PyLongQt modellib)
-#target_link_libraries(PyLongQt model)
-target_link_libraries(PyLongQt Qt5::Core)
+#if longqt-model is installed as a libaray
+#find_library(lqmodel_LIBRARY NAMES LongQt-model HINTS ${modellib_LIBRARY})
+#if(DEFINED lqmodel_LIBRARY)
+#	message("-- LongQt-model found at " ${lqmodel_LIBRARY})
+#endif()
+#target_link_libraries(PyLongQt ${lqmodel_LIBRARY})
+
+if(${BUILD_QT_STATIC})
+	target_link_libraries(PyLongQt Qt5::Core libQt5EventDispatcherSupport.a libQt5FontDatabaseSupport.a libqtfreetype.a libQt5ThemeSupport.a libQt5AccessibilitySupport.a libQt5PrintSupport.a libqtlibpng.a libqtharfbuzz.a libQt5Concurrent.a libQt5Core.a libqtpcre2.a mingw32 shlwapi winspool uxtheme dwmapi comdlg32 oleaut32 imm32 glu32 opengl32 gdi32 mpr version ws2_32 kernel32 user32 shell32 uuid ole32 advapi32 winmm) 
+	#target_link_libraries(PyLongQt Qt5::Core C:/Qt/Static/5.9.3/plugins/printsupport/libwindowsprintersupport.a C:/Qt/Static/5.9.3/plugins/platforms/libqwindows.a libQt5EventDispatcherSupport.a libQt5FontDatabaseSupport.a libqtfreetype.a libQt5ThemeSupport.a libQt5AccessibilitySupport.a C:/Qt/Static/5.9.3/plugins/imageformats/libqgif.a C:/Qt/Static/5.9.3/plugins/imageformats/libqicns.a C:/Qt/Static/5.9.3/plugins/imageformats/libqico.a C:/Qt/Static/5.9.3/plugins/imageformats/libqjpeg.a C:/Qt/Static/5.9.3/plugins/imageformats/libqtga.a C:/Qt/Static/5.9.3/plugins/imageformats/libqtiff.a C:/Qt/Static/5.9.3/plugins/imageformats/libqwbmp.a C:/Qt/Static/5.9.3/plugins/imageformats/libqwebp.a libQt5PrintSupport.a  libQt5Widgets.a libQt5Gui.a libqtlibpng.a libqtharfbuzz.a libQt5Concurrent.a libQt5Core.a libqtpcre2.a mingw32 shlwapi winspool uxtheme dwmapi comdlg32 oleaut32 imm32 glu32 opengl32 gdi32 mpr version ws2_32 kernel32 user32 shell32 uuid ole32 advapi32 winmm) 
+	target_compile_options(PyLongQt PRIVATE -static-libgcc -static-libstdc++)
+else()
+	target_link_libraries(PyLongQt Qt5::Core)
+endif()
+
+install(TARGETS PyLongQt DESTINATION ${INSTALL_LOC})
