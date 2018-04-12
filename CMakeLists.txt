@@ -11,7 +11,6 @@ project(PyLongQt)
 # Find includes in corresponding build directories
 set(CMAKE_BUILD_TYPE Release)
 
-SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a")
 add_subdirectory(pybind11)
 add_subdirectory(LongQt-model)
 find_package(Qt5Core)
