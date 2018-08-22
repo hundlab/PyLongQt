@@ -49,6 +49,7 @@ void init_protocols(py::module &m) {
         .def_property("runBefore",&Protocol::getRunBefore,&Protocol::setRunBefore)
         .def_property("runDuring",&Protocol::getRunDuring,&Protocol::setRunDuring)
         .def_property("runAfter",&Protocol::getRunAfter,&Protocol::setRunAfter)
+	.def_property("basedir",[](Protocol& p){return p.basedir.absolutePath();},[](Protocol& p, string path){p.basedir.setPath(path.c_str());})
         .def_readonly("pars",&Protocol::pars);
 
     py::class_<CurrentClamp, Protocol, std::shared_ptr<CurrentClamp>>(m_Protocols, "CurrentClamp")
@@ -56,7 +57,7 @@ void init_protocols(py::module &m) {
         .def(py::pickle(
         [] (shared_ptr<Protocol> p) {
             QString str;
-            SettingsIO::getInstance()->writeSettingsStr(p,&str);
+            SettingsIO::getInstance()->writeSettingsStr(&str,p);
             return str.toStdString();
         },
         [] (const string& s) {
@@ -64,7 +65,7 @@ void init_protocols(py::module &m) {
             auto p = CellUtils::protoMap.at("Current Clamp Protocol")();
             auto set = SettingsIO::getInstance();
             set->allowProtoChange = false;
-            set->readSettingsStr(p, str);
+            set->readSettingsStr(str,p);
             set->allowProtoChange = true;
             return *dynamic_pointer_cast<CurrentClamp>(p);
         }
@@ -80,7 +81,7 @@ void init_protocols(py::module &m) {
         .def(py::pickle(
         [] (shared_ptr<Protocol> p) {
             QString str;
-            SettingsIO::getInstance()->writeSettingsStr(p,&str);
+            SettingsIO::getInstance()->writeSettingsStr(&str,p);
             return str.toStdString();
         },
         [] (const string& s) {
@@ -88,7 +89,7 @@ void init_protocols(py::module &m) {
             auto p = CellUtils::protoMap.at("Voltage Clamp Protocol")();
             auto set = SettingsIO::getInstance();
             set->allowProtoChange = false;
-            set->readSettingsStr(p, str);
+            set->readSettingsStr(str, p);
             set->allowProtoChange = true;
             return *dynamic_pointer_cast<VoltageClamp>(p);
         }
@@ -108,7 +109,7 @@ void init_protocols(py::module &m) {
         .def(py::pickle(
         [] (shared_ptr<Protocol> p) {
             QString str;
-            SettingsIO::getInstance()->writeSettingsStr(p,&str);
+            SettingsIO::getInstance()->writeSettingsStr(&str,p);
             return str.toStdString();
         },
         [] (const string& s) {
@@ -116,7 +117,7 @@ void init_protocols(py::module &m) {
             auto p = CellUtils::protoMap.at("Grid Protocol")();
             auto set = SettingsIO::getInstance();
             set->allowProtoChange = false;
-            set->readSettingsStr(p, str);
+            set->readSettingsStr(str, p);
             set->allowProtoChange = true;
             return *dynamic_pointer_cast<GridProtocol>(p);
         }

@@ -71,7 +71,9 @@ void init_cells(py::module &m) {
         .def("setPar",&CellKernel::setPar,py::arg("name"),py::arg("value"))
         .def_property_readonly("variables",&CellKernel::getVariables)
         .def_property_readonly("constants",&CellKernel::getConstants)
-        .def_property_readonly("type",&CellKernel::type);
+        .def_property_readonly("type",&CellKernel::type)
+	.def_property("optionStr",&CellKernel::optionStr,static_cast<void (CellKernel::*)(string)>(&CellKernel::setOption))
+	.def_property("option",&CellKernel::option,static_cast<void (CellKernel::*)(int)>(&CellKernel::setOption));
 
     py::class_<Cell, std::shared_ptr<Cell>, CellKernel>(m_Cells, "Cell","Base class for cells. Provides selections of variables & constants to be written during the simulation")
 //            .def(py::init<const std::string &>())
@@ -110,8 +112,7 @@ void init_cells(py::module &m) {
     py::class_<FR, std::shared_ptr<FR>, Cell>(m_Cells, "FaberRudy")
         .def(py::init<>());
     py::class_<GpbAtrialOnal17, std::shared_ptr<GpbAtrialOnal17>, Cell>(m_Cells, "GpbAtrialOnal17")
-        .def(py::init<>())
-        .def_readwrite("isoflag",&GpbAtrialOnal17::isoflag);
+        .def(py::init<>());
     py::class_<GridCell, std::shared_ptr<GridCell>, Cell>(m_Cells, "GridCell")
         .def(py::init<>())
 //windows compiler static issues

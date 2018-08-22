@@ -8,6 +8,7 @@
 #include "measurewave.h"
 #include "measuremanager.h"
 #include "gridmeasuremanager.h"
+#include "runsim.h"
 
 
 void init_misc(py::module &m) {
@@ -141,6 +142,18 @@ void init_misc(py::module &m) {
     //            .def("readdvars",&SettingsIO::readdvars)
         .def_readonly("lastProto",&SettingsIO::lastProto)
         .def_readwrite("allowProtoChange",&SettingsIO::allowProtoChange)
-        .def("readSettings", [](SettingsIO& s,shared_ptr<Protocol> proto,char* filename){s.readSettings(proto,filename);})
-        .def("writeSettings", [](SettingsIO& s,shared_ptr<Protocol> proto,char* filename){s.writeSettings(proto,filename);});
+        .def("readSettings", [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto = NULL){s.readSettings(filename, proto);}, py::arg("filename"), py::arg("proto") = NULL)
+        .def("writeSettings", [](SettingsIO& s,char* filename, shared_ptr<Protocol> proto){s.writeSettings(filename, proto);}, py::arg("filename"), py::arg("proto"));
+
+    py::class_<RunSim>(m_Misc, "RunSim", "Runs simulations in a multithreaded environment")
+	.def(py::init<shared_ptr<Protocol>>())
+	.def(py::init<vector<shared_ptr<Protocol>>>())
+	.def("run",&RunSim::run,"Run simulations in parallel")
+	.def("finished",&RunSim::finished,"Check if simulations are all finished")
+	.def("progress",&RunSim::progress,"print progress message")
+	.def("setSims",(void(RunSim::*)(std::vector<shared_ptr<Protocol>>))&RunSim::setSims,"Set simualtions to run")
+	.def("setSims",(void(RunSim::*)(shared_ptr<Protocol>))&RunSim::setSims,"Set simualtions to run")
+	.def("appendSims",(void(RunSim::*)(std::vector<shared_ptr<Protocol>>))&RunSim::appendSims,"Append simulations to run")
+	.def("appendSims",(void(RunSim::*)(shared_ptr<Protocol>))&RunSim::appendSims,"Append simulations to run")
+	.def("clear",&RunSim::clear,"Clear list of simulations to run");
 }
