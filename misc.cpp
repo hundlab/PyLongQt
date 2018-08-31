@@ -137,7 +137,7 @@ void init_misc(py::module &m) {
         .def("setGridCell",(void(GridMeasureManager::*)(shared_ptr<GridCell>))&GridMeasureManager::cell);
 
     py::class_<SettingsIO>(m_Misc, "SettingsIO")
-        .def("getInstance",&SettingsIO::getInstance)
+        .def("getInstance",&SettingsIO::getInstance,py::return_value_policy::reference)
     //            .def("writedvars",&SettingsIO::writedvars)
     //            .def("readdvars",&SettingsIO::readdvars)
         .def_readonly("lastProto",&SettingsIO::lastProto)

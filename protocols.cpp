@@ -41,7 +41,7 @@ void init_protocols(py::module &m) {
         .def_readwrite("writeCellState",&Protocol::writeCellState)
         .def_readwrite("writeint",&Protocol::writeint)
         .def_readwrite("writetime",&Protocol::writetime)
-        .def("setDataDir",&Protocol::setDataDir, py::arg("str")="")
+        .def("setDataDir",&Protocol::setDataDir, py::arg("str")="", py::arg("basedir")="", py::arg("appendtxt")="")
         .def("mkDirs",&Protocol::mkDirs)
         .def_readwrite("numruns",&Protocol::numruns)
         .def_readwrite("runEvery",&Protocol::runEvery)
