@@ -1,4 +1,4 @@
-#include "cellpvars.h"
+#include "pvarscell.h"
 #include "measure.h"
 #include "settingsIO.h"
 #include "pvarscurrentclamp.h"
@@ -14,7 +14,7 @@
 void init_misc(py::module &m) {
     py::module m_Misc = m.def_submodule("Misc", "Measure, Pvars, helper classes");
 
-    auto cellPvarsREPR = [](CellPvars& p){
+    auto pvarscell_REPR = [](PvarsCell& p){
             string out = "{";
             bool first = true;
             for(auto& par: p) {
@@ -25,78 +25,78 @@ void init_misc(py::module &m) {
             out += "}";
             return out;
     };
-    py::class_<CellPvars> cellpvars(m_Misc, "CellPvars","Sets cell constant values");
-    cellpvars.def("setIonChanParams",&CellPvars::setIonChanParams,"apply ion channel parameters")
-        .def("calcIonChanParams",&CellPvars::calcIonChanParams,"calculate the ion channel parameters")
-        .def("__setitem__",&CellPvars::insert,"insert new rule",py::arg("name"),py::arg("parameter"))
-        .def("__delitem__",&CellPvars::erase)
-        .def("clear",&CellPvars::clear,"remove all rules")
-        .def("__getitem__",&CellPvars::at,py::return_value_policy::reference_internal)
-        .def("__iter__", [](const CellPvars &pvars)
+    py::class_<PvarsCell> pvarscell(m_Misc, "PvarsCell","Sets cell constant values");
+    pvarscell.def("setIonChanParams",&PvarsCell::setIonChanParams,"apply ion channel parameters")
+        .def("calcIonChanParams",&PvarsCell::calcIonChanParams,"calculate the ion channel parameters")
+        .def("__setitem__",&PvarsCell::insert,"insert new rule",py::arg("name"),py::arg("parameter"))
+        .def("__delitem__",&PvarsCell::erase)
+        .def("clear",&PvarsCell::clear,"remove all rules")
+        .def("__getitem__",&PvarsCell::at,py::return_value_policy::reference_internal)
+        .def("__iter__", [](const PvarsCell &pvars)
             { return py::make_iterator(pvars.begin(), pvars.end(),py::return_value_policy::reference_internal); },
             py::keep_alive<0, 1>())
-        .def("__len__",&CellPvars::size)
-        .def("__repr__",cellPvarsREPR);
-    py::enum_<CellPvars::Distribution>(cellpvars, "Distribution")
-        .value("none", CellPvars::Distribution::none)
-        .value("normal", CellPvars::Distribution::normal)
-        .value("lognormal", CellPvars::Distribution::lognormal)
+        .def("__len__",&PvarsCell::size)
+        .def("__repr__",pvarscell_REPR);
+    py::enum_<PvarsCell::Distribution>(pvarscell, "Distribution")
+        .value("none", PvarsCell::Distribution::none)
+        .value("normal", PvarsCell::Distribution::normal)
+        .value("lognormal", PvarsCell::Distribution::lognormal)
         .export_values();
-    auto IonChanParamREPR = [](CellPvars::IonChanParam& p){
+    auto IonChanParamREPR = [](PvarsCell::IonChanParam& p){
             auto s = QString(CellUtils::trim(p.IonChanParam::str("")).c_str());
             auto split = s.split(QRegExp("\\t"), QString::SkipEmptyParts);
             return (split[0]+" ("+split[1]+" "+split[2]+")").toStdString();
     };
-    py::class_<CellPvars::IonChanParam>(cellpvars, "IonChanParam", "A rule for a cell constant")
-        .def(py::init<CellPvars::Distribution,double,double>(),py::arg("dist")=CellPvars::Distribution::none,py::arg("val1")=0,py::arg("val2")=0)
-        .def_readwrite("dist",&CellPvars::IonChanParam::dist)
-        .def_property("val0",[](const CellPvars::IonChanParam& param) {
+    py::class_<PvarsCell::IonChanParam>(pvarscell, "IonChanParam", "A rule for a cell constant")
+        .def(py::init<PvarsCell::Distribution,double,double>(),py::arg("dist")=PvarsCell::Distribution::none,py::arg("val1")=0,py::arg("val2")=0)
+        .def_readwrite("dist",&PvarsCell::IonChanParam::dist)
+        .def_property("val0",[](const PvarsCell::IonChanParam& param) {
             return param.val[0];
         },
-        [](CellPvars::IonChanParam& param, double val) {
+        [](PvarsCell::IonChanParam& param, double val) {
             param.val[0] = val;
         },"Depends on distribution\n none: starting value\n normal & lognormal: mean")
-        .def_property("val1",[](const CellPvars::IonChanParam& param) {
+        .def_property("val1",[](const PvarsCell::IonChanParam& param) {
             return param.val[1];
         },
-        [](CellPvars::IonChanParam& param, double val) {
+        [](PvarsCell::IonChanParam& param, double val) {
             param.val[1] = val;
         },"Depends on distribution\nnone: increment amount\nnormal & lognormal: standard deviation")
         .def("__repr__",IonChanParamREPR);
 
-    py::class_<PvarsCurrentClamp, CellPvars> pvarsCurr(m_Misc, "PvarsCurrentClamp");
+    py::class_<PvarsCurrentClamp, PvarsCell> pvarsCurr(m_Misc, "PvarsCurrentClamp");
     pvarsCurr.def(py::init<Protocol*>(),py::keep_alive<1,2>())
         .def("protocol",&PvarsCurrentClamp::protocol,py::keep_alive<1,2>())
-        .def("__repr__",[cellPvarsREPR](PvarsCurrentClamp& c){
-            return "PvarsCurrentClamp("+cellPvarsREPR(c)+")";
+        .def("__repr__",[pvarscell_REPR](PvarsCurrentClamp& c){
+            return "PvarsCurrentClamp("+pvarscell_REPR(c)+")";
         });
-    py::class_<PvarsCurrentClamp::TIonChanParam, CellPvars::IonChanParam>(
+    py::class_<PvarsCurrentClamp::TIonChanParam, PvarsCell::IonChanParam>(
         pvarsCurr, "TIonChanParam")
         .def(py::init<>())
         .def_readwrite("trials",&PvarsCurrentClamp::TIonChanParam::trials)
         .def("__repr__",[IonChanParamREPR](PvarsCurrentClamp::TIonChanParam& p){return "<TIonChanParam: "+IonChanParamREPR(p)+">";});
 
-    py::class_<PvarsVoltageClamp, CellPvars> pvarsVolt(m_Misc, "PvarsVoltageClamp");
+    py::class_<PvarsVoltageClamp, PvarsCell> pvarsVolt(m_Misc, "PvarsVoltageClamp");
     pvarsVolt.def(py::init<Protocol*>(),py::keep_alive<1,2>())
         .def("protocol",&PvarsVoltageClamp::protocol,py::keep_alive<1,2>())
-        .def("__repr__",[cellPvarsREPR](PvarsVoltageClamp& c){
-            return "PvarsVoltageClamp("+cellPvarsREPR(c)+")";
+        .def("__repr__",[pvarscell_REPR](PvarsVoltageClamp& c){
+            return "PvarsVoltageClamp("+pvarscell_REPR(c)+")";
         });
-    py::class_<PvarsVoltageClamp::SIonChanParam, CellPvars::IonChanParam>(
+    py::class_<PvarsVoltageClamp::SIonChanParam, PvarsCell::IonChanParam>(
         pvarsVolt, "SIonChanParam")
         .def(py::init<>())
         .def_readwrite("val",&PvarsVoltageClamp::SIonChanParam::paramVal)
         .def("__repr__",[IonChanParamREPR](PvarsVoltageClamp::SIonChanParam& p){return "<SIonChanParam: "+IonChanParamREPR(p)+">";});
 
-    py::class_<PvarsGrid, CellPvars> pvarsGrid(m_Misc, "PvarsGrid");
+    py::class_<PvarsGrid, PvarsCell> pvarsGrid(m_Misc, "PvarsGrid");
     pvarsGrid.def(py::init<Grid*>(),py::keep_alive<1,2>())
         .def("setGrid",&PvarsGrid::setGrid,py::keep_alive<1,2>())
         .def("setMaxDistAndVal",&PvarsGrid::setMaxDistAndVal,"Set the maximum distance and the maximum value for a rule",py::arg("name"),py::arg("maxDist"),py::arg("maxVal"))
         .def("setStartCells",&PvarsGrid::setStartCells,"Set the cell locations that the rule will start from",py::arg("name"),py::arg("startCells"))
-        .def("__repr__",[cellPvarsREPR](PvarsGrid& c){
-            return "PvarsGrid("+cellPvarsREPR(c)+")";
+        .def("__repr__",[pvarscell_REPR](PvarsGrid& c){
+            return "PvarsGrid("+pvarscell_REPR(c)+")";
         });
-    py::class_<PvarsGrid::MIonChanParam, CellPvars::IonChanParam>(
+    py::class_<PvarsGrid::MIonChanParam, PvarsCell::IonChanParam>(
         pvarsGrid, "MIonChanParam")
         .def(py::init<>())
         .def_readwrite("maxDist",&PvarsGrid::MIonChanParam::maxDist)

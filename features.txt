@@ -1,2 +1,1 @@
 - add better rundurring support perhaps with a struct etc
-- for clacionChanParams to run after setting numtrials. or throw error when setting

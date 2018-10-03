@@ -22,7 +22,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(PyLongQt_includes
 	${modellib_includes}
 )
-message(${modellib_includes})
 include_directories(${PyLongQt_includes})
 
 set(PyLongQt_sources

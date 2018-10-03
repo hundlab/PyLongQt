@@ -3,17 +3,14 @@
 #include "cell/cell.h"
 #include "cell/kurata08.h"
 #include "cell/atrial.h"
-#include "cell/gpbatrialSE.h"
 #include "cell/ksan.h"
 #include "cell/OHaraRudyEpi.h"
 #include "cell/tnnp04.h"
 #include "cell/br04.h"
 #include "cell/gpbatrial.h"
-#include "cell/gpbatrialWT.h"
 #include "cell/hrd09.h"
 #include "cell/kurata08.h"
 #include "cell/OHaraRudy.h"
-#include "cell/gpbatrialRyr.h"
 #include "cell/gpbhuman.h"
 #include "cell/inexcitablecell.h"
 #include "cell/OHaraRudyEndo.h"
@@ -25,6 +22,37 @@
 
 void init_cells(py::module &m) {
     py::module m_Cells = m.def_submodule("Cells", "Contains all the Cell classes. For easy use cellMap provides constructors based on Cell.type.");
+
+    class Cellars_view {
+        CellKernel* cell;
+    public:
+        enum type {
+            vars = 0,
+            pars = 1
+        } ars_type;
+        Cellars_view(CellKernel* cell, type type) {
+            this->cell = cell;
+            this->ars_type = type;
+        }
+        bool has(std::string name) {
+            return ars_type == vars ? cell->hasVar(name) : cell->hasPar(name);
+        }
+        double get(std::string name) {
+            return ars_type == vars ? cell->var(name) : cell->par(name);
+        }
+        void set(std::string name, double val) {
+            ars_type == vars ? cell->setVar(name, val) : cell->setPar(name, val);
+        }
+        std::set<std::string> allNames() {
+            return ars_type == vars ? cell->getVariables() : cell->getConstants();
+        }
+    };
+
+    py::class_<Cellars_view>(m_Cells, "VarsParsVeiw","View for variables and constants in Cell's")
+        .def("__contains__", &Cellars_view::has)
+        .def("__getitem__", &Cellars_view::get)
+        .def("__setitem__", &Cellars_view::set)
+        .def("toSet", &Cellars_view::allNames);
 
     py::class_<CellKernel, std::shared_ptr<CellKernel>>(m_Cells, "CellKernel", "Base class of all cells")
         .def("clone",&CellKernel::clone)
@@ -65,15 +93,17 @@ void init_cells(py::module &m) {
         .def_readwrite("FDAY", &CellKernel::FDAY)
     //        .def_readonly("vars", &CellKernel::vars)
     //        .def_readonly("pars", &CellKernel::pars)
-        .def("getVar",&CellKernel::var,py::arg("name"))
-        .def("setVar",&CellKernel::setVar,py::arg("name"),py::arg("value"))
-        .def("getPar",&CellKernel::par,py::arg("name"))
-        .def("setPar",&CellKernel::setPar,py::arg("name"),py::arg("value"))
+//        .def("getVar",&CellKernel::var,py::arg("name"))
+//        .def("setVar",&CellKernel::setVar,py::arg("name"),py::arg("value"))
+//        .def("getPar",&CellKernel::par,py::arg("name"))
+//        .def("setPar",&CellKernel::setPar,py::arg("name"),py::arg("value"))
+        .def_property_readonly("vars",[](CellKernel* cell) {return Cellars_view(cell,Cellars_view::vars);})
+        .def_property_readonly("pars",[](CellKernel* cell) {return Cellars_view(cell,Cellars_view::pars);})
         .def_property_readonly("variables",&CellKernel::getVariables)
         .def_property_readonly("constants",&CellKernel::getConstants)
         .def_property_readonly("type",&CellKernel::type)
-	.def_property("optionStr",&CellKernel::optionStr,static_cast<void (CellKernel::*)(string)>(&CellKernel::setOption))
-	.def_property("option",&CellKernel::option,static_cast<void (CellKernel::*)(int)>(&CellKernel::setOption));
+        .def_property("optionStr",&CellKernel::optionStr,static_cast<void (CellKernel::*)(string)>(&CellKernel::setOption))
+        .def_property("option",&CellKernel::option,static_cast<void (CellKernel::*)(int)>(&CellKernel::setOption));
 
     py::class_<Cell, std::shared_ptr<Cell>, CellKernel>(m_Cells, "Cell","Base class for cells. Provides selections of variables & constants to be written during the simulation")
 //            .def(py::init<const std::string &>())
