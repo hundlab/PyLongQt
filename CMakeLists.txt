@@ -14,22 +14,22 @@ set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory(pybind11)
 find_package(LongQt-model REQUIRED)
-find_package(Qt5Core REQUIRED)
-#find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5 COMPONENTS Core Concurrent REQUIRED)
 set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(PyLongQt_includes
-	${modellib_includes}
+    ${CMAKE_CURRENT_LIST_DIR}/src
+    ${modellib_includes}
 )
 include_directories(${PyLongQt_includes})
 
 set(PyLongQt_sources
-	"pylongqt.cpp"
-    "cells.cpp"
-    "protocols.cpp"
-    "structures.cpp"
-    "misc.cpp"
+        "src/pylongqt.cpp"
+    "src/cells.cpp"
+    "src/protocols.cpp"
+    "src/structures.cpp"
+    "src/misc.cpp"
 )
 
 link_directories(${modellib_LIBRARY})
