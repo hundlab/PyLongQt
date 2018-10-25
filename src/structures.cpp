@@ -2,6 +2,8 @@
 #include "structure/fiber.h"
 #include "structure/grid.h"
 #include "pylongqt.h"
+using namespace LongQt;
+using namespace std;
 
 void init_structures(py::module &m) {
     py::module m_Structures = m.def_submodule("Structures", "Structures used by GridProtocol for 1 & 2D simulations.");

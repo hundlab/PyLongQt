@@ -5,9 +5,11 @@
 #include "measuremanager.h"
 #include "measure.h"
 #include "protocol.h"
-
-
-using namespace std;
+using namespace LongQt;
+using std::string;
+using std::make_shared;
+using std::set;
+using std::map;
 
 auto measMap = [] (string name) {
         auto c = make_shared<InexcitableCell>();

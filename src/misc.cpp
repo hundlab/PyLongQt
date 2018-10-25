@@ -9,7 +9,8 @@
 #include "measuremanager.h"
 #include "gridmeasuremanager.h"
 #include "runsim.h"
-
+using namespace LongQt;
+using namespace std;
 
 void init_misc(py::module &m) {
     py::module m_Misc = m.def_submodule("Misc", "Measure, Pvars, helper classes");

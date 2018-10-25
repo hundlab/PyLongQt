@@ -19,6 +19,7 @@
 #include "cell/gpbatrialonal17.h"
 #include "cell/FR.h"
 #include "pylongqt.h"
+using namespace LongQt;
 
 void init_cells(py::module &m) {
     py::module m_Cells = m.def_submodule("Cells", "Contains all the Cell classes. For easy use cellMap provides constructors based on Cell.type.");
@@ -102,14 +103,14 @@ void init_cells(py::module &m) {
         .def_property_readonly("variables",&CellKernel::getVariables)
         .def_property_readonly("constants",&CellKernel::getConstants)
         .def_property_readonly("type",&CellKernel::type)
-        .def_property("optionStr",&CellKernel::optionStr,static_cast<void (CellKernel::*)(string)>(&CellKernel::setOption))
+        .def_property("optionStr",&CellKernel::optionStr,static_cast<void (CellKernel::*)(std::string)>(&CellKernel::setOption))
         .def_property("option",&CellKernel::option,static_cast<void (CellKernel::*)(int)>(&CellKernel::setOption));
 
     py::class_<Cell, std::shared_ptr<Cell>, CellKernel>(m_Cells, "Cell","Base class for cells. Provides selections of variables & constants to be written during the simulation")
 //            .def(py::init<const std::string &>())
         .def_property("constantSelection", &Cell::getConstantSelection,&Cell::setConstantSelection)
         .def_property("variableSelection", &Cell::getVariableSelection,&Cell::setVariableSelection)
-        .def("__repr__",[](Cell& c){return "<Cell Type='"+string(c.type())+"'>";});
+        .def("__repr__",[](Cell& c){return "<Cell Type='"+std::string(c.type())+"'>";});
 
     py::class_<ControlSa, std::shared_ptr<ControlSa>, Cell>(m_Cells, "ControlSa")
         .def(py::init<>());

@@ -4,6 +4,9 @@
 #include "protocol/gridProtocol.h"
 #include "settingsIO.h"
 #include "pylongqt.h"
+using namespace LongQt;
+using namespace std;
+
 
 void init_protocols(py::module &m) {
     py::module m_Protocols = m.def_submodule("Protocols", "Contains all the Protocol classes. For easy use protoMap provides constructors based on Protocol.type.");
@@ -15,7 +18,7 @@ void init_protocols(py::module &m) {
             {return "<GetSet Type="+r.type+" Val='"+r.get()+"'>";})
         .def_readonly("type",&GetSetRef::type);
 
-    py::class_<Protocol,std::shared_ptr<Protocol>>(m_Protocols, "Protocol", "Protocols determine what happens in the simulation. These classes contain configurations for the simulations.")
+    py::class_<Protocol,shared_ptr<Protocol>>(m_Protocols, "Protocol", "Protocols determine what happens in the simulation. These classes contain configurations for the simulations.")
         .def("clone",&Protocol::clone)
         .def("readInCellState",&Protocol::readInCellState,"Read in cell from cellstatedir")
         .def("writeOutCellState",&Protocol::writeOutCellState,"Write out final state of the cell to datadir")
