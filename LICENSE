@@ -1,4 +1,4 @@
-LongQt, a graphical user interface for running simulations of heart cells.
+PyLongQt, python bindings for the LongQt-model library.
 Copyright (C) 2016, Thomas J. Hund
 
     This program is free software: you can redistribute it and/or modify
