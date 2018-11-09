@@ -11,31 +11,84 @@ using namespace std;
 void init_protocols(py::module &m) {
     py::module m_Protocols = m.def_submodule("Protocols", "Contains all the Protocol classes. For easy use protoMap provides constructors based on Protocol.type.");
 
-    py::class_<GetSetRef>(m_Protocols, "GetSetRef", "Accessor for properties in protocol")
-        .def(py::init<>())
-        .def_property("val", [](const GetSetRef& r) {return r.get();},[](const GetSetRef& r,string arg) {r.set(arg);})
-        .def("__repr__", [](const GetSetRef& r)
-            {return "<GetSet Type="+r.type+" Val='"+r.get()+"'>";})
-        .def_readonly("type",&GetSetRef::type);
+    class Pars_view {
+        Protocol* proto;
+    public:
+        Pars_view(Protocol* proto) {
+            this->proto = proto;
+        }
+        bool has(std::string name) {
+            return proto->hasPar(name);
+        }
+        std::string get(std::string name) {
+            return proto->parsStr(name);
+        }
+        void set(std::string name, std::string val) {
+            proto->parsStr(name, val);
+        }
+        std::list<std::pair<std::string,std::string>> allNames() {
+            return proto->parsList();
+        }
+        std::string type(std::string name) {
+            return proto->parsType(name);
+        }
+    };
+
+    class Clamp_view {
+        VoltageClamp* proto;
+    public:
+        Clamp_view(VoltageClamp* proto) {
+            this->proto = proto;
+        }
+        std::pair<double,double> get(int pos) {
+            return proto->clamps().at(pos);
+        }
+        int insert(std::pair<double,double> val) {
+            return proto->insertClamp(val.first, val.second);
+        }
+        void setVoltage(int pos, double voltage) {
+            proto->changeClampVoltage(pos,voltage);
+        }
+        void delVoltage(int pos) {
+            proto->removeClamp(pos);
+        }
+        const std::vector<std::pair<double, double>> toList() {
+            return proto->clamps();
+        }
+        void fromList(std::vector<std::pair<double,double>> clamps) {
+            proto->clamps(clamps);
+        }
+    };
+
+    py::class_<Pars_view>(m_Protocols, "_ParsVeiw","View for variables in Protocols")
+        .def("__contains__", &Pars_view::has)
+        .def("__getitem__", &Pars_view::get)
+        .def("__setitem__", &Pars_view::set)
+        .def("toList", &Pars_view::allNames)
+        .def("getType", &Pars_view::type);
+
+    py::class_<Clamp_view>(m_Protocols, "_ClampView","View for clamps in Voltage Clamp Protocol")
+            .def("__getitem__", &Clamp_view::get)
+            .def("insert", &Clamp_view::insert)
+            .def("__delitem__", &Clamp_view::delVoltage)
+            .def("setVoltage", &Clamp_view::setVoltage)
+            .def("toList", &Clamp_view::toList)
+            .def("fromList", &Clamp_view::fromList);
 
     py::class_<Protocol,shared_ptr<Protocol>>(m_Protocols, "Protocol", "Protocols determine what happens in the simulation. These classes contain configurations for the simulations.")
         .def("clone",&Protocol::clone)
-        .def("readInCellState",&Protocol::readInCellState,"Read in cell from cellstatedir")
-        .def("writeOutCellState",&Protocol::writeOutCellState,"Write out final state of the cell to datadir")
         .def("runSim", &Protocol::runSim, "Run all the trials consecutively")
         .def_property("trial",(unsigned int(Protocol::*)(void)const)&Protocol::trial,(void(Protocol::*)(unsigned int))&Protocol::trial)
         .def("runTrial", &Protocol::runTrial,"Run the current trial")
-    //            .def("setupTrial", &Protocol::setupTrial)
         .def_property("cell",(shared_ptr<Cell>(Protocol::*)(void)const)&Protocol::cell,(void(Protocol::*)(shared_ptr<Cell>))&Protocol::cell)
         .def("setCellByName",(bool(Protocol::*)(const string&))&Protocol::cell)
         .def("cellOptions",&Protocol::cellOptions,"possible cells that can be set with .cell")
         .def_property_readonly("pvars",&Protocol::pvars,py::return_value_policy::reference_internal,"The property settings. Used to modify the cells constants at the beginning of each simulation.")
         .def_property_readonly("measureMgr",&Protocol::measureMgr,py::return_value_policy::reference_internal,"The measurement settings. Tracks min,peak,etc of a cell variable")
         .def_property_readonly("type",&Protocol::type)
-    //            .def_readwrite("__dict__",&Protocol::pars)
-        .def_property("cellStateDir", [](Protocol& p){return p.pars["cellStateDir"].get();},[](Protocol& p,string val){p.pars["datadir"].set(val);})
+        .def_property("cellStateDir", [](Protocol& p){return p.parsStr("cellStateDir");},[](Protocol& p,string val){p.parsStr("datadir",val);})
         .def_readwrite("cellStateFile",&Protocol::cellStateFile)
-        .def_property("datadir",[](Protocol& p){return p.pars["datadir"].get();},[](Protocol& p,string val){p.pars["datadir"].set(val);})
+        .def_property("datadir",[](Protocol& p){return p.parsStr("datadir");},[](Protocol& p,string val){p.parsStr("datadir",val);})
         .def_readwrite("meastime",&Protocol::meastime)
         .def_readwrite("numtrials",&Protocol::numtrials)
         .def_readwrite("readCellState",&Protocol::readCellState)
@@ -49,11 +102,8 @@ void init_protocols(py::module &m) {
         .def_readwrite("numruns",&Protocol::numruns, "Number of times to run runDurring")
         .def_readwrite("runEvery",&Protocol::runEvery, "Frequency to run runDurring")
         .def_readwrite("firstRun",&Protocol::firstRun, "Time to start running runDurring")
-        .def_property("runBefore",&Protocol::getRunBefore,&Protocol::setRunBefore)
-        .def_property("runDuring",&Protocol::getRunDuring,&Protocol::setRunDuring)
-        .def_property("runAfter",&Protocol::getRunAfter,&Protocol::setRunAfter)
-	.def_property("basedir",[](Protocol& p){return p.basedir.absolutePath();},[](Protocol& p, string path){p.basedir.setPath(path.c_str());})
-        .def_readonly("pars",&Protocol::pars);
+        .def_property("basedir",[](Protocol& p){return p.basedir.absolutePath();},[](Protocol& p, string path){p.basedir.setPath(path.c_str());})
+        .def_property_readonly("pars",[](Protocol* p){return Pars_view(p);});
 
     py::class_<CurrentClamp, Protocol, std::shared_ptr<CurrentClamp>>(m_Protocols, "CurrentClamp")
         .def(py::init<>())
@@ -67,9 +117,7 @@ void init_protocols(py::module &m) {
             QString str(s.c_str());
             auto p = CellUtils::protoMap.at("Current Clamp Protocol")();
             auto set = SettingsIO::getInstance();
-            set->allowProtoChange = false;
             set->readSettingsStr(str,p);
-            set->allowProtoChange = true;
             return *dynamic_pointer_cast<CurrentClamp>(p);
         }
         ))
@@ -91,22 +139,12 @@ void init_protocols(py::module &m) {
             QString str(s.c_str());
             auto p = CellUtils::protoMap.at("Voltage Clamp Protocol")();
             auto set = SettingsIO::getInstance();
-            set->allowProtoChange = false;
             set->readSettingsStr(str, p);
-            set->allowProtoChange = true;
             return *dynamic_pointer_cast<VoltageClamp>(p);
         }
         ))
-        .def_readwrite("t1",&VoltageClamp::t1)
-        .def_readwrite("t2",&VoltageClamp::t2)
-        .def_readwrite("t3",&VoltageClamp::t3)
-        .def_readwrite("t4",&VoltageClamp::t4)
-        .def_readwrite("t5",&VoltageClamp::t5)
-        .def_readwrite("v1",&VoltageClamp::v1)
-        .def_readwrite("v2",&VoltageClamp::v2)
-        .def_readwrite("v3",&VoltageClamp::v3)
-        .def_readwrite("v4",&VoltageClamp::v4)
-        .def_readwrite("v5",&VoltageClamp::v5);
+        .def_property_readonly("clamps",[] (VoltageClamp* p) {return Clamp_view(p);});
+
     py::class_<GridProtocol, CurrentClamp,std::shared_ptr<GridProtocol>>(m_Protocols, "GridProtocol")
         .def(py::init<>())
         .def(py::pickle(
@@ -119,9 +157,7 @@ void init_protocols(py::module &m) {
             QString str(s.c_str());
             auto p = CellUtils::protoMap.at("Grid Protocol")();
             auto set = SettingsIO::getInstance();
-            set->allowProtoChange = false;
             set->readSettingsStr(str, p);
-            set->allowProtoChange = true;
             return *dynamic_pointer_cast<GridProtocol>(p);
         }
         ))

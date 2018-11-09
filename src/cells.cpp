@@ -49,7 +49,7 @@ void init_cells(py::module &m) {
         }
     };
 
-    py::class_<Cellars_view>(m_Cells, "VarsParsVeiw","View for variables and constants in Cell's")
+    py::class_<Cellars_view>(m_Cells, "_VarsParsVeiw","View for variables and constants in Cell's")
         .def("__contains__", &Cellars_view::has)
         .def("__getitem__", &Cellars_view::get)
         .def("__setitem__", &Cellars_view::set)
