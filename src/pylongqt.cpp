@@ -5,6 +5,9 @@
 #include "measuremanager.h"
 #include "measure.h"
 #include "protocol.h"
+#include "logger.h"
+#include <iostream>
+
 using namespace LongQt;
 using std::string;
 using std::make_shared;
@@ -24,6 +27,9 @@ auto measMap = [] (string name) {
     };
 
 PYBIND11_MODULE(PyLongQt, m) {
+    auto logger = Logger::getInstance();
+    logger->exceptionEnabled = true;
+
     m.doc() = "python bindings for LongQt's cell models and protocols";
     m.attr("cellMap") = py::cast(CellUtils::cellMap, py::return_value_policy::take_ownership);
     m.attr("protoMap") = py::cast(CellUtils::protoMap, py::return_value_policy::take_ownership);
@@ -34,15 +40,12 @@ PYBIND11_MODULE(PyLongQt, m) {
         .value("right", CellUtils::right)
         .value("left", CellUtils::left)
         .export_values();
-
+    m.def("verbose", [] (bool on) {
+        on ?
+            Logger::getInstance()->STDOut(&std::cout):
+            Logger::getInstance()->delSTDOut();});
     init_cells(m);
     init_protocols(m);
     init_structures(m);
     init_misc(m);
 }
-// {
-//    m.doc() = "";
-    // optional module docstring
-//    m.def("cellMap", &bain, "A function which returns a random number!");
-//    m.def("trim", &CellUtils::trim, "trim whitespace from beginning and end of a string", py::arg("string"));
-//}

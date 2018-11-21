@@ -70,6 +70,7 @@ void init_protocols(py::module &m) {
     py::class_<Clamp_view>(m_Protocols, "_ClampView","View for clamps in Voltage Clamp Protocol")
             .def("__getitem__", &Clamp_view::get)
             .def("insert", &Clamp_view::insert)
+            .def("insert", [] (Clamp_view& v, double time, double voltage) {v.insert({time,voltage});})
             .def("__delitem__", &Clamp_view::delVoltage)
             .def("setVoltage", &Clamp_view::setVoltage)
             .def("toList", &Clamp_view::toList)

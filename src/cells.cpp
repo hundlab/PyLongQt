@@ -112,7 +112,7 @@ void init_cells(py::module &m) {
         .def_property("variableSelection", &Cell::getVariableSelection,&Cell::setVariableSelection)
         .def("__repr__",[](Cell& c){return "<Cell Type='"+std::string(c.type())+"'>";});
 
-    py::class_<ControlSa, std::shared_ptr<ControlSa>, Cell>(m_Cells, "ControlSa")
+    py::class_<Kurata08, std::shared_ptr<Kurata08>, Cell>(m_Cells, "Kurata08")
         .def(py::init<>());
     py::class_<OHaraRudy, std::shared_ptr<OHaraRudy>, Cell>(m_Cells, "OHaraRudy")
         .def(py::init<>());
