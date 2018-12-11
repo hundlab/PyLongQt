@@ -3,7 +3,7 @@
 #include <string>
 #include "inexcitablecell.h"
 #include "measuremanager.h"
-#include "measure.h"
+#include "measuredefault.h".h"
 #include "protocol.h"
 #include "logger.h"
 #include <iostream>
@@ -21,7 +21,7 @@ auto measMap = [] (string name) {
         for(auto var: meas->varsMeas) {
             measMap[var.first] = meas->varMeasCreator.at(var.second)({})->variables();
         }
-        set<string> defaultMeas = Measure().variables();
+        set<string> defaultMeas = MeasureDefault().variables();
         delete meas;
         return measMap.count(name) > 0? measMap[name]: defaultMeas;
     };

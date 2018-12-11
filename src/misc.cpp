@@ -5,7 +5,8 @@
 #include "pvarsvoltageclamp.h"
 #include "pvarsgrid.h"
 #include "pylongqt.h"
-#include "measurewave.h"
+#include "measuredefault.h"
+#include "measurevoltage.h"
 #include "measuremanager.h"
 #include "gridmeasuremanager.h"
 #include "runsim.h"
@@ -103,8 +104,7 @@ void init_misc(py::module &m) {
         .def_readwrite("cells",&PvarsGrid::MIonChanParam::cells)
         .def("__repr__",[IonChanParamREPR](PvarsGrid::MIonChanParam& p){return "<MIonChanParam: "+IonChanParamREPR(p)+">";});
 
-    py::class_<Measure>(m_Misc, "_Measure","Class that measures an individual variable from a cell")
-        .def(py::init<>())
+    py::class_<Measure>(m_Misc, "_Measure","Base class for measure values during a simulation")
         .def("measure",&Measure::measure)
         .def("reset",&Measure::reset)
         .def_property_readonly("variables",&Measure::variables)
@@ -112,9 +112,11 @@ void init_misc(py::module &m) {
         .def_property("selection",(set<string>(Measure::*)(void))&Measure::selection,(void(Measure::*)(set<string>))&Measure::selection)
         .def("nameString",&Measure::getNameString)
         .def("valueString",&Measure::getValueString);
-    py::class_<MeasureWave,Measure>(m_Misc, "_MeasureWave")
+    py::class_<MeasureDefault,Measure>(m_Misc, "_MeasureDefault","Class that measures an individual variable from a cell")
+        .def(py::init<>());
+    py::class_<MeasureVoltage,Measure>(m_Misc, "_MeasureVoltage")
         .def(py::init<>())
-        .def_property("percrepol",(double(MeasureWave::*)(void)const)&MeasureWave::percrepol,(void(MeasureWave::*)(double))&MeasureWave::percrepol);
+        .def_property("percrepol",(double(MeasureVoltage::*)(void)const)&MeasureVoltage::percrepol,(void(MeasureVoltage::*)(double))&MeasureVoltage::percrepol);
 
     py::class_<MeasureManager>(m_Misc, "_MeasureManager","Manages measuring variables from a cell during a simulation. Can record per cycle measurements of min,peak,etc")
         .def(py::init<shared_ptr<Cell>>())

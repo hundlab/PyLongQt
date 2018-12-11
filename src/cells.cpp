@@ -27,6 +27,7 @@ void init_cells(py::module &m) {
     class Cellars_view {
         CellKernel* cell;
     public:
+        std::set<std::string> namesSet;
         enum type {
             vars = 0,
             pars = 1
@@ -34,6 +35,7 @@ void init_cells(py::module &m) {
         Cellars_view(CellKernel* cell, type type) {
             this->cell = cell;
             this->ars_type = type;
+            namesSet = ars_type == vars ? cell->vars() : cell->pars();
         }
         bool has(std::string name) {
             return ars_type == vars ? cell->hasVar(name) : cell->hasPar(name);
@@ -45,19 +47,33 @@ void init_cells(py::module &m) {
             ars_type == vars ? cell->setVar(name, val) : cell->setPar(name, val);
         }
         std::set<std::string> allNames() {
-            return ars_type == vars ? cell->getVariables() : cell->getConstants();
+            return namesSet;
         }
+        std::string toString() {
+            std::string ret = "{";
+            for(auto& name: namesSet) {
+                ret += "'"+name+"', ";
+            }
+            ret += "}";
+            return ret;
+        }
+        int length() {
+            return namesSet.size();
+        }
+
     };
 
     py::class_<Cellars_view>(m_Cells, "_VarsParsVeiw","View for variables and constants in Cell's")
         .def("__contains__", &Cellars_view::has)
         .def("__getitem__", &Cellars_view::get)
         .def("__setitem__", &Cellars_view::set)
-        .def("toSet", &Cellars_view::allNames);
+        .def("__str__", &Cellars_view::toString)
+        .def("__repr__", [] (Cellars_view&) {return "PyLongQt.Cells._VarsParsVeiw";})
+        .def("__iter__", [] (Cellars_view& v) {return py::make_iterator(v.namesSet);})
+        .def("keys", &Cellars_view::allNames);
 
     py::class_<CellKernel, std::shared_ptr<CellKernel>>(m_Cells, "CellKernel", "Base class of all cells")
         .def("clone",&CellKernel::clone)
-        .def("reset",&CellKernel::reset)
         .def("updateV", &CellKernel::updateV, "Update voltages")
         .def("setV", &CellKernel::setV, "Set total voltage",py::arg("voltage"))
         .def("updateCurr", &CellKernel::updateCurr, "Update currents")
@@ -65,7 +81,6 @@ void init_cells(py::module &m) {
         .def("tstep", &CellKernel::tstep, "Increment the time used by the cell", py::arg("stimulus time"))
         .def("externalStim", &CellKernel::externalStim,"Stimulate the cell",py::arg("stimulus"))
         .def_readwrite("vOld", &CellKernel::vOld)
-        .def_readwrite("vNew", &CellKernel::vNew)
         .def_readwrite("t", &CellKernel::t)
         .def_readwrite("dt", &CellKernel::dt)
         .def_readwrite("iNat", &CellKernel::iNat)
@@ -82,7 +97,6 @@ void init_cells(py::module &m) {
         .def_readwrite("cellRadius", &CellKernel::cellRadius)
         .def_readwrite("cellLength", &CellKernel::cellLength)
         .def_readwrite("dVdt", &CellKernel::dVdt)
-        .def_readwrite("dVdtmax", &CellKernel::dVdtmax)
         .def_readwrite("Rmyo", &CellKernel::Rmyo)
         .def_readwrite("dtmin", &CellKernel::dtmin)
         .def_readwrite("dtmed", &CellKernel::dtmed)
@@ -92,16 +106,8 @@ void init_cells(py::module &m) {
         .def_readwrite("RGAS", &CellKernel::RGAS)
         .def_readwrite("TEMP", &CellKernel::TEMP)
         .def_readwrite("FDAY", &CellKernel::FDAY)
-    //        .def_readonly("vars", &CellKernel::vars)
-    //        .def_readonly("pars", &CellKernel::pars)
-//        .def("getVar",&CellKernel::var,py::arg("name"))
-//        .def("setVar",&CellKernel::setVar,py::arg("name"),py::arg("value"))
-//        .def("getPar",&CellKernel::par,py::arg("name"))
-//        .def("setPar",&CellKernel::setPar,py::arg("name"),py::arg("value"))
         .def_property_readonly("vars",[](CellKernel* cell) {return Cellars_view(cell,Cellars_view::vars);})
         .def_property_readonly("pars",[](CellKernel* cell) {return Cellars_view(cell,Cellars_view::pars);})
-        .def_property_readonly("variables",&CellKernel::getVariables)
-        .def_property_readonly("constants",&CellKernel::getConstants)
         .def_property_readonly("type",&CellKernel::type)
         .def_property("optionStr",&CellKernel::optionStr,static_cast<void (CellKernel::*)(std::string)>(&CellKernel::setOption))
         .def_property("option",&CellKernel::option,static_cast<void (CellKernel::*)(int)>(&CellKernel::setOption));
