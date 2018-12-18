@@ -209,12 +209,25 @@ void init_misc(py::module& m) {
 
   py::class_<RunSim>(m_Misc, "RunSim",
                      "Runs simulations in a multithreaded environment")
+      .def(py::init())
       .def(py::init<shared_ptr<Protocol>>())
       .def(py::init<vector<shared_ptr<Protocol>>>())
       .def("run", &RunSim::run, "Run simulations in parallel")
+      .def("cancel", &RunSim::cancel, "Cancel running simulations")
       .def("finished", &RunSim::finished,
            "Check if simulations are all finished")
-      .def("progress", &RunSim::progress, "print progress message")
+      .def("progressRange", &RunSim::progressRange,
+           "return the min and max progress values")
+      .def("progress", &RunSim::progress, "Return progress")
+      .def("progressPercent",
+           [](RunSim& r) {
+             auto mM = r.progressRange();
+             return 100 * ((r.progress() - mM.first) / mM.second);
+           })
+      .def("startCallback", &RunSim::startCallback,
+           "Callback function when run is called")
+      .def("finishedCallback", &RunSim::finishedCallback,
+           "Callback function when simulations are finished")
       .def("setSims",
            (void (RunSim::*)(std::vector<shared_ptr<Protocol>>)) &
                RunSim::setSims,
