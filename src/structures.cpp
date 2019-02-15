@@ -12,17 +12,15 @@ void init_structures(py::module& m) {
   py::class_<Node, std::shared_ptr<Node>>(
       m_Structures, "Node",
       "Finest unit in a multi-dimensional simulation, contains a cell")
-      .def(py::init<>())
+      //      .def(py::init<>())
       .def("setCondConst", &Node::setCondConst,
-           "set the conductivity value of a side", py::arg("dx"), py::arg("s"),
+           "set the conductivity value of a side", py::arg("s"),
            py::arg("perc") = true, py::arg("val") = 1)
       .def("getCondConst", &Node::getCondConst,
            "get the conductivity value of a side", py::arg("s"))
       .def_readonly("cell", &Node::cell)
       //            .def_readwrite("rd",&Node::rd)
       //        .def_readwrite("condConst", &Node::condConst)
-      .def_readwrite("np", &Node::np, "number of cells represented by the node")
-      .def_readwrite("type", &Node::nodeType)
       .def("__repr__", [](Node& n) {
         return "<Node " + string(py::repr(py::cast(n.cell))) + ">";
       });
@@ -50,17 +48,12 @@ void init_structures(py::module& m) {
   py::class_<CellInfo>(
       m_Structures, "CellInfo",
       "Contains all the info needed to insert a cell into a Grid")
-      .def(py::init<int, int, double, double, int, shared_ptr<Cell>,
-                    array<double, 4>, bool>(),
-           py::arg("X") = -1, py::arg("Y") = -1, py::arg("dx") = 0.01,
-           py::arg("dy") = 0.01, py::arg("np") = 1, py::arg("cell") = nullptr,
+      .def(py::init<int, int, shared_ptr<Cell>, array<double, 4>, bool>(),
+           py::arg("X") = -1, py::arg("Y") = -1, py::arg("cell") = nullptr,
            py::arg("c") = array<double, 4>({NAN, NAN, NAN, NAN}),
            py::arg("c_perc") = false)
       .def_readwrite("row", &CellInfo::row)
       .def_readwrite("col", &CellInfo::col)
-      .def_readwrite("dx", &CellInfo::dx)
-      .def_readwrite("dy", &CellInfo::dy)
-      .def_readwrite("np", &CellInfo::np)
       .def_readwrite("c_perc", &CellInfo::c_perc)
       .def_readwrite("cell", &CellInfo::cell)
       .def_readwrite("c", &CellInfo::c)
@@ -88,6 +81,9 @@ void init_structures(py::module& m) {
       .def_property_readonly(
           "shape",
           [](Grid& g) { return make_tuple(g.rowCount(), g.columnCount()); })
+      .def_readwrite("dx", &Grid::dx)
+      .def_readwrite("dy", &Grid::dy)
+      .def_readwrite("np", &Grid::np)
       .def("rowCount", &Grid::rowCount)
       .def("columnCount", &Grid::columnCount)
       .def("findNode", &Grid::findNode, "find a nodes position")
@@ -107,6 +103,12 @@ void init_structures(py::module& m) {
                resList.push_back(g(item));
              }
              return resList;
+           })
+      .def("__setitem__",
+           [](Grid& g, const pair<int, int>& pos, std::shared_ptr<Cell> cell) {
+             CellInfo info(pos.first, pos.second);
+             info.cell = cell;
+             g.setCellTypes(info);
            })
       .def("getRow", [](Grid& g, int i) { return &g.rows[i]; },
            py::return_value_policy::reference_internal)

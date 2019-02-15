@@ -77,7 +77,7 @@ void init_protocols(py::module& m) {
       .def("runSim", &Protocol::runSim, "Run all the trials consecutively")
       .def_property("trial",
                     (unsigned int (Protocol::*)(void) const) & Protocol::trial,
-                    (void (Protocol::*)(unsigned int)) & Protocol::trial)
+                    (bool (Protocol::*)(unsigned int)) & Protocol::trial)
       .def("runTrial", &Protocol::runTrial, "Run the current trial")
       .def_property(
           "cell", (shared_ptr<Cell>(Protocol::*)(void) const) & Protocol::cell,

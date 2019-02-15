@@ -16,6 +16,7 @@
 #include "cell/ksan.h"
 #include "cell/kurata08.h"
 #include "cell/tnnp04.h"
+#include "cell/coupledinexcitablecell.h"
 #include "cellutils.h"
 #include "pylongqt.h"
 using namespace LongQt;
@@ -166,6 +167,9 @@ void init_cells(py::module& m) {
       .def(py::init<>());
   py::class_<InexcitableCell, std::shared_ptr<InexcitableCell>, Cell>(
       m_Cells, "InexcitableCell")
+      .def(py::init<>());
+  py::class_<CoupledInexcitableCell, std::shared_ptr<CoupledInexcitableCell>, Cell>(
+      m_Cells, "CoupledInexcitableCell")
       .def(py::init<>());
   py::class_<Ksan, std::shared_ptr<Ksan>, Cell>(m_Cells, "Ksan")
       .def(py::init<>());

@@ -10,6 +10,7 @@
 #include "pylongqt.h"
 #include "runsim.h"
 #include "settingsIO.h"
+
 using namespace LongQt;
 using namespace std;
 
@@ -198,9 +199,14 @@ void init_misc(py::module& m) {
       .def(
           "readSettings",
           [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto = NULL) {
+//            py::
+//            py::scoped_ostream_redirect stream(
+//                std::cout,                                // std::ostream&
+//                py::module::import("sys").attr("stdout")  // Python output
+//            );
             return s.readSettings(filename, proto);
           },
-          py::arg("filename"), py::arg("proto") = NULL)
+          py::arg("filename"), py::arg("proto") = shared_ptr<Protocol>(NULL))
       .def("writeSettings",
            [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto) {
              s.writeSettings(filename, proto);

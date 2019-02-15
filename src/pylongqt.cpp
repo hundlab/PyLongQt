@@ -8,6 +8,8 @@
 #include "measuremanager.h"
 #include "protocol.h"
 
+#include <pybind11/iostream.h>
+
 using namespace LongQt;
 using std::make_shared;
 using std::map;
@@ -44,10 +46,16 @@ PYBIND11_MODULE(PyLongQt, m) {
       .value("right", CellUtils::right)
       .value("left", CellUtils::left)
       .export_values();
+  //this relies on a pybind11 detail
   m.def("verbose", [](bool on) {
-    on ? Logger::getInstance()->STDOut(&std::cout)
-       : Logger::getInstance()->delSTDOut();
+    on ? Logger::getInstance()
+             ->STDOut(new std::ostream(new
+                 py::detail::pythonbuf(py::module::import("sys").attr("stdout"))))
+        : Logger::getInstance()->delSTDOut();
   });
+  m.attr("version") = CellUtils::version;
+
+  // py::register_exception<std::runtime_error>(m, "RuntimeException");
   init_cells(m);
   init_protocols(m);
   init_structures(m);
