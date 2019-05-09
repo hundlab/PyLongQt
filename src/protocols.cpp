@@ -17,13 +17,15 @@ void init_protocols(py::module& m) {
     Protocol* proto;
 
    public:
-    Pars_view(Protocol* proto) { this->proto = proto; }
+    std::list<std::pair<std::string, std::string>> allNames;
+
+    Pars_view(Protocol* proto) {
+      this->proto = proto;
+      this->allNames = proto->parsList();
+    }
     bool has(std::string name) { return proto->hasPar(name); }
     std::string get(std::string name) { return proto->parsStr(name); }
     void set(std::string name, std::string val) { proto->parsStr(name, val); }
-    std::list<std::pair<std::string, std::string>> allNames() {
-      return proto->parsList();
-    }
     std::string type(std::string name) { return proto->parsType(name); }
   };
 
@@ -31,7 +33,12 @@ void init_protocols(py::module& m) {
     VoltageClamp* proto;
 
    public:
-    Clamp_view(VoltageClamp* proto) { this->proto = proto; }
+    std::vector<std::pair<double, double>> clampsList;
+
+    Clamp_view(VoltageClamp* proto) {
+      this->proto = proto;
+      this->clampsList = proto->clamps();
+    }
     std::pair<double, double> get(int pos) { return proto->clamps().at(pos); }
     int insert(std::pair<double, double> val) {
       return proto->insertClamp(val.first, val.second);
@@ -40,9 +47,6 @@ void init_protocols(py::module& m) {
       proto->changeClampVoltage(pos, voltage);
     }
     void delVoltage(int pos) { proto->removeClamp(pos); }
-    const std::vector<std::pair<double, double>> toList() {
-      return proto->clamps();
-    }
     void fromList(std::vector<std::pair<double, double>> clamps) {
       proto->clamps(clamps);
     }
@@ -53,21 +57,23 @@ void init_protocols(py::module& m) {
       .def("__contains__", &Pars_view::has)
       .def("__getitem__", &Pars_view::get)
       .def("__setitem__", &Pars_view::set)
-      .def("toList", &Pars_view::allNames)
-      .def("getType", &Pars_view::type);
+      .def("__iter__",
+           [](Pars_view& v) { return py::make_iterator(v.allNames); })
+      .def("getType", &Pars_view::type, py::arg("name"));
 
   py::class_<Clamp_view>(m_Protocols, "_ClampView",
                          "View for clamps in Voltage Clamp Protocol")
       .def("__getitem__", &Clamp_view::get)
-      .def("insert", &Clamp_view::insert)
+      .def("insert", &Clamp_view::insert, py::arg("pair"))
       .def("insert",
            [](Clamp_view& v, double time, double voltage) {
              v.insert({time, voltage});
-           })
+           }, py::arg("time"), py::arg("voltage"))
       .def("__delitem__", &Clamp_view::delVoltage)
-      .def("setVoltage", &Clamp_view::setVoltage)
-      .def("toList", &Clamp_view::toList)
-      .def("fromList", &Clamp_view::fromList);
+      .def("setVoltage", &Clamp_view::setVoltage,py::arg("pos"), py::arg("voltage"))
+      .def("__iter__",
+           [](Clamp_view& v) { return py::make_iterator(v.clampsList); })
+      .def("fromList", &Clamp_view::fromList, py::arg("voltageList"));
 
   py::class_<Protocol, shared_ptr<Protocol>>(
       m_Protocols, "Protocol",
