@@ -7,6 +7,7 @@
 #include "cell/br04.h"
 #include "cell/cell.h"
 #include "cell/cell_kernel.h"
+#include "cell/coupledinexcitablecell.h"
 #include "cell/gpbatrial.h"
 #include "cell/gpbatrialonal17.h"
 #include "cell/gpbhuman.h"
@@ -16,7 +17,6 @@
 #include "cell/ksan.h"
 #include "cell/kurata08.h"
 #include "cell/tnnp04.h"
-#include "cell/coupledinexcitablecell.h"
 #include "cellutils.h"
 #include "pylongqt.h"
 using namespace LongQt;
@@ -111,11 +111,13 @@ void init_cells(py::module& m) {
       .def_property_readonly("vars",
                              [](CellKernel* cell) {
                                return Cellars_view(cell, Cellars_view::vars);
-                             })
+                             },
+                             py::keep_alive<0, 1>())
       .def_property_readonly("pars",
                              [](CellKernel* cell) {
                                return Cellars_view(cell, Cellars_view::pars);
-                             })
+                             },
+                             py::keep_alive<0, 1>())
       .def_property_readonly("type", &CellKernel::type)
       .def_property("optionStr", &CellKernel::optionStr,
                     static_cast<void (CellKernel::*)(std::string)>(
@@ -168,8 +170,8 @@ void init_cells(py::module& m) {
   py::class_<InexcitableCell, std::shared_ptr<InexcitableCell>, Cell>(
       m_Cells, "InexcitableCell")
       .def(py::init<>());
-  py::class_<CoupledInexcitableCell, std::shared_ptr<CoupledInexcitableCell>, Cell>(
-      m_Cells, "CoupledInexcitableCell")
+  py::class_<CoupledInexcitableCell, std::shared_ptr<CoupledInexcitableCell>,
+             Cell>(m_Cells, "CoupledInexcitableCell")
       .def(py::init<>());
   py::class_<Ksan, std::shared_ptr<Ksan>, Cell>(m_Cells, "Ksan")
       .def(py::init<>());
