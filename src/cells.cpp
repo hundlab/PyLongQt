@@ -68,7 +68,8 @@ void init_cells(py::module& m) {
       .def("__repr__",
            [](Cellars_view&) { return "PyLongQt.Cells._VarsParsVeiw"; })
       .def("__iter__",
-           [](Cellars_view& v) { return py::make_iterator(v.namesSet); })
+           [](Cellars_view& v) { return py::make_iterator(v.namesSet); },
+           py::keep_alive<0, 1>())
       .def("keys", &Cellars_view::allNames);
 
   py::class_<CellKernel, std::shared_ptr<CellKernel>>(m_Cells, "CellKernel",
@@ -111,13 +112,11 @@ void init_cells(py::module& m) {
       .def_property_readonly("vars",
                              [](CellKernel* cell) {
                                return Cellars_view(cell, Cellars_view::vars);
-                             },
-                             py::keep_alive<0, 1>())
+                             })
       .def_property_readonly("pars",
                              [](CellKernel* cell) {
                                return Cellars_view(cell, Cellars_view::pars);
-                             },
-                             py::keep_alive<0, 1>())
+                             })
       .def_property_readonly("type", &CellKernel::type)
       .def_property("optionStr", &CellKernel::optionStr,
                     static_cast<void (CellKernel::*)(std::string)>(

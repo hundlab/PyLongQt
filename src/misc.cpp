@@ -1,3 +1,4 @@
+#include "datareader.h"
 #include "gridmeasuremanager.h"
 #include "measure.h"
 #include "measuredefault.h"
@@ -11,6 +12,9 @@
 #include "pylongqt.h"
 #include "runsim.h"
 #include "settingsIO.h"
+
+#include <pybind11/stl.h>
+#include <pybind11/numpy.h>
 
 using namespace LongQt;
 using namespace std;
@@ -206,8 +210,8 @@ void init_misc(py::module& m) {
                         GridMeasureManager::dataNodes);
 
   py::class_<SettingsIO>(m_Misc, "SettingsIO")
-      .def("getInstance", &SettingsIO::getInstance,
-           py::return_value_policy::reference)
+      .def_static("getInstance", &SettingsIO::getInstance,
+                  py::return_value_policy::reference)
       .def(
           "readSettings",
           [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto = NULL) {
@@ -263,4 +267,58 @@ void init_misc(py::module& m) {
            (void (RunSim::*)(shared_ptr<Protocol>)) & RunSim::appendSims,
            "Append simulations to run")
       .def("clear", &RunSim::clear, "Clear list of simulations to run");
+
+  py::class_<DataReader> data_reader(m_Misc, "DataReader",
+                                     "Reads data written by a simulation");
+  data_reader
+      .def_static("readFile",
+                  [](const std::string& s, const std::set<int>& exclude = {}) {
+                    return DataReader::readFile(s, exclude);
+                  },
+                  "Reads a single data file", py::arg("file"),
+                  py::arg("exclude") = std::set<int>())
+      .def_static("readDir",
+                  [](const std::string& s, const std::set<int>& exclude = {}) {
+                    return DataReader::readDir(s, exclude);
+                  },
+                  "Reads an entire simulation", py::arg("dir"),
+                  py::arg("excludeTrials") = std::set<int>())
+      .def_static(
+          "getTrialNums",
+          [](const std::string& s) { return DataReader::getTrialNums(s); },
+          "Get the trial numbers from a directory", py::arg("dir"));
+  py::class_<DataReader::TSVData>(data_reader, "TSVData",
+                                  "Holds data read by one file")
+      .def_readonly("header", &DataReader::TSVData::header)
+      .def_readwrite("data", &DataReader::TSVData::data)
+      .def_readonly("trial", &DataReader::TSVData::trial);
+  py::class_<DataReader::MeasHeader>(data_reader, "MeasHeader",
+                                     "The header entry for measured data")
+      .def_readonly("cell_info", &DataReader::MeasHeader::cell_info)
+      .def_readonly("cell_info_parsed",
+                    &DataReader::MeasHeader::cell_info_parsed)
+      .def_readonly("var_name", &DataReader::MeasHeader::var_name)
+      .def_readonly("prop_name", &DataReader::MeasHeader::prop_name);
+  py::class_<DataReader::TraceHeader>(data_reader, "TraceHeader",
+                                      "The header entry for trace data")
+      .def_readonly("cell_info", &DataReader::TraceHeader::cell_info)
+      .def_readonly("cell_info_parsed",
+                    &DataReader::TraceHeader::cell_info_parsed)
+      .def_readonly("var_name", &DataReader::TraceHeader::var_name);
+  py::class_<DataReader::TrialData<DataReader::MeasHeader>>(
+      data_reader, "MeasData", "Header and data from a measure file")
+      .def_readonly("header",
+                    &DataReader::TrialData<DataReader::MeasHeader>::header)
+      .def_readonly("data",
+                    &DataReader::TrialData<DataReader::MeasHeader>::data);
+  py::class_<DataReader::TrialData<DataReader::TraceHeader>>(
+      data_reader, "TraceData", "Header and data from a trace file")
+      .def_readonly("header",
+                    &DataReader::TrialData<DataReader::TraceHeader>::header)
+      .def_readonly("data",
+                    &DataReader::TrialData<DataReader::TraceHeader>::data);
+  py::class_<DataReader::SimData>(data_reader, "SimData",
+                                  "Data from an entire simulation")
+      .def_readwrite("trace", &DataReader::SimData::trace)
+      .def_readwrite("meas", &DataReader::SimData::meas);
 }
