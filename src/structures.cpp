@@ -25,14 +25,14 @@ void init_structures(py::module& m) {
         return "<Node " + string(py::repr(py::cast(n.cell))) + ">";
       });
   py::class_<Fiber>(m_Structures, "Fiber", "A 1D line of nodes")
-      .def(py::init<int>())
+      .def(py::init<int, LongQt::CellUtils::Side>())
       .def("updateVm", &Fiber::updateVm, "Update voltages for all nodes")
       //            .def_readwrite("nodes",&Fiber::nodes)
       //        .def_readwrite("B",&Fiber::B)
       .def("__len__", &Fiber::size)
       .def("__getitem__", &Fiber::operator[])
       .def("__iter__",
-           [](const Fiber& f) { return py::make_iterator(f.begin(), f.end()); },
+           [](Fiber& f) { return py::make_iterator(f.begin(), f.end()); },
            py::keep_alive<0, 1>())
       .def("__repr__", [](Fiber& f) {
         string repr = "Fiber([";
@@ -44,23 +44,6 @@ void init_structures(py::module& m) {
         }
         repr += "])";
         return repr;
-      });
-  py::class_<CellInfo>(
-      m_Structures, "CellInfo",
-      "Contains all the info needed to insert a cell into a Grid")
-      .def(py::init<int, int, shared_ptr<Cell>, array<double, 4>, bool>(),
-           py::arg("X") = -1, py::arg("Y") = -1, py::arg("cell") = nullptr,
-           py::arg("c") = array<double, 4>({NAN, NAN, NAN, NAN}),
-           py::arg("c_perc") = false)
-      .def_readwrite("row", &CellInfo::row)
-      .def_readwrite("col", &CellInfo::col)
-      .def_readwrite("c_perc", &CellInfo::c_perc)
-      .def_readwrite("cell", &CellInfo::cell)
-      .def_readwrite("c", &CellInfo::c)
-      .def("__repr__", [](const CellInfo& r) {
-        return "<CellInfo row=" + to_string(r.row) +
-               ", col=" + to_string(r.col) +
-               (r.cell ? ", cell='" + string(r.cell->type()) + "'>" : "");
       });
 
   py::class_<Grid>(m_Structures, "Grid")
@@ -74,10 +57,6 @@ void init_structures(py::module& m) {
       .def("removeColumn", &Grid::removeColumn, py::arg("pos"))
       .def("removeColumns", &Grid::removeColumns, py::arg("num"),
            py::arg("pos"))
-      .def("setCells", (void (Grid::*)(list<CellInfo>&)) & Grid::setCellTypes,
-           "set cells in grid", py::arg("cells"))
-      .def("setCell", (void (Grid::*)(const CellInfo&)) & Grid::setCellTypes,
-           py::arg("singleCell"))
       .def_property_readonly(
           "shape",
           [](Grid& g) { return make_tuple(g.rowCount(), g.columnCount()); })
@@ -88,11 +67,9 @@ void init_structures(py::module& m) {
       .def("columnCount", &Grid::columnCount)
       .def("findNode", &Grid::findNode, "find a nodes position")
       .def("reset", &Grid::reset)
-      .def("updateB", &Grid::updateB,
-           "use node conductivity values to update fiber conductivity list")
       .def("__len__", &Grid::columnCount)
       .def("__iter__",
-           [](const Grid& g) { return py::make_iterator(g.begin(), g.end()); },
+           [](Grid& g) { return py::make_iterator(g.begin(), g.end()); },
            py::keep_alive<0, 1>())
       .def("__getitem__", (shared_ptr<Node>(Grid::*)(const pair<int, int>&)) &
                               Grid::operator())
@@ -104,12 +81,12 @@ void init_structures(py::module& m) {
              }
              return resList;
            })
-      .def("__setitem__",
-           [](Grid& g, const pair<int, int>& pos, std::shared_ptr<Cell> cell) {
-             CellInfo info(pos.first, pos.second);
-             info.cell = cell;
-             g.setCellTypes(info);
-           })
+//      .def("__setitem__",
+//           [](Grid& g, const pair<int, int>& pos, std::shared_ptr<Cell> cell) {
+//             CellInfo info(pos.first, pos.second);
+//             info.cell = cell;
+//             g.setCellTypes(info);
+//           })
       .def("getRow", [](Grid& g, int i) { return &g.rows[i]; },
            py::return_value_policy::reference_internal)
       .def("getColumn", [](Grid& g, int i) { return &g.columns[i]; },

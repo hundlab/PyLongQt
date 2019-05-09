@@ -4,7 +4,8 @@
 #include "cellutils.h"
 #include "inexcitablecell.h"
 #include "logger.h"
-#include "measuredefault.h".h "
+#include "measuredefault.h"
+#include "measurefactory.h"
 #include "measuremanager.h"
 #include "protocol.h"
 
@@ -16,9 +17,8 @@ using std::map;
 using std::set;
 using std::string;
 
-auto measMap = [](string name) {
-  auto c = make_shared<InexcitableCell>();
-  auto meas = new MeasureManager(c);
+/*auto measMap = [](string name) {
+  auto meas = new MeasureFactory;
   map<string, set<string>> measMap;
   for (auto var : meas->varsMeas) {
     measMap[var.first] = meas->varMeasCreator.at(var.second)({})->variables();
@@ -26,7 +26,7 @@ auto measMap = [](string name) {
   set<string> defaultMeas = MeasureDefault().variables();
   delete meas;
   return measMap.count(name) > 0 ? measMap[name] : defaultMeas;
-};
+};*/
 
 PYBIND11_MODULE(PyLongQt, m) {
   auto logger = Logger::getInstance();
@@ -37,9 +37,9 @@ PYBIND11_MODULE(PyLongQt, m) {
       py::cast(CellUtils::cellMap, py::return_value_policy::take_ownership);
   m.attr("protoMap") =
       py::cast(CellUtils::protoMap, py::return_value_policy::take_ownership);
-  m.def("measMap", measMap,
-        "Get the available measure variables for a given cell variable",
-        py::arg("name"));
+//  m.def("measMap", measMap,
+//        "Get the available measure variables for a given cell variable",
+//        py::arg("name"));
   py::enum_<CellUtils::Side>(m, "Side", "Numbering of sides in 2D grids")
       .value("top", CellUtils::top)
       .value("bottom", CellUtils::bottom)

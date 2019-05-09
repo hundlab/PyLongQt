@@ -185,12 +185,5 @@ void init_protocols(py::module& m) {
       .def_property_readonly("grid", &GridProtocol::getGrid)
       .def_property_readonly("stimNodes", &GridProtocol::getStimNodes,
                              "nodes to stimulate")
-      .def_property("stim2", &GridProtocol::getStim2, &GridProtocol::setStim2,
-                    "enable a second stimulus")
-      .def_readwrite("stimNodes", &GridProtocol::stimNodes)
-      .def_readwrite("stimNodes2", &GridProtocol::stimNodes2)
-      .def_readwrite("stimval2", &GridProtocol::stimval2)
-      .def_readwrite("stimdur2", &GridProtocol::stimdur2)
-      .def_readwrite("bcl2", &GridProtocol::bcl2)
-      .def_readwrite("stimt2", &GridProtocol::stimt2);
+      .def_readwrite("stimNodes", &GridProtocol::stimNodes);
 }

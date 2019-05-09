@@ -1,6 +1,7 @@
 #include "gridmeasuremanager.h"
 #include "measure.h"
 #include "measuredefault.h"
+#include "measurefactory.h"
 #include "measuremanager.h"
 #include "measurevoltage.h"
 #include "pvarscell.h"
@@ -155,11 +156,28 @@ void init_misc(py::module& m) {
           "percrepol",
           (double (MeasureVoltage::*)(void) const) & MeasureVoltage::percrepol,
           (void (MeasureVoltage::*)(double)) & MeasureVoltage::percrepol);
+  py::class_<MeasureFactory>(
+      m_Misc, "_MeasureFactory",
+      "Creates appropriate Measure given a variable name")
+      .def(py::init<>())
+      .def_property(
+          "percrepol",
+          (double (MeasureFactory::*)(void)) & MeasureFactory::percrepol,
+          (void (MeasureFactory::*)(double)) & MeasureFactory::percrepol,
+          "the percent repolarization to write out measurements")
+      .def("buildMeasure", &MeasureFactory::buildMeasure, "Build a Measure",
+           py::arg("varname"), py::arg("selection") = std::set<std::string>())
+      .def("measureType", &MeasureFactory::measureType,
+           "Returns the name of the measure class for the variable",
+           py::arg("varname"))
+      .def("measureOptions", &MeasureFactory::measureOptions,
+           "Returns the measures available for a Measure type",
+           py::arg("measType"));
 
-  py::class_<MeasureManager>(
-      m_Misc, "_MeasureManager",
-      "Manages measuring variables from a cell during a simulation. Can record "
-      "per cycle measurements of min,peak,etc")
+  py::class_<MeasureManager>(m_Misc, "_MeasureManager",
+                             "Manages measuring variables from a cell "
+                             "during a simulation. Can record "
+                             "per cycle measurements of min,peak,etc")
       .def(py::init<shared_ptr<Cell>>())
       .def_property("selection",
                     (map<string, set<string>>(MeasureManager::*)(void)) &
@@ -172,19 +190,13 @@ void init_misc(py::module& m) {
           (double (MeasureManager::*)(void)) & MeasureManager::percrepol,
           (void (MeasureManager::*)(double)) & MeasureManager::percrepol,
           "the percent repolarization to write out measurements")
-      .def("createMeasure", &MeasureManager::getMeasure, "Create a Measure",
-           py::arg("varname"), py::arg("selection"))
       .def("addMeasure", &MeasureManager::addMeasure,
            "Add a new cell variable to be measured", py::arg("varname"),
            py::arg("selection") = set<string>())
       .def("setupMeasures", &MeasureManager::setupMeasures,
-           "Get measures ready for simulation", py::arg("filename"))
+           "Get measures ready for simulation")
       .def("measure", &MeasureManager::measure, "measure the variables",
-           py::arg("time"))
-      .def("resetMeasures", &MeasureManager::resetMeasures,
-           "reset measures that are invalid after percrepol is reached")
-      .def_readonly("varsMeas", &MeasureManager::varsMeas)
-      .def_readonly("varMeasCreator", &MeasureManager::varMeasCreator);
+           py::arg("time"));
   py::class_<GridMeasureManager, MeasureManager>(m_Misc, "_GridMeasureManager")
       .def(py::init<shared_ptr<GridCell>>())
       .def_property("dataNodes",
@@ -199,11 +211,13 @@ void init_misc(py::module& m) {
       .def(
           "readSettings",
           [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto = NULL) {
-//            py::
-//            py::scoped_ostream_redirect stream(
-//                std::cout,                                // std::ostream&
-//                py::module::import("sys").attr("stdout")  // Python output
-//            );
+            //            py::
+            //            py::scoped_ostream_redirect stream(
+            //                std::cout,                                //
+            //                std::ostream&
+            //                py::module::import("sys").attr("stdout")  //
+            //                Python output
+            //            );
             return s.readSettings(filename, proto);
           },
           py::arg("filename"), py::arg("proto") = shared_ptr<Protocol>(NULL))
