@@ -118,12 +118,10 @@ void init_cells(py::module& m) {
                                return Cellars_view(cell, Cellars_view::pars);
                              })
       .def_property_readonly("type", &CellKernel::type)
-      .def_property("optionStr", &CellKernel::optionStr,
-                    static_cast<void (CellKernel::*)(std::string)>(
-                        &CellKernel::setOption))
-      .def_property(
-          "option", &CellKernel::option,
-          static_cast<void (CellKernel::*)(int)>(&CellKernel::setOption));
+      .def("optionsMap", &CellKernel::optionsMap)
+      .def("setOption", &CellKernel::setOption, py::arg("name"),
+           py::arg("value"))
+      .def("getOption", &CellKernel::option, py::arg{"name"});
 
   py::class_<Cell, std::shared_ptr<Cell>, CellKernel>(
       m_Cells, "Cell",
