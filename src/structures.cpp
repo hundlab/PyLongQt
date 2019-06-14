@@ -18,11 +18,13 @@ void init_structures(py::module& m) {
            py::arg("perc") = true, py::arg("val") = 1)
       .def("getCondConst", &Node::getCondConst,
            "get the conductivity value of a side", py::arg("s"))
-      .def_readonly("cell", &Node::cell)
+      .def_property_readonly(
+          "cell",
+          static_cast<shared_ptr<Cell> (Node::*)(void) const>(&Node::cell))
       //            .def_readwrite("rd",&Node::rd)
       //        .def_readwrite("condConst", &Node::condConst)
       .def("__repr__", [](Node& n) {
-        return "<Node " + string(py::repr(py::cast(n.cell))) + ">";
+        return "<Node " + string(py::repr(py::cast(n.cell()))) + ">";
       });
   py::class_<Fiber>(m_Structures, "Fiber", "A 1D line of nodes")
       .def(py::init<int, LongQt::CellUtils::Side>())
@@ -81,12 +83,13 @@ void init_structures(py::module& m) {
              }
              return resList;
            })
-//      .def("__setitem__",
-//           [](Grid& g, const pair<int, int>& pos, std::shared_ptr<Cell> cell) {
-//             CellInfo info(pos.first, pos.second);
-//             info.cell = cell;
-//             g.setCellTypes(info);
-//           })
+      //      .def("__setitem__",
+      //           [](Grid& g, const pair<int, int>& pos, std::shared_ptr<Cell>
+      //           cell) {
+      //             CellInfo info(pos.first, pos.second);
+      //             info.cell = cell;
+      //             g.setCellTypes(info);
+      //           })
       .def("getRow", [](Grid& g, int i) { return &g.rows[i]; },
            py::return_value_policy::reference_internal)
       .def("getColumn", [](Grid& g, int i) { return &g.columns[i]; },

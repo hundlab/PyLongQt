@@ -13,8 +13,8 @@
 #include "runsim.h"
 #include "settingsIO.h"
 
-#include <pybind11/stl.h>
 #include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 
 using namespace LongQt;
 using namespace std;
@@ -200,7 +200,7 @@ void init_misc(py::module& m) {
       .def("setupMeasures", &MeasureManager::setupMeasures,
            "Get measures ready for simulation")
       .def("measure", &MeasureManager::measure, "measure the variables",
-           py::arg("time"));
+           py::arg("time"), py::arg("write") = false);
   py::class_<GridMeasureManager, MeasureManager>(m_Misc, "_GridMeasureManager")
       .def(py::init<shared_ptr<GridCell>>())
       .def_property("dataNodes",
