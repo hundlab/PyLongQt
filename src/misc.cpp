@@ -15,6 +15,13 @@
 
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl_bind.h>
+
+PYBIND11_MAKE_OPAQUE(std::vector<LongQt::DataReader::TrialData<LongQt::DataReader::TraceHeader>>);
+PYBIND11_MAKE_OPAQUE(std::vector<LongQt::DataReader::TrialData<LongQt::DataReader::MeasHeader>>);
+
+PYBIND11_MAKE_OPAQUE(std::vector<LongQt::DataReader::TraceHeader>);
+PYBIND11_MAKE_OPAQUE(std::vector<LongQt::DataReader::MeasHeader>);
 
 using namespace LongQt;
 using namespace std;
@@ -214,7 +221,7 @@ void init_misc(py::module& m) {
                   py::return_value_policy::reference)
       .def(
           "readSettings",
-          [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto = NULL) {
+          [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto = nullptr) {
             //            py::
             //            py::scoped_ostream_redirect stream(
             //                std::cout,                                //
@@ -224,7 +231,7 @@ void init_misc(py::module& m) {
             //            );
             return s.readSettings(filename, proto);
           },
-          py::arg("filename"), py::arg("proto") = shared_ptr<Protocol>(NULL))
+          py::arg("filename"), py::arg("proto") = shared_ptr<Protocol>(nullptr))
       .def("writeSettings",
            [](SettingsIO& s, char* filename, shared_ptr<Protocol> proto) {
              s.writeSettings(filename, proto);
@@ -268,6 +275,68 @@ void init_misc(py::module& m) {
            "Append simulations to run")
       .def("clear", &RunSim::clear, "Clear list of simulations to run");
 
+  py::bind_vector<vector<DataReader::TrialData<DataReader::TraceHeader>>>(m, "VectorTrace")
+          .def("__repr__", [m](const vector<DataReader::TrialData<DataReader::TraceHeader>>& self){
+      unsigned int max_lines = m.attr("max_print_lines").cast<unsigned int>();
+      std::string out = "[";
+      unsigned int i = 0;
+      for(; i < max_lines && i < self.size(); ++i) {
+          py::object py_header = py::cast(self[i]);
+          out += py::repr(py_header).cast<std::string>() + ",\n";
+      }
+      if(i == max_lines && max_lines < self.size()) {
+          out += "...";
+      }
+      out += "]";
+      return out;
+  });
+  py::bind_vector<vector<DataReader::TrialData<DataReader::MeasHeader>>>(m, "VectorMeas")
+          .def("__repr__", [m](const vector<DataReader::TrialData<DataReader::MeasHeader>>& self){
+      unsigned int max_lines = m.attr("max_print_lines").cast<unsigned int>();
+      std::string out = "[";
+      unsigned int i = 0;
+      for(; i < max_lines && i < self.size(); ++i) {
+          py::object py_header = py::cast(self[i]);
+          out += py::repr(py_header).cast<std::string>() + ",\n";
+      }
+      if(i == max_lines && max_lines < self.size()) {
+          out += "...";
+      }
+      out += "]";
+      return out;
+  });
+
+  py::bind_vector<vector<DataReader::TraceHeader>>(m, "VectorTraceHeader")
+          .def("__repr__", [m](const vector<DataReader::TraceHeader>& self){
+      unsigned int max_lines = m.attr("max_print_lines").cast<unsigned int>();
+      std::string out = "[";
+      unsigned int i = 0;
+      for(; i < max_lines && i < self.size(); ++i) {
+          py::object py_header = py::cast(self[i]);
+          out += py::repr(py_header).cast<std::string>() + ",\n";
+      }
+      if(i == max_lines && max_lines < self.size()) {
+          out += "...";
+      }
+      out += "]";
+      return out;
+  });
+  py::bind_vector<vector<DataReader::MeasHeader>>(m, "VectorMeasHeader")
+          .def("__repr__", [m](const vector<DataReader::MeasHeader>& self){
+      unsigned int max_lines = m.attr("max_print_lines").cast<unsigned int>();
+      std::string out = "[";
+      unsigned int i = 0;
+      for(; i < max_lines && i < self.size(); ++i) {
+          py::object py_header = py::cast(self[i]);
+          out += py::repr(py_header).cast<std::string>() + ",\n";
+      }
+      if(i == max_lines && max_lines < self.size()) {
+          out += "...";
+      }
+      out += "]";
+      return out;
+  });
+
   py::class_<DataReader> data_reader(m_Misc, "DataReader",
                                      "Reads data written by a simulation");
   data_reader
@@ -289,11 +358,18 @@ void init_misc(py::module& m) {
           "Get the trial numbers from a directory", py::arg("dir"));
   py::class_<DataReader::TSVData>(data_reader, "TSVData",
                                   "Holds data read by one file")
+      .def("__repr__", [](const DataReader::TSVData& self) {
+            return "<TraceHeader for trial="+to_string(self.trial)+"with header, data["
+                    +to_string(self.data.size())+"]>";
+        })
       .def_readonly("header", &DataReader::TSVData::header)
       .def_readwrite("data", &DataReader::TSVData::data)
       .def_readonly("trial", &DataReader::TSVData::trial);
   py::class_<DataReader::MeasHeader>(data_reader, "MeasHeader",
                                      "The header entry for measured data")
+      .def("__repr__", [](const DataReader::MeasHeader& self) {
+            return "<TraceHeader for var="+self.var_name+", prop="+self.prop_name+">";
+        })
       .def_readonly("cell_info", &DataReader::MeasHeader::cell_info)
       .def_readonly("cell_info_parsed",
                     &DataReader::MeasHeader::cell_info_parsed)
@@ -301,24 +377,43 @@ void init_misc(py::module& m) {
       .def_readonly("prop_name", &DataReader::MeasHeader::prop_name);
   py::class_<DataReader::TraceHeader>(data_reader, "TraceHeader",
                                       "The header entry for trace data")
+      .def("__repr__", [](const DataReader::TraceHeader& self) {
+            return "<TraceHeader for var="+self.var_name+">";
+        })
       .def_readonly("cell_info", &DataReader::TraceHeader::cell_info)
       .def_readonly("cell_info_parsed",
                     &DataReader::TraceHeader::cell_info_parsed)
       .def_readonly("var_name", &DataReader::TraceHeader::var_name);
   py::class_<DataReader::TrialData<DataReader::MeasHeader>>(
       data_reader, "MeasData", "Header and data from a measure file")
+      .def("__repr__", [](const DataReader::TrialData<DataReader::MeasHeader>& self) {
+            return "<MeasData with header, data["+to_string(self.data.size())+"]>";
+        })
       .def_readonly("header",
-                    &DataReader::TrialData<DataReader::MeasHeader>::header)
+                    &DataReader::TrialData<DataReader::MeasHeader>::header,
+                    py::return_value_policy::reference_internal)
       .def_readonly("data",
-                    &DataReader::TrialData<DataReader::MeasHeader>::data);
+                    &DataReader::TrialData<DataReader::MeasHeader>::data,
+                    py::return_value_policy::reference_internal);
   py::class_<DataReader::TrialData<DataReader::TraceHeader>>(
       data_reader, "TraceData", "Header and data from a trace file")
+      .def("__repr__", [](const DataReader::TrialData<DataReader::TraceHeader>& self) {
+            return "<TraceData with header, data["+to_string(self.data.size())+"]>";
+        })
       .def_readonly("header",
-                    &DataReader::TrialData<DataReader::TraceHeader>::header)
+                    &DataReader::TrialData<DataReader::TraceHeader>::header,
+                    py::return_value_policy::reference_internal)
       .def_readonly("data",
-                    &DataReader::TrialData<DataReader::TraceHeader>::data);
+                    &DataReader::TrialData<DataReader::TraceHeader>::data,
+                    py::return_value_policy::reference_internal);
   py::class_<DataReader::SimData>(data_reader, "SimData",
                                   "Data from an entire simulation")
-      .def_readwrite("trace", &DataReader::SimData::trace)
-      .def_readwrite("meas", &DataReader::SimData::meas);
+      .def("__repr__", [](const DataReader::SimData& self) {
+            return "<SimData with meas["+to_string(self.meas.size())
+                +"], trace["+to_string(self.trace.size())+"]>";
+        })
+      .def_readwrite("trace", &DataReader::SimData::trace,
+                     py::return_value_policy::reference_internal)
+      .def_readwrite("meas", &DataReader::SimData::meas,
+                     py::return_value_policy::reference_internal);
 }

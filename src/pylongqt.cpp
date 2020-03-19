@@ -54,6 +54,7 @@ PYBIND11_MODULE(PyLongQt, m) {
         : Logger::getInstance()->delSTDOut();
   });
   m.attr("version") = CellUtils::version;
+  m.attr("max_print_lines") = 20;
 
   // py::register_exception<std::runtime_error>(m, "RuntimeException");
   init_cells(m);
