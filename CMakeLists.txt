@@ -10,6 +10,7 @@ project(PyLongQt VERSION 0.2)
 
 # Find includes in corresponding build directories
 #Release Debug
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 #set_target_properties(PyLongQt PROPERTIES
 #    CXX_STANDARD 17)
