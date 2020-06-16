@@ -177,9 +177,20 @@ void init_cells(py::module& m) {
       .def(py::init<>());
   py::class_<FR, std::shared_ptr<FR>, Cell>(m_Cells, "FaberRudy")
       .def(py::init<>());
-  py::class_<GpbAtrialOnal17, std::shared_ptr<GpbAtrialOnal17>, Cell>(
+
+  class PyGpbAtrialOnal17: public GpbAtrialOnal17 {
+  public:
+      using GpbAtrialOnal17::GpbAtrialOnal17;
+      PyGpbAtrialOnal17* clone() override {PYBIND11_OVERLOAD(PyGpbAtrialOnal17*, PyGpbAtrialOnal17, clone, );}
+      void setup() override {PYBIND11_OVERLOAD(void, PyGpbAtrialOnal17, setup, );}
+      const char* type() const override {PYBIND11_OVERLOAD_NAME(const char*, GpbAtrialOnal17, "cell_type", type, );}
+      void updateIna() override {PYBIND11_OVERLOAD(void, GpbAtrialOnal17, updateIna, );}
+  };
+  py::class_<GpbAtrialOnal17, PyGpbAtrialOnal17, std::shared_ptr<GpbAtrialOnal17>, Cell>(
       m_Cells, "GpbAtrialOnal17")
-      .def(py::init<>());
+      .def(py::init<>())
+      .def("updateIna", &GpbAtrialOnal17::updateIna);
+
   py::class_<GridCell, std::shared_ptr<GridCell>, Cell>(m_Cells, "GridCell")
       .def(py::init<>())
 // windows compiler static issues
