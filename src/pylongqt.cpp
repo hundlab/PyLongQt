@@ -28,6 +28,13 @@ using std::string;
   return measMap.count(name) > 0 ? measMap[name] : defaultMeas;
 };*/
 
+void setVerbose(bool on) {
+    on ? Logger::getInstance()
+             ->STDOut(new std::ostream(new
+                 py::detail::pythonbuf(py::module::import("sys").attr("stdout"))))
+        : Logger::getInstance()->delSTDOut();
+}
+
 PYBIND11_MODULE(PyLongQt, m) {
   auto logger = Logger::getInstance();
   logger->exceptionEnabled = true;
@@ -47,12 +54,7 @@ PYBIND11_MODULE(PyLongQt, m) {
       .value("left", CellUtils::left)
       .export_values();
   //this relies on a pybind11 detail
-  m.def("verbose", [](bool on) {
-    on ? Logger::getInstance()
-             ->STDOut(new std::ostream(new
-                 py::detail::pythonbuf(py::module::import("sys").attr("stdout"))))
-        : Logger::getInstance()->delSTDOut();
-  });
+  m.def("verbose", &setVerbose);
   m.attr("version") = CellUtils::version;
   m.attr("max_print_lines") = 20;
 
@@ -61,4 +63,5 @@ PYBIND11_MODULE(PyLongQt, m) {
   init_protocols(m);
   init_structures(m);
   init_misc(m);
+  setVerbose(true);
 }

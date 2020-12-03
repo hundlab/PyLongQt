@@ -86,8 +86,8 @@ void init_protocols(py::module& m) {
       .def("clone", &Protocol::clone)
       .def("runSim", &Protocol::runSim, "Run all the trials consecutively")
       .def_property("trial",
-                    (unsigned int (Protocol::*)(void) const) & Protocol::trial,
-                    (bool (Protocol::*)(unsigned int)) & Protocol::trial)
+                    (int (Protocol::*)(void) const) & Protocol::trial,
+                    (bool (Protocol::*)(int)) & Protocol::trial)
       .def("runTrial", &Protocol::runTrial, "Run the current trial")
       .def_property(
           "cell", (shared_ptr<Cell>(Protocol::*)(void) const) & Protocol::cell,
@@ -112,7 +112,8 @@ void init_protocols(py::module& m) {
       .def_property("datadir", [](Protocol& p) { return p.parsStr("datadir"); },
                     [](Protocol& p, string val) { p.parsStr("datadir", val); })
       .def_readwrite("meastime", &Protocol::meastime)
-      .def_readwrite("numtrials", &Protocol::numtrials)
+      .def_property("numtrials", (int(Protocol::*)(void) const) &Protocol::numtrials,
+          (void(Protocol::*)(int)) &Protocol::numtrials)
       .def_readwrite("readCellState", &Protocol::readCellState)
       .def_readwrite("simvarfile", &Protocol::simvarfile)
       .def_readwrite("tMax", &Protocol::tMax)
@@ -124,6 +125,44 @@ void init_protocols(py::module& m) {
            py::arg("str") = "", py::arg("basedir") = "",
            py::arg("appendtxt") = "")
       .def("mkDirs", &Protocol::mkDirs)
+      .def("setRunDuring", [] (Protocol& p, std::function<void(Protocol*)> func, double firstRun = -1,
+           double runEvery = -1, int numruns = -1) {
+            auto new_func = [func] (Protocol& p) { func(&p); };
+            p.setRunDuring(new_func, firstRun, runEvery, numruns);},
+           py::arg("func"), py::arg("firstRun") = -1,
+           py::arg("runEvery") = -1, py::arg("numruns") = -1,
+           "This takes a function which will"
+            " be called durring the simulation"
+           " at time firstRun, and then every runEvery"
+           " after that until the end of the simulation"
+           " or func has been run numruns number of times."
+            "The function must take a the "
+            "protocol class which will be run "
+            "as an arguement, and it should not "
+            "return anything.")
+      .def("setRunBefore", [] (Protocol& p, std::function<void(Protocol*)> func) {
+            auto new_func = [func] (Protocol& p) { func(&p); };
+            p.setRunBefore(new_func);},
+           py::arg("func"),
+           "This takes a function which will"
+            " be called before the simulation"
+            " is started but after the"
+            " simulation has been setup. "
+            "The function must take a the "
+            "protocol class which will be run "
+            "as an arguement, and it should not "
+            "return anything.")
+      .def("setRunAfter", [] (Protocol& p, std::function<void(Protocol*)> func) {
+               auto new_func = [func] (Protocol& p) { func(&p); };
+               p.setRunBefore(new_func);},
+           py::arg("func"),
+           "This takes a function which will"
+            " be called after the simulation"
+            " is finished. "
+            "The function must take a the "
+            "protocol class which will be run "
+            "as an arguement, and it should not "
+            "return anything.")
       .def_readwrite("numruns", &Protocol::numruns,
                      "Number of times to run runDurring")
       .def_readwrite("runEvery", &Protocol::runEvery,

@@ -5,6 +5,7 @@
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/cast.h>
 #define slots Q_SLOTS
 #include <memory>
 
