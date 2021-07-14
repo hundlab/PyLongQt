@@ -18,6 +18,7 @@ build/*
 PyLongQt_autogen/
 CMakeCache.txt
 CMakeFiles/
+_build
 
 #data files and temp text editor files
 data*/
