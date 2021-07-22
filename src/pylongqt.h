@@ -16,6 +16,6 @@ PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 void init_cells(py::module &m);
 void init_protocols(py::module &m);
 void init_structures(py::module &m);
-void init_misc(py::module &m);
-
+void init_measures(py::module &m);
+void init_pvars(py::module &m);
 #endif

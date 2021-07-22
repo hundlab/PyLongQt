@@ -35,7 +35,8 @@ set(PyLongQt_sources
     "src/cells.cpp"
     "src/protocols.cpp"
     "src/structures.cpp"
-    "src/misc.cpp"
+    "src/measures.cpp"
+    "src/pvars.cpp"
 )
 
 #link_directories(${modellib_LIBRARY})
