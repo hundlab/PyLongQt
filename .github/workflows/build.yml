@@ -112,6 +112,6 @@ jobs:
       - name: Upload PyLongQt
         uses: actions/upload-artifact@v2
         with:
-          name: PyLongQt-${{ runner.os }}
+          name: PyLongQt-${{ runner.os }}-${{ github.sha }}
           path: ./install
 
