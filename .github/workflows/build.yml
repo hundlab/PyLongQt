@@ -53,9 +53,12 @@ jobs:
           submodules: true
 
       - name: Download LongQt-model
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.ACC_LONGQT_MODEL}}
+          workflow: build.yml
           name: LongQt-model-${{ runner.os }}
+          repo: hundlab/LongQt-model
 #          path: ./install
 
       - name: Print env
@@ -94,7 +97,7 @@ jobs:
             -B . \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
             -DCMAKE_INSTALL_PREFIX:PATH=./install \
-            -DLongQt-model_DIR:PATH= ${{ matrix.config.longqt-model }} \
+            -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }} \
             -G "${{ matrix.config.generators }}"
 
       - name: Build
