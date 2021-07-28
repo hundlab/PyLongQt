@@ -18,7 +18,8 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../../build/PyLongQt'))
+#sys.path.insert(0, os.path.abspath('../../build/PyLongQt'))
+sys.path.insert(0, os.path.abspath('./install/lib'))
 
 # -- General configuration ------------------------------------------------
 
@@ -33,6 +34,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
+    'rtds_action',
 ]
 
 autosummary_generate = True
@@ -301,3 +303,21 @@ autodoc_default_options = {
         'special-members': '__contains__,__getitem__,__setitem__,__iter__,__delitem__',
         'autoclass-content': 'both'
 }
+
+# -- Get github complied PyLongQt: rtsd_action --
+
+# The repo name
+rtds_action_github_repo = 'hundlab/PyLongQt'
+
+# The path where the artifact will be extracted
+rtds_action_path = './'
+
+# The prefix of the artifact
+rtds_action_artifact_prefix = 'PyLongQt-Linux-'
+
+# The github token for accessing the repository
+rtds_action_github_token = os.environ["GITHUB_TOKEN"]
+
+# Error if artifact missing
+rtds_action_error_if_missing = True
+
