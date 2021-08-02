@@ -113,12 +113,12 @@ jobs:
       - name: Upload PyLongQt
         uses: actions/upload-artifact@v2
         with:
-          name: PyLongQt-${{ runner.os }}-${{ github.sha }}
+          name: PyLongQt-${{ runner.os }} #-${{ github.sha }}
           path: ./install
 
-      - name: Trigger ReadTheDocs Build
-        uses: dfm/rtds-action@v1
-        with:
-          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
-          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
-          commit_ref: ${{ github.ref }}
+#      - name: Trigger ReadTheDocs Build
+#        uses: dfm/rtds-action@v1
+#        with:
+#          webhook_url: ${{ secrets.RTDS_WEBHOOK_URL }}
+#          webhook_token: ${{ secrets.RTDS_WEBHOOK_TOKEN }}
+#          commit_ref: ${{ github.ref }}

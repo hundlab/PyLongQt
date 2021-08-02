@@ -18,9 +18,9 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-os.makedirs('./install/lib', exist_ok=True)
-#sys.path.insert(0, os.path.abspath('../../build/PyLongQt'))
-sys.path.insert(0, os.path.abspath('./install/lib'))
+#os.makedirs('./install/lib', exist_ok=True)
+sys.path.insert(0, os.path.abspath('../../build/PyLongQt'))
+#sys.path.insert(0, os.path.abspath('./install/lib'))
 
 # -- General configuration ------------------------------------------------
 
@@ -35,7 +35,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
-    'rtds_action',
+#    'rtds_action',
 ]
 
 autosummary_generate = True
