@@ -1,0 +1,374 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cell Parameter Configuration &#8212; PyLongQt 0.5 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Measures" href="measures.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-PyLongQt.CellParameters">
+<span id="cell-parameter-configuration"></span><h1>Cell Parameter Configuration<a class="headerlink" href="#module-PyLongQt.CellParameters" title="Permalink to this headline">¶</a></h1>
+<p>Configure the cell parameters for each trial</p>
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsCell">
+<em class="property">class </em><code class="descclassname">PyLongQt.CellParameters.</code><code class="descname">PvarsCell</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for protocol specific pvars,
+pvars control cell parameters, which are values set at the
+beginning of a simulation and are not changed throughout. Different
+trials may have different parameter values. pvars provides a simple
+class to control these cell parameter settings.</p>
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsCell.Distribution">
+<em class="property">class </em><code class="descname">Distribution</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.Distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Possible distributions for cell parameter rules</p>
+<p>Members:</p>
+<blockquote>
+<div><p>none : No distribution</p>
+<p>normal : Gaussian distribution <span class="math notranslate nohighlight">\(N(\mu, \sigma^2)\)</span></p>
+<p>lognormal : Log-Gaussian distribution <span class="math notranslate nohighlight">\(exp(N(\mu, \sigma^2))\)</span></p>
+</div></blockquote>
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsCell.Distribution.name">
+<code class="descname">name</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.Distribution.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle) -&gt; str</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">(self</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsCell.IonChanParam">
+<em class="property">class </em><code class="descname">IonChanParam</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.IonChanParam" title="Permalink to this definition">¶</a></dt>
+<dd><p>A rule for a cell parameter</p>
+<p>Depending on the distribution the rule’s values have different meanings</p>
+<p>Distribution values:</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">none:</th><td class="field-body"><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">val1:</th><td class="field-body">The starting value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">val2:</th><td class="field-body">The increment amount for each trial (may be positive or negative)</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">normal:</th><td class="field-body"><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">val1:</th><td class="field-body">The mean <span class="math notranslate nohighlight">\(\mu\)</span> (may be positive or negative)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">val2:</th><td class="field-body">The standard deviation <span class="math notranslate nohighlight">\(\sigma\)</span> (must be positive)</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">lognormal:</th><td class="field-body"><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">val1:</th><td class="field-body">The mean of the underlying normal distribution <span class="math notranslate nohighlight">\(\mu\)</span> (may be positive or negative)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">val2:</th><td class="field-body">The standard deviation of the underlying normal distribution <span class="math notranslate nohighlight">\(\sigma\)</span> (must be positive)</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsCell.IonChanParam.dist">
+<code class="descname">dist</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.IonChanParam.dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distribution, which alters the meaning of the other members</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsCell.IonChanParam.val0">
+<code class="descname">val0</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.IonChanParam.val0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depends on distribution, see class description</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsCell.IonChanParam.val1">
+<code class="descname">val1</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.IonChanParam.val1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depends on distribution, see class description</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.__delitem__">
+<code class="descname">__delitem__</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em>, <em>name: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Delete a specific rule</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body">The cell parameter’s name</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em>, <em>name: str</em><span class="sig-paren">)</span> &#x2192; LongQt::PvarsCell::IonChanParam<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Retrieve the rule for a cell parameter</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body">The cell parameter’s name</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.__iter__">
+<code class="descname">__iter__</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em><span class="sig-paren">)</span> &#x2192; iterator<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over cell parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.__setitem__">
+<code class="descname">__setitem__</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em>, <em>name: str</em>, <em>parameter: LongQt::PvarsCell::IonChanParam</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Insert a new rule to define cell parameter values</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">name:</th><td class="field-body">The cell parameter’s name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">parameter:</th><td class="field-body">The rule which defines how the cell parameter will be set</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.calcIonChanParams">
+<code class="descname">calcIonChanParams</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.calcIonChanParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-calculate the ion channel parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all of the rules</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsCell.setIonChanParams">
+<code class="descname">setIonChanParams</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsCell</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsCell.setIonChanParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply ion channel parameters to cell(s)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsCurrentClamp">
+<em class="property">class </em><code class="descclassname">PyLongQt.CellParameters.</code><code class="descname">PvarsCurrentClamp</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCurrentClamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pvars specialized for the current clamp protocol</p>
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsCurrentClamp.TIonChanParam">
+<em class="property">class </em><code class="descname">TIonChanParam</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCurrentClamp.TIonChanParam" title="Permalink to this definition">¶</a></dt>
+<dd><p>IonChanParam specialized for the current clamp protocol, this subclass will be
+created automatically when an IonChanParam is assigned to a pvars</p>
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsCurrentClamp.TIonChanParam.trials">
+<code class="descname">trials</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsCurrentClamp.TIonChanParam.trials" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cell parameter values for each trial</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsGrid">
+<em class="property">class </em><code class="descclassname">PyLongQt.CellParameters.</code><code class="descname">PvarsGrid</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pvars specialized for the grid protocol</p>
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsGrid.MIonChanParam">
+<em class="property">class </em><code class="descname">MIonChanParam</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.MIonChanParam" title="Permalink to this definition">¶</a></dt>
+<dd><p>IonChanParam specialized for the gird protocol, this subclass will be
+created automatically when an IonChanParam is assigned to a pvars</p>
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsGrid.MIonChanParam.cells">
+<code class="descname">cells</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.MIonChanParam.cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cells and the values they will be set to</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsGrid.MIonChanParam.maxDist">
+<code class="descname">maxDist</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.MIonChanParam.maxDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum distance from the start that the rule will be applied</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsGrid.MIonChanParam.maxVal">
+<code class="descname">maxVal</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.MIonChanParam.maxVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maxiumum value the rule will set the parameter for any cell to</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsGrid.MIonChanParam.startCells">
+<code class="descname">startCells</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.MIonChanParam.startCells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The starting cells. These are the first cells the rule is applied to, and the rule step is appliedoutward until the maxiumum distance is obtained.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsGrid.setMaxDistAndVal">
+<code class="descname">setMaxDistAndVal</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsGrid</em>, <em>name: str</em>, <em>maxDist: int</em>, <em>maxVal: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.setMaxDistAndVal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum distance and the maximum value for a rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.CellParameters.PvarsGrid.setStartCells">
+<code class="descname">setStartCells</code><span class="sig-paren">(</span><em>self: PyLongQt.CellParameters.PvarsGrid, name: str, startCells: Set[Tuple[int, int]]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.CellParameters.PvarsGrid.setStartCells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the cell locations in the grid that the rule will start from</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsVoltageClamp">
+<em class="property">class </em><code class="descclassname">PyLongQt.CellParameters.</code><code class="descname">PvarsVoltageClamp</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsVoltageClamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pvars specialized for the current clamp protocol</p>
+<dl class="class">
+<dt id="PyLongQt.CellParameters.PvarsVoltageClamp.SIonChanParam">
+<em class="property">class </em><code class="descname">SIonChanParam</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsVoltageClamp.SIonChanParam" title="Permalink to this definition">¶</a></dt>
+<dd><p>IonChanParam specialized for the voltage clamp protocol, this subclass will be
+created automatically when an IonChanParam is assigned to a pvars</p>
+<dl class="attribute">
+<dt id="PyLongQt.CellParameters.PvarsVoltageClamp.SIonChanParam.val">
+<code class="descname">val</code><a class="headerlink" href="#PyLongQt.CellParameters.PvarsVoltageClamp.SIonChanParam.val" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cell parameter value for the trial</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PyLongQt</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="toplevel.html">Top-level functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cell Parameter Configuration</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="measures.html" title="previous chapter">Measures</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Thomas Hund.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/pvars.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
