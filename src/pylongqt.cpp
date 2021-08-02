@@ -62,7 +62,7 @@ PYBIND11_MODULE(PyLongQt, m) {
 
           .. Note::
             Further documentation on LongQt and its graphical interface as well as sample code can be found in
-            the `LongQt manual <www.longqt.readthedocs.io>`_
+            the `LongQt manual <https://www.longqt.readthedocs.io>`_
         )pbdoc";
 
   m.attr("cellMap") =
