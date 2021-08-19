@@ -74,4 +74,4 @@ endif()
 set_target_properties(PyLongQt PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
                                          SUFFIX "${PYTHON_MODULE_EXTENSION}")
 
-install(TARGETS PyLongQt DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(TARGETS PyLongQt DESTINATION ${CMAKE_INSTALL_PREFIX})
