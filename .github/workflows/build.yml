@@ -37,7 +37,7 @@ jobs:
               build_type: "Release",
               cc: "gcc",
               cxx: "g++",
-              generators: "Unix Makefiles",
+              generators: "Ninja",
               longqt-model: ./share/cmake/LongQt-model,
               qt5_path: "./5.15.2/gcc_64/lib/cmake/Qt5",
               python: python3,
@@ -73,10 +73,19 @@ jobs:
           echo github.event.action: ${{ github.event.action }}
           echo github.event_name: ${{ github.event_name }}
 
+      - name: Install python dependencies
+        run: |
+          ${{ matrix.config.python }} -m pip install \
+            aqtinstall \
+            setuptools \
+            wheel \
+            scikit-build \
+            cmake \
+            ninja
+
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          py -m pip install aqtinstall
           py -m aqt install 5.15.2 windows desktop win64_msvc2019_64
           cmake --version
           cmd "${{ matrix.config.environment_script }}"
@@ -85,8 +94,7 @@ jobs:
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install --assume-yes build-essential mesa-common-dev libglu1-mesa-dev
-          python3 -m pip install aqtinstall
+          sudo apt-get install --assume-yes build-essential mesa-common-dev libglu1-mesa-dev ninja
           python3 -m aqt install 5.15.2 linux desktop gcc_64
           cmake --version
           gcc --version
@@ -95,7 +103,6 @@ jobs:
         if: startsWith(matrix.config.os, 'macos')
         run: |
           brew install ninja
-          python3 -m pip install aqtinstall
           python3 -m aqt install 5.15.2 mac desktop clang_64
           ninja --version
           cmake --version
