@@ -26,7 +26,10 @@ jobs:
 #              cc: "cl",
 #              cxx: "cl",
 #              environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-#              generators: "Visual Studio 16 2019"
+#              generators: "Visual Studio 16 2019",
+#              qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5",
+#              longqt-model: ./cmake,
+#              python: py,
 #            }
           - {
               name: "Ubuntu_Latest",
@@ -35,7 +38,9 @@ jobs:
               cc: "gcc",
               cxx: "g++",
               generators: "Unix Makefiles",
-              longqt-model: ./share/cmake/LongQt-model
+              longqt-model: ./share/cmake/LongQt-model,
+              qt5_path: "./5.15.2/gcc_64/lib/cmake/Qt5",
+              python: python3,
             }
 #          - {
 #              name: "macOS Latest Clang",
@@ -43,7 +48,10 @@ jobs:
 #              build_type: "Release",
 #              cc: "clang",
 #              cxx: "clang++",
-#              generators: "Ninja"
+#              generators: "Ninja",
+#              qt5_path: "./5.15.2/clang_64/lib/cmake/Qt5",
+#              longqt-model: ./share/cmake/LongQt-model,
+#              python: python3,
 #            }
     
     steps:
@@ -59,7 +67,6 @@ jobs:
           workflow: build.yml
           name: LongQt-model-${{ runner.os }}
           repo: hundlab/LongQt-model
-#          path: ./install
 
       - name: Print env
         run: |
@@ -69,7 +76,8 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          choco install cmake
+          py -m pip install aqtinstall
+          py -m aqt install 5.15.2 windows desktop win64_msvc2019_64
           cmake --version
           cmd "${{ matrix.config.environment_script }}"
  
@@ -77,44 +85,37 @@ jobs:
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install --assume-yes cmake build-essential qt5-default
+          sudo apt-get install --assume-yes build-essential mesa-common-dev libglu1-mesa-dev
+          python3 -m pip install aqtinstall
+          python3 -m aqt install 5.15.2 linux desktop gcc_64
           cmake --version
           gcc --version
 
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install cmake ninja qt@5
-          brew link qt5 --force
+          brew install ninja
+          python3 -m pip install aqtinstall
+          python3 -m aqt install 5.15.2 mac desktop clang_64
           ninja --version
           cmake --version
+          clang --version
 
-      - name: Configure
+      - name: Build Wheel
         shell: bash
         run: |
-          mkdir -p build
-          cmake \
-            -S . \
-            -B . \
+          ${{ matrix.config.python }} \
+            setup.py build bdist_wheel -- \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-            -DCMAKE_INSTALL_PREFIX:PATH=./install \
             -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }} \
+            -DQt5_DIR:PATH=${{ matrix.config.qt5_path }} \
             -G "${{ matrix.config.generators }}"
 
-      - name: Build
-        shell: bash
-        run: |
-          cmake --build . --config ${{ matrix.config.build_type }}
- 
-      - name: Install
-        shell: bash
-        run: cmake --install . --prefix ./install
-          
       - name: Upload PyLongQt
         uses: actions/upload-artifact@v2
         with:
           name: PyLongQt-${{ runner.os }} #-${{ github.sha }}
-          path: ./install
+          path: ./dist
 
 #      - name: Trigger ReadTheDocs Build
 #        uses: dfm/rtds-action@v1
