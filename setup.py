@@ -16,7 +16,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name='PyLongQt-hundlab',
     version='0.5',
-    license='GNU GPL v3.0'
+    license='GNU GPL v3.0',
     author='Thomas Hund',
     author_email='hund.1@osu.edu',
     description="Python bindings for LongQt",

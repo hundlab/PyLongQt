@@ -74,6 +74,7 @@ jobs:
           echo github.event_name: ${{ github.event_name }}
 
       - name: Install python dependencies
+        shell: bash
         run: |
           ${{ matrix.config.python }} -m pip install \
             aqtinstall \
@@ -106,7 +107,6 @@ jobs:
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          brew install ninja
           python3 -m aqt install 5.15.2 mac desktop clang_64
           ninja --version
           cmake --version
