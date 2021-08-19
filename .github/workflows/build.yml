@@ -94,7 +94,11 @@ jobs:
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install --assume-yes build-essential mesa-common-dev libglu1-mesa-dev ninja
+          sudo apt-get install --assume-yes \
+            build-essential \
+            mesa-common-dev \
+            libglu1-mesa-dev \
+            ninja-build
           python3 -m aqt install 5.15.2 linux desktop gcc_64
           cmake --version
           gcc --version
