@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar  9 13:29:32 2020
+Created on Mon Mar 9 13:29:32 2020
 
 @author: grat05
 """
 
-import PyLongQt as pylqt
 import numpy as np
 import pandas as pd
 
+from ._PyLongQt import DataReader
 
-def data2DataFrame(folder):
-    data = pylqt.Misc.DataReader.readDir(folder)
+def readAsDataFrame(folder):
+    """
+
+    """
+    data = DataReader.readDir(folder)
     traces_by_cell = []
     for trial in range(len(data.trace)):
         traces = data.trace[trial]
@@ -62,7 +65,7 @@ def data2DataFrame(folder):
                                                      columns=col_index))
     return traces_by_cell, measured_by_cell
 
-def data2Excel(fname_trace, fname_meas,\
+def convertDataToExcel(fname_trace, fname_meas,\
                data_folder = None,\
                traces_by_cell=None, measured_by_cell=None):
     if not data_folder is None:
@@ -82,7 +85,7 @@ def data2Excel(fname_trace, fname_meas,\
             df.to_excel(excel_writer=writer,\
                         sheet_name='Trial '+str(trial))
 
-def data2HDF(outfile, data_folder = None,\
+def convertDataToHDF(outfile, data_folder = None,\
              traces_by_cell=None, measured_by_cell=None):
     if not data_folder is None:
         traces_by_cell, measured_by_cell = data2DataFrame(data_folder)
@@ -114,3 +117,9 @@ def readHDF(outfile):
                 print("Key not trace or meansure with name: "+key)
     return traces_by_cell, measured_by_cell
                 
+
+#Add functions to DataReader
+DataReader.readAsDataFrame = readAsDataFrame
+DataReader.convertDataToExcel = convertDataToExcel
+DataReader.convertDataToHDF = convertDataToHDF
+DataReader.readHDF = readHDF

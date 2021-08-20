@@ -13,6 +13,9 @@ from skbuild import setup
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+with open("requirements.txt", "r", encoding="utf-8") as fh: 
+     install_requires = fh.read().splitlines()
+
 setup(
     name='hundlab-PyLongQt',
     version='0.5',
@@ -26,6 +29,7 @@ setup(
     project_urls={
         "Documentation": "https://hundlab.github.io/PyLongQt",
     },
+    install_requires=install_requires,
 #    ext_modules=ext_modules,
     packages=['PyLongQt'],
     package_dir={'PyLongQt': 'src'},
