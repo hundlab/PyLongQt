@@ -31,17 +31,17 @@ jobs:
               longqt-model: ./cmake,
               python: py,
             }
-          - {
-              name: "Ubuntu_Latest",
-              os: ubuntu-latest,
-              build_type: "Release",
-              cc: "gcc",
-              cxx: "g++",
-              generators: "Ninja",
-              longqt-model: ./share/cmake/LongQt-model,
-              qt5_path: "./5.15.2/gcc_64/lib/cmake/Qt5",
-              python: python3,
-            }
+#          - {
+#              name: "Ubuntu_Latest",
+#              os: ubuntu-latest,
+#              build_type: "Release",
+#              cc: "gcc",
+#              cxx: "g++",
+#              generators: "Ninja",
+#              longqt-model: ./share/cmake/LongQt-model,
+#              qt5_path: "./5.15.2/gcc_64/lib/cmake/Qt5",
+#              python: python3,
+#            }
           - {
               name: "macOS Latest Clang",
               os: macos-latest,
