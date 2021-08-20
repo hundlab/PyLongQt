@@ -1,1 +1,1 @@
-from PyLongQt import *
+from ._PyLongQt import *

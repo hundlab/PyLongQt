@@ -51,7 +51,7 @@ void setVerbose(bool on) {
         : Logger::getInstance()->delSTDOut();
 }
 
-PYBIND11_MODULE(PyLongQt, m) {
+PYBIND11_MODULE(_PyLongQt, m) {
   auto logger = Logger::getInstance();
   logger->exceptionEnabled = true;
 
