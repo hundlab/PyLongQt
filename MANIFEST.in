@@ -1,3 +1,0 @@
-include(lib/)
-include(include/)
-include(share/)

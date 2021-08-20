@@ -14,7 +14,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name='PyLongQt-hundlab',
+    name='hundlab-PyLongQt',
     version='0.5',
     license='GNU GPL v3.0',
     author='Thomas Hund',
