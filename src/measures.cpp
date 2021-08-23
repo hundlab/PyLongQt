@@ -59,7 +59,7 @@ void init_measures(py::module& m) {
            :selection: The selection of values to be measured)pbdoc",
            py::arg("varname"), py::arg("selection") = std::set<std::string>())
       .def("measureType", &MeasureFactory::measureType,
-           R"pbdoc(Returns the name of the measure class for that variable name
+           R"pbdoc(Returns the name of the measure class for that cell variable 
            :varname: The cell variable's name)pbdoc",
            py::arg("varname"))
       .def("measureOptions", &MeasureFactory::measureOptions,
@@ -83,14 +83,29 @@ void init_measures(py::module& m) {
           (double (MeasureManager::*)(void)) & MeasureManager::percrepol,
           (void (MeasureManager::*)(double)) & MeasureManager::percrepol,
           R"pbdoc(The percent repolarization at which an action potential ends)pbdoc")
+      .def_readonly("measMaker", &MeasureManager::measMaker)
       .def("addMeasure", &MeasureManager::addMeasure,
            R"pbdoc(Add a new cell variable to be measured
            :varname: The cell variable's name
            :selection: The variable's values to be measured)pbdoc",
            py::arg("varname"), py::arg("selection") = set<string>())
-      .def("setupMeasures", &MeasureManager::setupMeasures,
+      .def("removeMeasure", &MeasureManager::removeMeasure,
+	   R"pbdoc(Remove cell variable from being measured
+	   :varname: The cell variable's name)pbdoc",
+	   py::arg("varname"))
+      .def("measureOptions", [] (MeasureManager& self, std::string varname) {
+		auto measType = self.measMaker.measureType(varname);
+		return self.measMaker.measureOptions(measType);
+	   },
+	   R"pbdoc(List the possible options for a cell variable
+	   :varname: The cell variable's name)pbdoc",
+	   py::arg("varname"))
+      .def("cellVariables", [] (MeasureManager& self) {
+		return self.cell()->vars();},
+	   R"pbdoc(List the cell variables)pbdoc")
+      .def("_setupMeasures", &MeasureManager::setupMeasures,
            "Get measures ready for simulation")
-      .def("measure", &MeasureManager::measure,
+      .def("_measure", &MeasureManager::measure,
            R"pbdoc(Measure all of the variables
            :time: The current simulation time (ms)
            :write: Should the measured values be saved)pbdoc",
