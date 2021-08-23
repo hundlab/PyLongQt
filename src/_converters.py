@@ -11,11 +11,14 @@ import pandas as pd
 
 from ._PyLongQt import DataReader
 
-def readAsDataFrame(folder):
+def readAsDataFrame(folder, exclude_trials=set()):
     """
-
+    Read a folder in the same manner as :py:meth:`DataReader.readDir`
+    but return a DataFrame instead of a :py:class:`SimData` object
+    :folder: The directory which contains the simulation save files
+    :exclude_trials: Trials to exclude
     """
-    data = DataReader.readDir(folder)
+    data = DataReader.readDir(folder, exclude_trials)
     traces_by_cell = []
     for trial in range(len(data.trace)):
         traces = data.trace[trial]
@@ -68,6 +71,9 @@ def readAsDataFrame(folder):
 def convertDataToExcel(fname_trace, fname_meas,\
                data_folder = None,\
                traces_by_cell=None, measured_by_cell=None):
+    '''
+    
+    '''
     if not data_folder is None:
         traces_by_cell, measured_by_cell = data2DataFrame(data_folder)
     elif (traces_by_cell is None) or (measured_by_cell is None):
@@ -87,6 +93,9 @@ def convertDataToExcel(fname_trace, fname_meas,\
 
 def convertDataToHDF(outfile, data_folder = None,\
              traces_by_cell=None, measured_by_cell=None):
+    '''
+
+    '''
     if not data_folder is None:
         traces_by_cell, measured_by_cell = data2DataFrame(data_folder)
     elif (traces_by_cell is None) or (measured_by_cell is None):
@@ -104,6 +113,9 @@ def convertDataToHDF(outfile, data_folder = None,\
                       key='Measure_'+str(trial))
             
 def readHDF(outfile):
+    '''
+
+    '''
     traces_by_cell = []
     measured_by_cell = []
     with pd.HDFStore(outfile, mode='r') as store:

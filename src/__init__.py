@@ -6,3 +6,4 @@ from ._PyLongQt import *
 # Converters adds functions to read data directories
 # and convert them
 from . import _converters
+from . import _runsim
