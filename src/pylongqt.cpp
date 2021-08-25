@@ -132,6 +132,8 @@ PYBIND11_MODULE(_PyLongQt, m) {
            "Check if simulations are all finished")
       .def("progressRange", &RunSim::progressRange,
            "Return the min and max possible progress values")
+      .def("wait", &RunSim::wait,
+	   "Wait for the running simulation to finish")
       .def("progress", &RunSim::progress, "Return simulation progress")
       .def("progressPercent",
            [](RunSim& r) {
