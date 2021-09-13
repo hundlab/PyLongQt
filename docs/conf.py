@@ -19,7 +19,7 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #os.makedirs('./install/lib', exist_ok=True)
-sys.path.insert(0, os.path.abspath('../../build/PyLongQt'))
+#sys.path.insert(0, os.path.abspath('../../build/PyLongQt'))
 #sys.path.insert(0, os.path.abspath('./install/lib'))
 
 # -- General configuration ------------------------------------------------
@@ -35,6 +35,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
+    'sphinx_gallery.gen_gallery',
 #    'rtds_action',
 ]
 
@@ -151,7 +152,7 @@ html_static_path = ['_static']
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
-#html_extra_path = []
+#html_extra_path = ['extra']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -305,20 +306,27 @@ autodoc_default_options = {
         'autoclass-content': 'both'
 }
 
-# -- Get github complied PyLongQt: rtsd_action --
+## -- Get github complied PyLongQt: rtsd_action --
+#
+## The repo name
+#rtds_action_github_repo = 'hundlab/PyLongQt'
+#
+## The path where the artifact will be extracted
+#rtds_action_path = './'
+#
+## The prefix of the artifact
+#rtds_action_artifact_prefix = 'PyLongQt-Linux-'
+#
+## The github token for accessing the repository
+#rtds_action_github_token = os.environ["GITHUB_TOKEN"]
+#
+## Error if artifact missing
+#rtds_action_error_if_missing = True
+#
 
-# The repo name
-rtds_action_github_repo = 'hundlab/PyLongQt'
-
-# The path where the artifact will be extracted
-rtds_action_path = './'
-
-# The prefix of the artifact
-rtds_action_artifact_prefix = 'PyLongQt-Linux-'
-
-# The github token for accessing the repository
-rtds_action_github_token = os.environ["GITHUB_TOKEN"]
-
-# Error if artifact missing
-rtds_action_error_if_missing = True
+# Options for sphinx-gallery ----------------------------------------------
+sphinx_gallery_conf = {
+     'examples_dirs': '../examples',   # path to your example scripts
+     'gallery_dirs': 'auto_examples',  # path to where to save gallery generated output
+}
 

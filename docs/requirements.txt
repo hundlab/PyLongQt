@@ -1,1 +1,1 @@
-rtds-action
+sphinx-gallery

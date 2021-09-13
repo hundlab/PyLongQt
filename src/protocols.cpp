@@ -109,6 +109,9 @@ void init_protocols(py::module& m) {
            [](Clamp_view& v) { return py::make_iterator(v.clampsList); },
            R"pubdoc(Iterate over clamps)pubdoc",
            py::keep_alive<0, 1>())
+      .def("__repr__",
+	   [](Clamp_view& v) {
+	   	return py::print(v.clampsList); })	
       .def("fromList", &Clamp_view::fromList,
            R"pubdoc(Import clamps from a list)pubdoc",
            py::arg("voltageList"));

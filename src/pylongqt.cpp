@@ -15,6 +15,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>
 #include <pybind11/stl_bind.h>
+#include <pybind11/chrono.h>
 
 #include "settingsIO.h"
 
@@ -134,6 +135,10 @@ PYBIND11_MODULE(_PyLongQt, m) {
            "Return the min and max possible progress values")
       .def("wait", &RunSim::wait,
 	   "Wait for the running simulation to finish")
+      .def("wait_for", &RunSim::wait_for,
+	   R"pbdoc(Wait for the running simulation to finish
+	   :timeout: Time out wait in seconds)pbdoc",
+	   py::arg("timeout"))
       .def("progress", &RunSim::progress, "Return simulation progress")
       .def("progressPercent",
            [](RunSim& r) {
@@ -148,6 +153,9 @@ PYBIND11_MODULE(_PyLongQt, m) {
            R"pbdoc(Set a callback function for when all simulations have finished
            :callback: The function that will be called after all simulations have been run)pbdoc",
            py::arg("callback"))
+      .def_property("numThreads", (int (RunSim::*)(void)) &RunSim::numThreads,
+      	   (void (RunSim::*)(int)) &RunSim::numThreads,
+	   "The maximum number of threads that RunSim will use")
       .def("setSims",
            (void (RunSim::*)(std::vector<shared_ptr<Protocol>>)) &
                RunSim::setSims,

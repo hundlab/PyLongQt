@@ -38,5 +38,5 @@ def printProgressLoop(self, noTime:bool=False):
         print(text.format(taken, left, **fmt), end='')
         sleep(0.5)
 
-Runsim.printProgressLoop = printProgressLoop
+RunSim.printProgressLoop = printProgressLoop
 

@@ -17,3 +17,4 @@ Contents:
    structures
    measures
    pvars
+   auto_examples/index
