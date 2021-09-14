@@ -84,7 +84,7 @@ in LongQt as well as a few examples of more advanced options.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a curret clamp simulation,  also known as a paced...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a current clamp simulation,  also known as a pace...">
 
 .. only:: html
 

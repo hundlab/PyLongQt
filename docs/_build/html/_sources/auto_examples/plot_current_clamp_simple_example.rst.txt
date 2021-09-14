@@ -22,11 +22,11 @@
 Simple Current Clamp
 **********************
 
-This example illustrates how to setup and run a curret clamp simulation, 
+This example illustrates how to setup and run a current clamp simulation, 
 also known as a paced simulation on a single cell. Current clamp simulations
 involve pacing the cell with a set stimulus over time similarly to how
 the cells would be paced in the heart. To start, once  PyLongQt 
-is installed import it as seen below, this gives accesss to all of the 
+is installed import it as seen below, this gives accesses to all of the 
 classes and objects necessary to set up and run a simulation.
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-21
@@ -230,7 +230,7 @@ The next setup is the protocol's settings. For the current clamp
 protocol these control the pacing: how often to pace, how long each stimulus
 is for, .... A more complete description of each of these, along with their
 units can be found in the API portion of the documentation. Below we set 
-``bcl`` the number of miliseconds between each stimulus, ``stimt`` the time
+``bcl`` the number of milliseconds between each stimulus, ``stimt`` the time
 of the first stimulus, ``tMax`` the length of the simulation, ``numstims`` the
 number of stimuli that will be applied and ``meastime`` the time at which 
 measuring will begin (to be discussed in more detail later on in this example).
@@ -263,14 +263,14 @@ as multiple files will be written into that directory.
  .. code-block:: none
 
 
-    '/home/dgratz/Documents/data091321-1411'
+    '/home/dgratz/Documents/data091421-1555_1'
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 105-110
 
 The rest of the setup deals with choosing which variables to save, and what
-infomation about them to save. The first options are for controling which 
+infomation about them to save. The first options are for controlling which 
 variables have traces saved, which are records of that variable's value
 throughout the simulation. By default time and voltage are traced, time being
 critical for most common plots that are made with traces.
@@ -325,7 +325,7 @@ sodium current ``iNa``.
  .. code-block:: none
 
 
-    {'vOld', 't', 'iNa'}
+    {'iNa', 'vOld', 't'}
 
 
 
@@ -333,7 +333,7 @@ sodium current ``iNa``.
 
 To change which variables are being traced it is necessary to copy the 
 selection into a separate variable, modify it and reassign the 
-selection to the model. This is an unfortunate limiation of the python
+selection to the model. This is an unfortunate limitation of the python
 bindings.
 
 .. GENERATED FROM PYTHON SOURCE LINES 129-133
@@ -363,13 +363,13 @@ bindings.
 
 The ``writeint`` variable controls how frequently
 traces are saved. The value of 20 indicates that every 20\ :sup:``th`` step of
-the model will be saved. The step size may vary throught the simulation, 
+the model will be saved. The step size may vary throughout the simulation, 
 depending on the cell model, so the time between points in the trace will not
 be constant. Smaller values of ``writeint`` will save a more
 detailed trace, but at the expense of causing the simulation to run slower.
 
 Finally, there are the measure settings. Measures write out values once per
-action potential, and record functions of the trace, such as the minumum value,
+action potential, and record functions of the trace, such as the minimum value,
 the peak or the action potential duration. The main advantage of using measures
 is that they are called every time-step and so can use the full resolution
 of the simulation without needing to save every point (as this can be very 
@@ -397,7 +397,7 @@ there are and preform the necessary setup.
  .. code-block:: none
 
 
-    {'maxderiv', 'derivt', 'ddr', 'amp', 'dur', 'durtime1', 'min', 'mint', 'cl', 'deriv2ndt', 'vartakeoff', 'maxt', 'peak'}
+    {'cl', 'dur', 'mint', 'peak', 'ddr', 'maxderiv', 'derivt', 'durtime1', 'vartakeoff', 'deriv2ndt', 'min', 'amp', 'maxt'}
 
 
 
@@ -419,7 +419,7 @@ there are and preform the necessary setup.
  .. code-block:: none
 
 
-    {'maxderiv', 'derivt', 'amp', 'avg', 'min', 'stdev', 'mint', 'maxt', 'peak'}
+    {'peak', 'mint', 'avg', 'maxderiv', 'derivt', 'stdev', 'min', 'amp', 'maxt'}
 
 
 
@@ -451,7 +451,7 @@ and avgerage current.
  .. code-block:: none
 
 
-    {'iNa': {'avg', 'min'}, 'vOld': {'cl', 'min', 'peak'}}
+    {'iNa': {'min', 'avg'}, 'vOld': {'cl', 'min', 'peak'}}
 
 
 
@@ -484,7 +484,29 @@ the script until the simulations are finished. For a progress bar use
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-195
+.. GENERATED FROM PYTHON SOURCE LINES 187-191
+
+Before or after the simulation is run we may want to save the simulation
+settings we selected so that the simulation may be recreated without
+re-running this code file. To read or write settings use the 
+:py:class:`SettingsIO` object.
+
+.. GENERATED FROM PYTHON SOURCE LINES 191-195
+
+.. code-block:: default
+
+
+    settings = pylqt.SettingsIO.getInstance()
+    settings.writeSettings(proto.datadir + '/simvars.xml', proto)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 196-204
 
 Plot the Results
 ----------------
@@ -495,7 +517,7 @@ Once a simulation is run it will place all the saved data into
 the data directory and returns the chosen traces and measures each in 
 :py:class:`pandas.DataFrame`. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-204
+.. GENERATED FROM PYTHON SOURCE LINES 205-213
 
 .. code-block:: default
 
@@ -514,7 +536,7 @@ the data directory and returns the chosen traces and measures each in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-212
+.. GENERATED FROM PYTHON SOURCE LINES 214-221
 
 :py:meth:`readAsDataFrame` returns two lists of :py:class:`DataFrame`s for
 the traces and measures, respectively. Each element in the list is its own
@@ -524,7 +546,7 @@ element in each list.
 After extrating the data we will use :py:mod:`matplotlib.pyplot` to make a 
 few plots of the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-218
+.. GENERATED FROM PYTHON SOURCE LINES 221-227
 
 .. code-block:: default
 
@@ -553,14 +575,14 @@ few plots of the data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-223
+.. GENERATED FROM PYTHON SOURCE LINES 228-232
 
 Using the saved data we can plot the traces for the variables we selected.
-We can also modify the data for anlaysis or to produce different plots 
+We can also modify the data for analysis or to produce different plots 
 as seen below for iNa where we subset the data to only plot the last sodium
 current peak.
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-233
+.. GENERATED FROM PYTHON SOURCE LINES 232-242
 
 .. code-block:: default
 
@@ -585,7 +607,7 @@ current peak.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-242
+.. GENERATED FROM PYTHON SOURCE LINES 243-251
 
 We can make a plots from the measured variables, such as
 seeing how the peak sodium current varies beat to beat throughout the 
@@ -593,10 +615,10 @@ simulation.
 
 First we will enumerate the beats starting with 2 as we skipped the
 first beat using :py:data:`proto.meastime`, then we will plot the beat
-vs peak sodium current, which in this case is captured by the `min` measaure
+vs peak sodium current, which in this case is captured by the `min` measure
 as sodium current is always negative
 
-.. GENERATED FROM PYTHON SOURCE LINES 242-249
+.. GENERATED FROM PYTHON SOURCE LINES 251-258
 
 .. code-block:: default
 
@@ -629,7 +651,7 @@ as sodium current is always negative
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  44.450 seconds)
+   **Total running time of the script:** ( 0 minutes  43.019 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_current_clamp_simple_example.py:

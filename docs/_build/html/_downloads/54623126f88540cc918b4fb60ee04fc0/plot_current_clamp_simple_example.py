@@ -6,11 +6,11 @@
 Simple Current Clamp
 **********************
 
-This example illustrates how to setup and run a curret clamp simulation, 
+This example illustrates how to setup and run a current clamp simulation, 
 also known as a paced simulation on a single cell. Current clamp simulations
 involve pacing the cell with a set stimulus over time similarly to how
 the cells would be paced in the heart. To start, once  PyLongQt 
-is installed import it as seen below, this gives accesss to all of the 
+is installed import it as seen below, this gives accesses to all of the 
 classes and objects necessary to set up and run a simulation.
 """
 
@@ -84,7 +84,7 @@ proto.cell.optionsMap()
 # protocol these control the pacing: how often to pace, how long each stimulus
 # is for, .... A more complete description of each of these, along with their
 # units can be found in the API portion of the documentation. Below we set 
-# ``bcl`` the number of miliseconds between each stimulus, ``stimt`` the time
+# ``bcl`` the number of milliseconds between each stimulus, ``stimt`` the time
 # of the first stimulus, ``tMax`` the length of the simulation, ``numstims`` the
 # number of stimuli that will be applied and ``meastime`` the time at which 
 # measuring will begin (to be discussed in more detail later on in this example).
@@ -103,7 +103,7 @@ proto.datadir
 
 #%%
 # The rest of the setup deals with choosing which variables to save, and what
-# infomation about them to save. The first options are for controling which 
+# infomation about them to save. The first options are for controlling which 
 # variables have traces saved, which are records of that variable's value
 # throughout the simulation. By default time and voltage are traced, time being
 # critical for most common plots that are made with traces.
@@ -124,7 +124,7 @@ proto.cell.variableSelection
 #%%
 # To change which variables are being traced it is necessary to copy the 
 # selection into a separate variable, modify it and reassign the 
-# selection to the model. This is an unfortunate limiation of the python
+# selection to the model. This is an unfortunate limitation of the python
 # bindings.
 
 
@@ -133,13 +133,13 @@ proto.writeint
 #%%
 # The ``writeint`` variable controls how frequently
 # traces are saved. The value of 20 indicates that every 20\ :sup:``th`` step of
-# the model will be saved. The step size may vary throught the simulation, 
+# the model will be saved. The step size may vary throughout the simulation, 
 # depending on the cell model, so the time between points in the trace will not
 # be constant. Smaller values of ``writeint`` will save a more
 # detailed trace, but at the expense of causing the simulation to run slower.
 #
 # Finally, there are the measure settings. Measures write out values once per
-# action potential, and record functions of the trace, such as the minumum value,
+# action potential, and record functions of the trace, such as the minimum value,
 # the peak or the action potential duration. The main advantage of using measures
 # is that they are called every time-step and so can use the full resolution
 # of the simulation without needing to save every point (as this can be very 
@@ -184,6 +184,15 @@ sim_runner.run()
 sim_runner.wait()
 
 #%%
+# Before or after the simulation is run we may want to save the simulation
+# settings we selected so that the simulation may be recreated without
+# re-running this code file. To read or write settings use the 
+# :py:class:`SettingsIO` object.
+
+settings = pylqt.SettingsIO.getInstance()
+settings.writeSettings(proto.datadir + '/simvars.xml', proto)
+
+#%%
 #
 # Plot the Results
 # ----------------
@@ -217,7 +226,7 @@ plt.ylabel('Voltage (mV)')
 
 #%%
 # Using the saved data we can plot the traces for the variables we selected.
-# We can also modify the data for anlaysis or to produce different plots 
+# We can also modify the data for analysis or to produce different plots 
 # as seen below for iNa where we subset the data to only plot the last sodium
 # current peak.
 
@@ -237,7 +246,7 @@ plt.locator_params(axis='x', nbins=5)
 #
 # First we will enumerate the beats starting with 2 as we skipped the
 # first beat using :py:data:`proto.meastime`, then we will plot the beat
-# vs peak sodium current, which in this case is captured by the `min` measaure
+# vs peak sodium current, which in this case is captured by the `min` measure
 # as sodium current is always negative
 
 beat = np.arange(meas.shape[0])+2
