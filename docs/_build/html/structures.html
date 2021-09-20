@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Structures &#8212; PyLongQt 0.5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,12 +16,14 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Measures" href="measures.html" />
     <link rel="prev" title="Cells" href="cells.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -33,15 +33,320 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="module-PyLongQt.Structures">
 <span id="structures"></span><h1>Structures<a class="headerlink" href="#module-PyLongQt.Structures" title="Permalink to this headline">¶</a></h1>
 <p>Structures used by GridProtocol to layout 1 &amp; 2D simulations.</p>
+<dl class="class">
+<dt id="PyLongQt.Structures.Fiber">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Structures.</code><code class="sig-name descname">Fiber</code><a class="headerlink" href="#PyLongQt.Structures.Fiber" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 1D row/column of nodes in a <a class="reference internal" href="#PyLongQt.Structures.Grid" title="PyLongQt.Structures.Grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">Grid</span></code></a></p>
+<dl class="method">
+<dt id="PyLongQt.Structures.Fiber.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Fiber</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; PyLongQt._PyLongQt.Structures.Node<a class="headerlink" href="#PyLongQt.Structures.Fiber.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a node by index</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Fiber.__iter__">
+<code class="sig-name descname">__iter__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Fiber</em><span class="sig-paren">)</span> &#x2192; iterator<a class="headerlink" href="#PyLongQt.Structures.Fiber.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over nodes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Fiber.updateVm">
+<code class="sig-name descname">updateVm</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Fiber</em>, <em class="sig-param">arg0: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Fiber.updateVm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update voltages for all nodes. Calls <code class="xref py py-meth docutils literal notranslate"><span class="pre">Cell.updateVm()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Structures.Grid">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Structures.</code><code class="sig-name descname">Grid</code><a class="headerlink" href="#PyLongQt.Structures.Grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 2D plane of nodes, which provides the layout for 1 and 2 dimentional simulations</p>
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#PyLongQt.Structures.Grid.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__getitem__(self: PyLongQt._PyLongQt.Structures.Grid, arg0: Tuple[int, int]) -&gt; PyLongQt._PyLongQt.Structures.Node</p></li>
+</ol>
+<p>Retrieve node by its (row, column)</p>
+<ol class="arabic simple" start="2">
+<li><p>__getitem__(self: PyLongQt._PyLongQt.Structures.Grid, arg0: List[Tuple[int, int]]) -&gt; List[PyLongQt._PyLongQt.Structures.Node]</p></li>
+</ol>
+<p>Retrieve nodes by thier [(row, column),…]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.__iter__">
+<code class="sig-name descname">__iter__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em><span class="sig-paren">)</span> &#x2192; iterator<a class="headerlink" href="#PyLongQt.Structures.Grid.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over nodes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.addColumn">
+<code class="sig-name descname">addColumn</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.addColumn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single column of cells</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.addColumns">
+<code class="sig-name descname">addColumns</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">num: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.addColumns" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Add multiple columns of cells</dt><dd><dl class="field-list simple">
+<dt class="field-odd">num</dt>
+<dd class="field-odd"><p>the number of rows to add</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.addRow">
+<code class="sig-name descname">addRow</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.addRow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single row of cells</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.addRows">
+<code class="sig-name descname">addRows</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">num: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.addRows" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Add multiple rows of cells</dt><dd><dl class="field-list simple">
+<dt class="field-odd">num</dt>
+<dd class="field-odd"><p>the number of rows to add</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.columnCount">
+<code class="sig-name descname">columnCount</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#PyLongQt.Structures.Grid.columnCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of columns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.dx">
+<em class="property">property </em><code class="sig-name descname">dx</code><a class="headerlink" href="#PyLongQt.Structures.Grid.dx" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of each node in the grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.dy">
+<em class="property">property </em><code class="sig-name descname">dy</code><a class="headerlink" href="#PyLongQt.Structures.Grid.dy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The width of each cell in the grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.findNode">
+<code class="sig-name descname">findNode</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">node: PyLongQt._PyLongQt.Structures.Node</em><span class="sig-paren">)</span> &#x2192; Tuple[int, int]<a class="headerlink" href="#PyLongQt.Structures.Grid.findNode" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Find a node’s location in the grid</dt><dd><dl class="field-list simple">
+<dt class="field-odd">node</dt>
+<dd class="field-odd"><p>The node object to locate</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.getColumn">
+<code class="sig-name descname">getColumn</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; PyLongQt._PyLongQt.Structures.Fiber<a class="headerlink" href="#PyLongQt.Structures.Grid.getColumn" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieve a column of nodes by thier index</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>The location of the column</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.getRow">
+<code class="sig-name descname">getRow</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; PyLongQt._PyLongQt.Structures.Fiber<a class="headerlink" href="#PyLongQt.Structures.Grid.getRow" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieve a row of nodes by thier index</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>The location of the row</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.np">
+<em class="property">property </em><code class="sig-name descname">np</code><a class="headerlink" href="#PyLongQt.Structures.Grid.np" title="Permalink to this definition">¶</a></dt>
+<dd><p>WHAT IS THIS</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.removeColumn">
+<code class="sig-name descname">removeColumn</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.removeColumn" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Remove one column of cells</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>the location of the column to remove</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.removeColumns">
+<code class="sig-name descname">removeColumns</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">num: int</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.removeColumns" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Remove multiple columns of cells</dt><dd><dl class="field-list simple">
+<dt class="field-odd">num</dt>
+<dd class="field-odd"><p>the number of columns including index to be removed</p>
+</dd>
+<dt class="field-even">index</dt>
+<dd class="field-even"><p>the location of the first column to remove</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.removeRow">
+<code class="sig-name descname">removeRow</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.removeRow" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Remove one row of cells</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>the location of the row to remove</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.removeRows">
+<code class="sig-name descname">removeRows</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">num: int</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.removeRows" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Remove multiple rows of cells</dt><dd><dl class="field-list simple">
+<dt class="field-odd">num</dt>
+<dd class="field-odd"><p>the number of rows including index to be removed</p>
+</dd>
+<dt class="field-even">index</dt>
+<dd class="field-even"><p>the location of the first row to remove</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the grid to original state</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.rowCount">
+<code class="sig-name descname">rowCount</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#PyLongQt.Structures.Grid.rowCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of rows</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.shape">
+<em class="property">property </em><code class="sig-name descname">shape</code><a class="headerlink" href="#PyLongQt.Structures.Grid.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The shape of the grid (rows, columns)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Structures.Node">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Structures.</code><code class="sig-name descname">Node</code><a class="headerlink" href="#PyLongQt.Structures.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>The wrapper for a single cell in a multi-dimensional simulation</p>
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.cell">
+<em class="property">property </em><code class="sig-name descname">cell</code><a class="headerlink" href="#PyLongQt.Structures.Node.cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or set the cell contained in the node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.cellOptions">
+<code class="sig-name descname">cellOptions</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#PyLongQt.Structures.Node.cellOptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.getCondConst">
+<code class="sig-name descname">getCondConst</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#PyLongQt.Structures.Node.getCondConst" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Get the conductivity of a side</dt><dd><dl class="field-list simple">
+<dt class="field-odd">side</dt>
+<dd class="field-odd"><p>The side to get</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.resetCondConst">
+<code class="sig-name descname">resetCondConst</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side = -1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Node.resetCondConst" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Reset the conductivity of a side</dt><dd><dl class="field-list simple">
+<dt class="field-odd">side</dt>
+<dd class="field-odd"><p>The side to reset (if left as the default option all sides will be reset)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.setCellByName">
+<code class="sig-name descname">setCellByName</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">cellName: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#PyLongQt.Structures.Node.setCellByName" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set the cell using its name rather than a cell model object</dt><dd><dl class="field-list simple">
+<dt class="field-odd">name</dt>
+<dd class="field-odd"><p>The name of the cell model</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.setCondConst">
+<code class="sig-name descname">setCondConst</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em>, <em class="sig-param">perc: bool = True</em>, <em class="sig-param">value: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Node.setCondConst" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set the conductivity (what are the units) of a side to a value</dt><dd><dl class="field-list simple">
+<dt class="field-odd">side</dt>
+<dd class="field-odd"><p>The side to set</p>
+</dd>
+<dt class="field-even">perc</dt>
+<dd class="field-even"><p>If the value is a precentage or raw</p>
+</dd>
+<dt class="field-odd">value</dt>
+<dd class="field-odd"><p>The value</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -63,7 +368,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pvars.html">Cell Parameter Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">PyLongQt Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Starter Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html#advanced-examples">Advanced Examples</a></li>
 </ul>
 
 <div class="relations">
@@ -76,17 +382,23 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -95,8 +407,8 @@
       &copy;2020, Thomas Hund.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/structures.rst.txt"

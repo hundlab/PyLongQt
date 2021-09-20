@@ -134,11 +134,13 @@ PYBIND11_MODULE(_PyLongQt, m) {
       .def("progressRange", &RunSim::progressRange,
            "Return the min and max possible progress values")
       .def("wait", &RunSim::wait,
-	   "Wait for the running simulation to finish")
+       "Wait for the running simulation to finish",
+       py::call_guard<py::gil_scoped_release>())
       .def("wait_for", &RunSim::wait_for,
-	   R"pbdoc(Wait for the running simulation to finish
-	   :timeout: Time out wait in seconds)pbdoc",
-	   py::arg("timeout"))
+       R"pbdoc(Wait for the running simulation to finish
+       :timeout: Time out wait in seconds)pbdoc",
+       py::arg("timeout"),
+       py::call_guard<py::gil_scoped_release>())
       .def("progress", &RunSim::progress, "Return simulation progress")
       .def("progressPercent",
            [](RunSim& r) {
@@ -154,8 +156,8 @@ PYBIND11_MODULE(_PyLongQt, m) {
            :callback: The function that will be called after all simulations have been run)pbdoc",
            py::arg("callback"))
       .def_property("numThreads", (int (RunSim::*)(void)) &RunSim::numThreads,
-      	   (void (RunSim::*)(int)) &RunSim::numThreads,
-	   "The maximum number of threads that RunSim will use")
+           (void (RunSim::*)(int)) &RunSim::numThreads,
+       "The maximum number of threads that RunSim will use")
       .def("setSims",
            (void (RunSim::*)(std::vector<shared_ptr<Protocol>>)) &
                RunSim::setSims,

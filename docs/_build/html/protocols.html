@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Protocols &#8212; PyLongQt 0.5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,12 +16,14 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Cells" href="cells.html" />
     <link rel="prev" title="Top-level functions" href="toplevel.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
@@ -33,20 +33,475 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="module-PyLongQt.Protocols">
 <span id="protocols"></span><h1>Protocols<a class="headerlink" href="#module-PyLongQt.Protocols" title="Permalink to this headline">¶</a></h1>
 <p>Protocols control what happens to the cell(s) throughout the simulation. There are currently 3 types of protocols:</p>
 <ol class="arabic simple">
-<li>Current Clamp: stimulates the cell at a given frequency</li>
-<li>Voltage Clamp: fixes the transmembrane voltage for specific lengths of time</li>
-<li>Grid: for 1D fiber, and 2D grid simulations stimulating as in Current Clamp</li>
+<li><p>Current Clamp: stimulates the cell at a given frequency</p></li>
+<li><p>Voltage Clamp: fixes the transmembrane voltage for specific lengths of time</p></li>
+<li><p>Grid: for 1D fiber, and 2D grid simulations stimulating as in Current Clamp</p></li>
 </ol>
+<dl class="class">
+<dt id="PyLongQt.Protocols.ClampView">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Protocols.</code><code class="sig-name descname">ClampView</code><a class="headerlink" href="#PyLongQt.Protocols.ClampView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for voltages clamps. Access through clamps in Voltage Clamp Protocol</p>
+<dl class="method">
+<dt id="PyLongQt.Protocols.ClampView.__delitem__">
+<code class="sig-name descname">__delitem__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ClampView</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.ClampView.__delitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Delete a clamp from the list of clamps</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>That clamp’s index in the ordered list of clamps</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ClampView.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ClampView</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; Tuple[float, float]<a class="headerlink" href="#PyLongQt.Protocols.ClampView.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieves the clamps start time (ms) and voltage (mV)</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>That clamp’s index in the ordered list of clamps</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ClampView.__iter__">
+<code class="sig-name descname">__iter__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ClampView</em><span class="sig-paren">)</span> &#x2192; iterator<a class="headerlink" href="#PyLongQt.Protocols.ClampView.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over clamps</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ClampView.fromList">
+<code class="sig-name descname">fromList</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ClampView, voltageList: List[Tuple[float, float]]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.ClampView.fromList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import clamps from a list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ClampView.insert">
+<code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#PyLongQt.Protocols.ClampView.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>insert(self: PyLongQt._PyLongQt.Protocols.ClampView, pair: Tuple[float, float]) -&gt; int</p></li>
+</ol>
+<dl class="simple">
+<dt>Insert a new clamp into the list of clamps</dt><dd><dl class="field-list simple">
+<dt class="field-odd">pair</dt>
+<dd class="field-odd"><p>The clamp’s start time (ms) and voltage (mV)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<ol class="arabic simple" start="2">
+<li><p>insert(self: PyLongQt._PyLongQt.Protocols.ClampView, time: float, voltage: float) -&gt; None</p></li>
+</ol>
+<dl class="simple">
+<dt>Insert a new clamp into the list of clamps</dt><dd><dl class="field-list simple">
+<dt class="field-odd">time</dt>
+<dd class="field-odd"><p>The clamp’s start time (ms)</p>
+</dd>
+<dt class="field-even">voltage</dt>
+<dd class="field-even"><p>The clamp’s voltage (mV)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ClampView.setVoltage">
+<code class="sig-name descname">setVoltage</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ClampView</em>, <em class="sig-param">index: int</em>, <em class="sig-param">voltage: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.ClampView.setVoltage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Change the voltage of a clamp</dt><dd><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>That clamp’s index in the ordered list of clamps</p>
+</dd>
+<dt class="field-even">voltage</dt>
+<dd class="field-even"><p>The clamp’s voltage (mV)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Protocols.CurrentClamp">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Protocols.</code><code class="sig-name descname">CurrentClamp</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="PyLongQt.Protocols.CurrentClamp.bcl">
+<em class="property">property </em><code class="sig-name descname">bcl</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp.bcl" title="Permalink to this definition">¶</a></dt>
+<dd><p>The basic cycle length (ms). After stimt the cell will be stimulated every bcl miliseconds.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.CurrentClamp.numstims">
+<em class="property">property </em><code class="sig-name descname">numstims</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp.numstims" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of times the stimulus should be applied in the simulation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.CurrentClamp.paceflag">
+<em class="property">property </em><code class="sig-name descname">paceflag</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp.paceflag" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the cell should be stimulated. When this is falce no other stimulus related parameters have an effect</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.CurrentClamp.stimdur">
+<em class="property">property </em><code class="sig-name descname">stimdur</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp.stimdur" title="Permalink to this definition">¶</a></dt>
+<dd><p>The duration of each stimulus (ms)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.CurrentClamp.stimt">
+<em class="property">property </em><code class="sig-name descname">stimt</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp.stimt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time (ms) at which the first stimulus should be applied</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.CurrentClamp.stimval">
+<em class="property">property </em><code class="sig-name descname">stimval</code><a class="headerlink" href="#PyLongQt.Protocols.CurrentClamp.stimval" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current at which the cell should be stimulated</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Protocols.GridProtocol">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Protocols.</code><code class="sig-name descname">GridProtocol</code><a class="headerlink" href="#PyLongQt.Protocols.GridProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>This protocol is for 1D fibers or 2D grids of cells. It allows for current clamp like”
+“simulations with the groups of cells rather than just individual cells as in Voltage Clamp and”
+“Current Clamp.</p>
+<dl class="method">
+<dt id="PyLongQt.Protocols.GridProtocol.grid">
+<em class="property">property </em><code class="sig-name descname">grid</code><a class="headerlink" href="#PyLongQt.Protocols.GridProtocol.grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The structure of cells, if this is 1D then it is a fibre simulation, if it’s 2D then it’s a grid simulation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.GridProtocol.stimNodes">
+<em class="property">property </em><code class="sig-name descname">stimNodes</code><a class="headerlink" href="#PyLongQt.Protocols.GridProtocol.stimNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cells which the current stimulus will be applied to. The cells not on this list will not be excited directly but may excited by their neighbors.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Protocols.ParsVeiw">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Protocols.</code><code class="sig-name descname">ParsVeiw</code><a class="headerlink" href="#PyLongQt.Protocols.ParsVeiw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for working with Protocol variables. Accessable through pars property in each Protocol.</p>
+<dl class="method">
+<dt id="PyLongQt.Protocols.ParsVeiw.__contains__">
+<code class="sig-name descname">__contains__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ParsVeiw</em>, <em class="sig-param">name: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#PyLongQt.Protocols.ParsVeiw.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Checks if the protocol has that parameter</dt><dd><dl class="field-list simple">
+<dt class="field-odd">name</dt>
+<dd class="field-odd"><p>The name of the parameter</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ParsVeiw.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ParsVeiw</em>, <em class="sig-param">name: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#PyLongQt.Protocols.ParsVeiw.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieves the parameter’s value</dt><dd><dl class="field-list simple">
+<dt class="field-odd">name</dt>
+<dd class="field-odd"><p>The name of the parameter</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ParsVeiw.__iter__">
+<code class="sig-name descname">__iter__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ParsVeiw</em><span class="sig-paren">)</span> &#x2192; iterator<a class="headerlink" href="#PyLongQt.Protocols.ParsVeiw.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ParsVeiw.__setitem__">
+<code class="sig-name descname">__setitem__</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ParsVeiw</em>, <em class="sig-param">name: str</em>, <em class="sig-param">value: str</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.ParsVeiw.__setitem__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets the parameter to value</dt><dd><dl class="field-list simple">
+<dt class="field-odd">name</dt>
+<dd class="field-odd"><p>The name of the parameter</p>
+</dd>
+<dt class="field-even">value</dt>
+<dd class="field-even"><p>The new value</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.ParsVeiw.getType">
+<code class="sig-name descname">getType</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.ParsVeiw</em>, <em class="sig-param">name: str</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#PyLongQt.Protocols.ParsVeiw.getType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieves the parameter’s class type</dt><dd><dl class="field-list simple">
+<dt class="field-odd">name</dt>
+<dd class="field-odd"><p>The name of the parameter</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Protocols.Protocol">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Protocols.</code><code class="sig-name descname">Protocol</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base class of all protocols</p>
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.basedir">
+<em class="property">property </em><code class="sig-name descname">basedir</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.basedir" title="Permalink to this definition">¶</a></dt>
+<dd><p>The directory in which the datadir will be created</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.cell">
+<em class="property">property </em><code class="sig-name descname">cell</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cell model used in the simulation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.cellOptions">
+<code class="sig-name descname">cellOptions</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#PyLongQt.Protocols.Protocol.cellOptions" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The names of the cell models which this protocol can take</dt><dd></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.cellStateDir">
+<em class="property">property </em><code class="sig-name descname">cellStateDir</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.cellStateDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>The directory to read/write the complete state of the cell model.
+.. Note: this is an expiremental feature and may not work correctly for every cell</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.cellStateFile">
+<em class="property">property </em><code class="sig-name descname">cellStateFile</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.cellStateFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name to of the cell state. See cellStateDir.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em><span class="sig-paren">)</span> &#x2192; PyLongQt._PyLongQt.Protocols.Protocol<a class="headerlink" href="#PyLongQt.Protocols.Protocol.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy/clone of the protocol</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.datadir">
+<em class="property">property </em><code class="sig-name descname">datadir</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.datadir" title="Permalink to this definition">¶</a></dt>
+<dd><p>The directory where the results of the simulations will be saved.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.firstRun">
+<em class="property">property </em><code class="sig-name descname">firstRun</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.firstRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time to start running runDurring</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.meastime">
+<em class="property">property </em><code class="sig-name descname">meastime</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.meastime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time (ms) when the measure manager will begin measuring.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.measureMgr">
+<em class="property">property </em><code class="sig-name descname">measureMgr</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.measureMgr" title="Permalink to this definition">¶</a></dt>
+<dd><p>The manager for cell’s measured variables. Many of the cell model’s internal variables can be tracked
+throughout the simulation and functions of those variables can be recored, such as the peak, min, etc. The
+advantage to using this interface rather than computing these measures post simulation is that within LongQt
+they can be computed using every time step, while usually only a fraction of the timesteps are saved. This
+reduces the amount of disk space and computational time needed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.mkDirs">
+<code class="sig-name descname">mkDirs</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.Protocol.mkDirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create datadir (will be called automatically when simulations are run)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.numruns">
+<em class="property">property </em><code class="sig-name descname">numruns</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.numruns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of times to run runDurring</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.numtrials">
+<em class="property">property </em><code class="sig-name descname">numtrials</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.numtrials" title="Permalink to this definition">¶</a></dt>
+<dd><p>The totoal number of trials (simulations) to be run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.pars">
+<em class="property">property </em><code class="sig-name descname">pars</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.pars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.pvars">
+<em class="property">property </em><code class="sig-name descname">pvars</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.pvars" title="Permalink to this definition">¶</a></dt>
+<dd><p>The cell’s properties. These are cell model constants which are not changed throughout
+the simulation, but may be different from one trial (simulation) to annother</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.readCellState">
+<em class="property">property </em><code class="sig-name descname">readCellState</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.readCellState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the cell state should be read</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.runEvery">
+<em class="property">property </em><code class="sig-name descname">runEvery</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.runEvery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency to run runDurring</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.runSim">
+<code class="sig-name descname">runSim</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#PyLongQt.Protocols.Protocol.runSim" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Run all the trials consecutively.</dt><dd></dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.runTrial">
+<code class="sig-name descname">runTrial</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#PyLongQt.Protocols.Protocol.runTrial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the current trial</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.setCellByName">
+<code class="sig-name descname">setCellByName</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em>, <em class="sig-param">cellName: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#PyLongQt.Protocols.Protocol.setCellByName" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set the cell using its name rather than a cell model object</dt><dd><dl class="field-list simple">
+<dt class="field-odd">name</dt>
+<dd class="field-odd"><p>The name of the cell model</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.setDataDir">
+<code class="sig-name descname">setDataDir</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol</em>, <em class="sig-param">name: str = '/data'</em>, <em class="sig-param">basedir: str = ''</em>, <em class="sig-param">appendtxt: str = ''</em>, <em class="sig-param">append_date: bool = True</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.Protocol.setDataDir" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set the directory where the results of the simulations will be saved.</dt><dd><p>datadir = basedir + name + datetime + appendtxt + (optional number for uniqueness)
+:name: the name of the datadir, if this is omitted the standard naming scheme will be used
+:basedir: the directory where the datadir will be created, if omited basedir will be used (the basedir property will
+be set)
+:appendtxt: additional text to be appended to the end
+:append_date: if datetime will be appended after name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.setRunAfter">
+<code class="sig-name descname">setRunAfter</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol, func: Callable[[PyLongQt._PyLongQt.Protocols.Protocol], None]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.Protocol.setRunAfter" title="Permalink to this definition">¶</a></dt>
+<dd><p>This takes a function which will be called after the simulation is finished. The function must take a the protocol class which will be run as an arguement, and it should not return anything.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.setRunBefore">
+<code class="sig-name descname">setRunBefore</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol, func: Callable[[PyLongQt._PyLongQt.Protocols.Protocol], None]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.Protocol.setRunBefore" title="Permalink to this definition">¶</a></dt>
+<dd><p>This takes a function which will be called before the simulation is started but after the simulation has been setup. The function must take a the protocol class which will be run as an arguement, and it should not return anything.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.setRunDuring">
+<code class="sig-name descname">setRunDuring</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Protocols.Protocol, func: Callable[[PyLongQt._PyLongQt.Protocols.Protocol], None], firstRun: float = -1, runEvery: float = -1, numruns: int = -1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Protocols.Protocol.setRunDuring" title="Permalink to this definition">¶</a></dt>
+<dd><p>This takes a function which will be called durring the simulation at time firstRun, and then every runEvery after that until the end of the simulation or func has been run numruns number of times.The function must take a the protocol class which will be run as an arguement, and it should not return anything.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.simvarfile">
+<em class="property">property </em><code class="sig-name descname">simvarfile</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.simvarfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file where the simulation settings will be written. The settings include the protocol configuration,
+the cell, the cell’s properties, the measures, as well as the structure: in short almost everything. The
+directory will be datadir.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.tMax">
+<em class="property">property </em><code class="sig-name descname">tMax</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.tMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maxium length of each simulation (ms)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.trial">
+<em class="property">property </em><code class="sig-name descname">trial</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.trial" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current trial number. Different trials with have cell parameters. See pvars for more detial.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.type">
+<em class="property">property </em><code class="sig-name descname">type</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the protocol class</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.writeCellState">
+<em class="property">property </em><code class="sig-name descname">writeCellState</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.writeCellState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the cell state should be written</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.writeint">
+<em class="property">property </em><code class="sig-name descname">writeint</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.writeint" title="Permalink to this definition">¶</a></dt>
+<dd><p>How often the cell’s variable traces should be recored. Every writeint
+number of simulation timesteps the traces will be recorded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Protocols.Protocol.writetime">
+<em class="property">property </em><code class="sig-name descname">writetime</code><a class="headerlink" href="#PyLongQt.Protocols.Protocol.writetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time (ms) when traces will begin being recorded</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="PyLongQt.Protocols.VoltageClamp">
+<em class="property">class </em><code class="sig-prename descclassname">PyLongQt.Protocols.</code><code class="sig-name descname">VoltageClamp</code><a class="headerlink" href="#PyLongQt.Protocols.VoltageClamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This protocol fixes the cell model’s transmembrane voltage to different values throughout the course of
+the simulation as defined by the clamp list</p>
+<dl class="method">
+<dt id="PyLongQt.Protocols.VoltageClamp.clamps">
+<em class="property">property </em><code class="sig-name descname">clamps</code><a class="headerlink" href="#PyLongQt.Protocols.VoltageClamp.clamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of clamps which fix the cells transmembrane voltage to a specfic value (mv) starting at a time (ms). The
+pairs in the list are (time, voltage), and are ordered by time.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -68,7 +523,8 @@
 <li class="toctree-l1"><a class="reference internal" href="structures.html">Structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="measures.html">Measures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pvars.html">Cell Parameter Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">PyLongQt Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Starter Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html#advanced-examples">Advanced Examples</a></li>
 </ul>
 
 <div class="relations">
@@ -81,17 +537,23 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -100,8 +562,8 @@
       &copy;2020, Thomas Hund.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/protocols.rst.txt"

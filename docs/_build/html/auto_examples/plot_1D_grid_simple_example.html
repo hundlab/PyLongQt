@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>3. 1D Grid Simulation &#8212; PyLongQt 0.5 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-1d-grid-simple-example-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="d-grid-simulation">
+<span id="sphx-glr-auto-examples-plot-1d-grid-simple-example-py"></span><h1>3. 1D Grid Simulation<a class="headerlink" href="#d-grid-simulation" title="Permalink to this headline">¶</a></h1>
+<p>This example illustrates how to setup and run a simple 1D grid simulation,
+also known as a fiber simulation with a row of cells. These simulations
+show how the cell models interact rather than examining them in isolation. 2D
+grids can be setup in the same fashion as 1D fibers, and there is also a more
+advanced tutorial on seting up a 2D grid showing the possible customizations.</p>
+<div class="section" id="setup-run-the-simulation">
+<h2>Setup &amp; Run the Simulation<a class="headerlink" href="#setup-run-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>Import PyLongQt and create a grid protocol, this protocol can function for
+1 or 2D simulations. These simulations are similar to current clamp simulations
+except that they are preformed on a grid of connected cells, instead of on an
+individual cell.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PyLongQt</span> <span class="k">as</span> <span class="nn">pylqt</span>
+
+<span class="n">proto</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">protoMap</span><span class="p">[</span><span class="s1">&#39;Grid Protocol&#39;</span><span class="p">]()</span>
+</pre></div>
+</div>
+<p>To configure the size of the Fiber we will add one row and the number of
+columns we would like to have for the simulation. Due to the detialed nature
+of many of the cell models, larger fibers/grids may be very slow and
+computationally demanding.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n_cols</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">addRow</span><span class="p">()</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">addColumns</span><span class="p">(</span><span class="n">n_cols</span><span class="p">)</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Grid([Fiber([&lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Inexcitable Cell&#39;&gt;&gt;])])
+</pre></div>
+</div>
+<p>When new cells are added to the grid, they are automatically filled with a
+cell model called ‘Inexcitable Cell’, this cell acts like the edge of the
+grid. It is not excited by its neighbors and cannot pass any signal between
+them. To replace these cells with more interesting cells, we will create new
+cell objects and place them in the grid.</p>
+<p>To get the possible options for a node in a grid use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cellOptions</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;Inexcitable Cell&#39;, &#39;Canine Ventricular (Hund-Rudy 2009)&#39;, &#39;Canine Ventricular Border Zone (Hund-Rudy 2009)&#39;, &#39;Coupled Inexcitable Cell&#39;, &#39;Human Atrial (Courtemanche 1998)&#39;, &#39;Human Atrial (Grandi 2011)&#39;, &#39;Human Atrial (Koivumaki 2011)&#39;, &#39;Human Atrial (Onal 2017)&#39;, &#39;Human Ventricular (Grandi 10)&#39;, &#39;Human Ventricular (Ten Tusscher 2004)&#39;, &quot;Human Ventricular Endocardium (O&#39;Hara-Rudy 2011)&quot;, &quot;Human Ventricular Epicardium (O&#39;Hara-Rudy 2011)&quot;, &quot;Human Ventricular Mid Myocardial (O&#39;Hara-Rudy 2011)&quot;, &#39;Mammalian Ventricular (Faber-Rudy 2000)&#39;, &#39;Mouse Sinus Node (Kharche 2011)&#39;, &#39;Mouse Ventricular (Bondarenko 2004)&#39;, &#39;Rabbit Sinus Node (Kurata 2008)&#39;]
+</pre></div>
+</div>
+<p>rather than</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cellOptions</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;&#39;]
+</pre></div>
+</div>
+<p>as the cell cannot be set at the protocol level when there is a grid structure.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">col</span><span class="p">]</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">setCellByName</span><span class="p">(</span><span class="s1">&#39;Canine Ventricular (Hund-Rudy 2009)&#39;</span><span class="p">)</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Grid([Fiber([&lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;, &lt;Node &lt;Cell Type=&#39;Canine Ventricular (Hund-Rudy 2009)&#39;&gt;&gt;])])
+</pre></div>
+</div>
+<p>Now that all the cells have been setup we can configure the stimulus settings.
+Many of the settings are the same, however now we must also select the cells
+that we want to stimulate. Typically this is one edge or one corner of the
+grid, but it can be any cells as desired.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">stimNodes</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>To select which cells will be stimulated create a set of touples with the
+positions of cells to be stimulated as shown above.</p>
+<p>The rest of the settings can be modified in the same fashion as before.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">stimt</span> <span class="o">=</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+<p>By detault the simulation will be 5000 ms</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">tMax</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>5000.0
+</pre></div>
+</div>
+<p>Measures and traces can also be taken, the setup is largely similar to single
+cell simulations with the addition of selecting the nodes to be measured.
+These nodes can be selected using the <code class="xref py py-class docutils literal notranslate"><span class="pre">MeasureManager</span></code> and are the
+same nodes used for saving traces and taking measurements. For this example
+we will selected every node.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">dataNodes</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">columnCount</span><span class="p">())}</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;peak&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;cl&#39;</span><span class="p">})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;iNa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">selection</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;iNa&#39;: {&#39;min&#39;, &#39;avg&#39;}, &#39;vOld&#39;: {&#39;min&#39;, &#39;cl&#39;, &#39;peak&#39;}}
+</pre></div>
+</div>
+<p>The traces can be set in the same way as before using <code class="xref py py-data docutils literal notranslate"><span class="pre">Protocol.cell</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">variableSelection</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="s1">&#39;iNa&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Now the simulation is all setup and can be run.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim_runner</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">RunSim</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">setSims</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The data can once again be read using <code class="xref py py-class docutils literal notranslate"><span class="pre">DataReader</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="p">[</span><span class="n">trace</span><span class="p">],</span> <span class="p">[</span><span class="n">meas</span><span class="p">]</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">DataReader</span><span class="o">.</span><span class="n">readAsDataFrame</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">datadir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The trace DataFrame’s columns now have two levels, one for the cell’s position and
+one for the variable name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trace</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MultiIndex([((0, 5),  &#39;iNa&#39;),
+            ((0, 5),    &#39;t&#39;),
+            ((0, 5), &#39;vOld&#39;),
+            ((0, 4),  &#39;iNa&#39;),
+            ((0, 4),    &#39;t&#39;)],
+           names=[&#39;Cell&#39;, &#39;Variable&#39;])
+</pre></div>
+</div>
+<p>Similarly the measure DataFrame’s columns have an additional level for the
+cell’s position</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">meas</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>MultiIndex([((0, 0),  &#39;iNa&#39;,  &#39;avg&#39;),
+            ((0, 0),  &#39;iNa&#39;,  &#39;min&#39;),
+            ((0, 0), &#39;vOld&#39;,   &#39;cl&#39;),
+            ((0, 0), &#39;vOld&#39;,  &#39;min&#39;),
+            ((0, 0), &#39;vOld&#39;, &#39;peak&#39;)],
+           names=[&#39;Cell&#39;, &#39;Variable&#39;, &#39;Property&#39;])
+</pre></div>
+</div>
+<p>We can use the trace Dataframe to produce traces of each of the action
+potenitals in the fiber and color them by their location in the fiber</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet_r</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">n_cols</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span><span class="p">):</span>
+    <span class="n">trace_subset</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[</span><span class="n">trace</span><span class="p">[((</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;t&#39;</span><span class="p">)]</span> <span class="o">&lt;</span> <span class="mi">4_250</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trace_subset</span><span class="p">[((</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;t&#39;</span><span class="p">)],</span>
+             <span class="n">trace_subset</span><span class="p">[((</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;vOld&#39;</span><span class="p">)],</span>
+             <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+             <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (mV)&#39;</span><span class="p">)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="plot 1D grid simple example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_1D_grid_simple_example_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+</pre></div>
+</div>
+<p>Then let’s create one more plot to show the action potential propagation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet_r</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">n_cols</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span><span class="p">):</span>
+    <span class="n">trace_subset</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[</span><span class="n">trace</span><span class="p">[((</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;t&#39;</span><span class="p">)]</span> <span class="o">&lt;</span> <span class="mi">4_010</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trace_subset</span><span class="p">[((</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;t&#39;</span><span class="p">)],</span>
+             <span class="n">trace_subset</span><span class="p">[((</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;vOld&#39;</span><span class="p">)],</span>
+             <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+             <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (mV)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot 1D grid simple example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_1D_grid_simple_example_002.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\cbook\__init__.py:1402: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x[:, None]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:276: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  x = x[:, np.newaxis]
+C:\Users\grat05\AppData\Local\Programs\Python\Python37\lib\site-packages\matplotlib\axes\_base.py:278: FutureWarning: Support for multi-dimensional indexing (e.g. `obj[:, None]`) is deprecated and will be removed in a future version.  Convert to a numpy array before indexing instead.
+  y = y[:, np.newaxis]
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.995 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-1d-grid-simple-example-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/e320bc890032aa6a826f189c4c6549c9/plot_1D_grid_simple_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_1D_grid_simple_example.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/e49697384bce7b2ff838e89a695fe7ac/plot_1D_grid_simple_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_1D_grid_simple_example.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PyLongQt</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../toplevel.html">Top-level functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols.html">Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../measures.html">Measures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pvars.html">Cell Parameter Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Starter Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Thomas Hund.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_examples/plot_1D_grid_simple_example.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

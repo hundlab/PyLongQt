@@ -299,12 +299,12 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 # -- Option for autodoc ---------------------------------------------------
 
-autodoc_member_order = 'bysource'
-autodoc_default_options = {
-        'member-order': 'bysource',
-        'special-members': '__contains__,__getitem__,__setitem__,__iter__,__delitem__',
-        'autoclass-content': 'both'
-}
+#autodoc_member_order = 'bysource'
+#autodoc_default_options = {
+#        'member-order': 'bysource',
+#        'special-members': '__contains__,__getitem__,__setitem__,__iter__,__delitem__',
+#        'autoclass-content': 'both'
+#}
 
 ## -- Get github complied PyLongQt: rtsd_action --
 #
@@ -325,8 +325,11 @@ autodoc_default_options = {
 #
 
 # Options for sphinx-gallery ----------------------------------------------
+from sphinx_gallery.sorting import FileNameSortKey
+
 sphinx_gallery_conf = {
      'examples_dirs': '../examples',   # path to your example scripts
      'gallery_dirs': 'auto_examples',  # path to where to save gallery generated output
+     'within_subsection_order': FileNameSortKey,
 }
 

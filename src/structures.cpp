@@ -21,10 +21,21 @@ void init_structures(py::module& m) {
       .def("getCondConst", &Node::getCondConst,
            R"pbdoc(Get the conductivity of a side
            :side: The side to get)pbdoc", py::arg("side"))
-      .def_property_readonly(
+      .def("resetCondConst", &Node::resetCondConst,
+           R"pbdoc(Reset the conductivity of a side
+           :side: The side to reset (if left as the default option all sides will be reset)
+           )pbdoc", py::arg("side") = -1)
+      .def("cellOptions", &Node::cellOptions)
+      .def_property(
           "cell",
           static_cast<shared_ptr<Cell> (Node::*)(void) const>(&Node::cell),
-          R"pbdoc(The cell contained in the node)pbdoc")
+          (void (Node::*)(shared_ptr<Cell>)) &Node::cell,
+          R"pbdoc(Get or set the cell contained in the node)pbdoc")
+      .def("setCellByName",
+           (bool (Node::*)(const std::string&)) &Node::cell,
+           R"pubdoc(Set the cell using its name rather than a cell model object
+           :name: The name of the cell model)pubdoc",
+           py::arg("cellName"))
       //            .def_readwrite("rd",&Node::rd)
       //        .def_readwrite("condConst", &Node::condConst)
       .def("__repr__", [](Node& n) {

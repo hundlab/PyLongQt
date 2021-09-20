@@ -5,7 +5,7 @@
 .. _sphx_glr_auto_examples:
 
 ==================
-PyLongQt Examples
+Starter Examples
 ==================
 
 These examples illustrate the basic usage of PyLongQt to 
@@ -21,14 +21,14 @@ in LongQt as well as a few examples of more advanced options.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a curret clamp simulation,  also known as a paced...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a current clamp simulation,  also known as a pace...">
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_2D_grid_example_thumb.png
-     :alt: 2D Grid Simulation
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_1_current_clamp_simple_example_thumb.png
+     :alt: 1. Simple Current Clamp
 
-     :ref:`sphx_glr_auto_examples_plot_2D_grid_example.py`
+     :ref:`sphx_glr_auto_examples_plot_1_current_clamp_simple_example.py`
 
 .. raw:: html
 
@@ -38,28 +38,7 @@ in LongQt as well as a few examples of more advanced options.
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_2D_grid_example
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a curret clamp simulation,  also known as a paced...">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_parameter_sensitivity_analysis_thumb.png
-     :alt: Parameter Sensitivity Analysis
-
-     :ref:`sphx_glr_auto_examples_plot_parameter_sensitivity_analysis.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_parameter_sensitivity_analysis
+   /auto_examples/plot_1_current_clamp_simple_example
 
 .. raw:: html
 
@@ -67,10 +46,10 @@ in LongQt as well as a few examples of more advanced options.
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_voltage_clamp_simple_example_thumb.png
-     :alt: Simple Voltage Clamp
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_2_voltage_clamp_simple_example_thumb.png
+     :alt: 2. Simple Voltage Clamp
 
-     :ref:`sphx_glr_auto_examples_plot_voltage_clamp_simple_example.py`
+     :ref:`sphx_glr_auto_examples_plot_2_voltage_clamp_simple_example.py`
 
 .. raw:: html
 
@@ -80,18 +59,18 @@ in LongQt as well as a few examples of more advanced options.
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_voltage_clamp_simple_example
+   /auto_examples/plot_2_voltage_clamp_simple_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a current clamp simulation,  also known as a pace...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a simple 1D grid simulation,  also known as a fib...">
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_current_clamp_simple_example_thumb.png
-     :alt: Simple Current Clamp
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_3_1D_grid_simple_example_thumb.png
+     :alt: 3. 1D Grid Simulation
 
-     :ref:`sphx_glr_auto_examples_plot_current_clamp_simple_example.py`
+     :ref:`sphx_glr_auto_examples_plot_3_1D_grid_simple_example.py`
 
 .. raw:: html
 
@@ -101,7 +80,67 @@ in LongQt as well as a few examples of more advanced options.
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_current_clamp_simple_example
+   /auto_examples/plot_3_1D_grid_simple_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_auto_examples_advanced_examples:
+
+===================
+Advanced Examples
+===================
+
+These examples illustrate some of the more advanced features of LongQt
+including setups that we frequently use for expirementation. They build
+off of the simple examples, so if you are unfamilar with LongQt it is
+best to start off there.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to conduct parameter sensitivity analysis. The  purpose of conduci...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/advanced_examples/images/thumb/sphx_glr_plot_parameter_sensitivity_analysis_thumb.png
+     :alt: Parameter Sensitivity Analysis
+
+     :ref:`sphx_glr_auto_examples_advanced_examples_plot_parameter_sensitivity_analysis.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/advanced_examples/plot_parameter_sensitivity_analysis
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup a simulation which modifies the protocol while it is runn...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/advanced_examples/images/thumb/sphx_glr_plot_variable_frequency_thumb.png
+     :alt: Variable Pacing Frequency
+
+     :ref:`sphx_glr_auto_examples_advanced_examples_plot_variable_frequency.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/advanced_examples/plot_variable_frequency
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

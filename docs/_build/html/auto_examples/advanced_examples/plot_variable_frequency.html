@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Variable Pacing Frequency &#8212; PyLongQt 0.5 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Parameter Sensitivity Analysis" href="plot_parameter_sensitivity_analysis.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-advanced-examples-plot-variable-frequency-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="variable-pacing-frequency">
+<span id="sphx-glr-auto-examples-advanced-examples-plot-variable-frequency-py"></span><h1>Variable Pacing Frequency<a class="headerlink" href="#variable-pacing-frequency" title="Permalink to this headline">¶</a></h1>
+<p>This example illustrates how to setup a simulation which modifies the protocol
+while it is running. In this case we will show how this can be used
+to change the pacing frequency (basic cycle length), however in general this
+can be applied to change any parameter during runtime.</p>
+<div class="section" id="inital-setup">
+<h2>Inital Setup<a class="headerlink" href="#inital-setup" title="Permalink to this headline">¶</a></h2>
+<p>First we will setup paced current clamp simulation with any of the options
+we would like.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">PyLongQt</span> <span class="k">as</span> <span class="nn">pylqt</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">proto</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">protoMap</span><span class="p">[</span><span class="s1">&#39;Current Clamp Protocol&#39;</span><span class="p">]()</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">setCellByName</span><span class="p">(</span><span class="s1">&#39;Canine Ventricular (Hund-Rudy 2009)&#39;</span><span class="p">)</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">bcl</span> <span class="o">=</span> <span class="mi">2_000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">tMax</span> <span class="o">=</span> <span class="mi">55_000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">numstims</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">meastime</span> <span class="o">=</span> <span class="mi">1_000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">writetime</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;cl&#39;</span><span class="p">,</span> <span class="s1">&#39;peak&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Now that the basic setup is complete we will use an additonal feature
+of <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Protocol.setRunDuring()</span></code>, which allows
+us to set a function to be called periodically while the simulation is
+running. The settings for the run durring function are the first time
+for the function to be called <cite>firstRun</cite> (in ms), how often it should be run
+<cite>runEvery</cite> (in ms) and finally how many times it should be run: <cite>numruns</cite>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are two other features which similarly allow for a user defined
+function to be run durring the simulation: <cite>setRunBefore</cite> and <cite>setRunAfter</cite>.
+As the names imply these will be run at the begining and end of a simulation.</p>
+</div>
+</div>
+<div class="section" id="define-the-run-durring-function">
+<h2>Define the run durring function<a class="headerlink" href="#define-the-run-durring-function" title="Permalink to this headline">¶</a></h2>
+<p>The user defined function we will supply to the method will be a special one.
+In python it is possible to define a class which can act like a function,
+and we will do that in order to allow our ‘function’ to store all of the
+<a href="#id1"><span class="problematic" id="id2">`</span></a>bcl`s.</p>
+<p>To do this we will define the class <cite>IterateBCLs</cite>, which will take the list
+of <cite>bcl</cite>s we want to use, and then update the protocol everytime it is called
+as a function.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">IterateBCLs</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bcls</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proto_lookup</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bcls</span> <span class="o">=</span> <span class="n">bcls</span>
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bcls</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto_lookup</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proto_lookup</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">proto</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto_lookup</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">proto</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bcls</span><span class="p">):</span>
+            <span class="n">bcl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bcls</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">proto</span><span class="o">.</span><span class="n">bcl</span> <span class="o">=</span> <span class="n">bcl</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proto_lookup</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">proto</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">proto</span><span class="o">.</span><span class="n">paceflag</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>A detailed explaination for those unfamiliar with python classes</p>
+<blockquote>
+<div><p>The <cite>__init__</cite> method is the one that is
+called when <cite>IterateBCLs</cite> is created. In our case it initalizes the
+<cite>proto_lookup</cite> table, and saves the <cite>bcl</cite>s for use later. To call this method
+run <code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">=</span> <span class="pre">IterateBCLs([1000,500])</span></code>. The <cite>__len__</cite>
+function returns the number of <cite>bcl</cite>s that are stored, and could be called
+<code class="docutils literal notranslate"><span class="pre">len(func)</span></code>. Finally, the most important method is <cite>__call__</cite>, this is what
+will be called while the simulation is running. It can be called using
+<code class="docutils literal notranslate"><span class="pre">func(proto)</span></code>.</p>
+</div></blockquote>
+<p>The <cite>__call__</cite> method preforms the following tasks:</p>
+<ol class="arabic simple">
+<li><p>Determines the number of times that the <cite>__call__</cite> method has been called
+so that it will know which bcl to assign to the protocol</p></li>
+<li><p>If the number of times it has been called is less than the number of bcls
+passed in, it updates the protocol’s bcl to the next bcl in the list,
+otherwise it instructs the protocol to stop pacing.</p></li>
+</ol>
+<p>For step 1, we need to use a lookup table for the case where we are running
+multiple simulations using <cite>numtrials</cite>. That is not the case in this example,
+but this allows the <cite>IterateBCLs</cite> class to be more generally useful. The
+lookup table is needed to ensure that <cite>IterateBCLs</cite> keeps track of the number
+of calls each simulation made independantly of the others. When the simulations
+are run the protocol is copied once for each simulation, so its location
+in memory can be used to uniquly identify it.</p>
+<p>Now that the <cite>IterateBCLs</cite> class is defined we can create an instance of it
+and add it to the protocol</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bcls</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
+<span class="n">func</span> <span class="o">=</span> <span class="n">IterateBCLs</span><span class="p">(</span><span class="n">bcls</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This sets the <cite>func</cite> instance to be called first at time 20,000ms
+and then every 10,000ms until its been run <code class="docutils literal notranslate"><span class="pre">len(bcls)+1</span></code> (=4) number of
+times</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">setRunDuring</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">firstRun</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">runEvery</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">numruns</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-the-simulation">
+<h2>Run the simulation<a class="headerlink" href="#run-the-simulation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim_runner</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">RunSim</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">setSims</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plots">
+<h2>Plots!<a class="headerlink" href="#plots" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">trace</span><span class="p">],</span> <span class="p">[</span><span class="n">meas</span><span class="p">]</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">DataReader</span><span class="o">.</span><span class="n">readAsDataFrame</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">datadir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A plot of the voltage over time will show the pacing frequency
+and we will follow it up with the measured cycle length</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trace</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (mV)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot variable frequency" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_variable_frequency_001.png" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;Peak Sodium Current vs Beat&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">beat</span><span class="p">,</span> <span class="n">meas</span><span class="p">[(</span><span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="s1">&#39;cl&#39;</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Basic Cycle Length (ms)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Beat&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot variable frequency" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_variable_frequency_002.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.748 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-advanced-examples-plot-variable-frequency-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/def6a3dc667c44d421ea14a3127a35df/plot_variable_frequency.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_variable_frequency.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/aab98b7b31e4dd8ac50c7746ddff5c69/plot_variable_frequency.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_variable_frequency.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">PyLongQt</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../toplevel.html">Top-level functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../protocols.html">Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../measures.html">Measures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pvars.html">Cell Parameter Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Starter Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#advanced-examples">Advanced Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_parameter_sensitivity_analysis.html">Parameter Sensitivity Analysis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Variable Pacing Frequency</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Starter Examples</a><ul>
+      <li>Previous: <a href="plot_parameter_sensitivity_analysis.html" title="previous chapter">Parameter Sensitivity Analysis</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Thomas Hund.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/auto_examples/advanced_examples/plot_variable_frequency.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

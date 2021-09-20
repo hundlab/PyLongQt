@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Simple Current Clamp &#8212; PyLongQt 0.5 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. Simple Voltage Clamp" href="plot_2_voltage_clamp_simple_example.html" />
+    <link rel="prev" title="Starter Examples" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-1-current-clamp-simple-example-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="simple-current-clamp">
+<span id="sphx-glr-auto-examples-plot-1-current-clamp-simple-example-py"></span><h1>1. Simple Current Clamp<a class="headerlink" href="#simple-current-clamp" title="Permalink to this headline">¶</a></h1>
+<p>This example illustrates how to setup and run a current clamp simulation,
+also known as a paced simulation on a single cell. Current clamp simulations
+involve pacing the cell with a set stimulus over time similarly to how
+the cells would be paced in the heart. To start, once  PyLongQt
+is installed import it as seen below, this gives accesses to all of the
+classes and objects necessary to set up and run a simulation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PyLongQt</span> <span class="k">as</span> <span class="nn">pylqt</span>
+</pre></div>
+</div>
+<div class="section" id="setup-the-simulation">
+<h2>Setup the Simulation<a class="headerlink" href="#setup-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>Protocols are the base of the simulation, the <code class="xref py py-data docutils literal notranslate"><span class="pre">protoMap</span></code> allows
+them to be created using their name. Additionally, the map contains
+all of the available protocols so all options can be easily seen.
+Alternatively, the protocol classes are available in the
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">pylqt.Protocols</span></code> module.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">protoMap</span><span class="p">[</span><span class="s1">&#39;Current Clamp Protocol&#39;</span><span class="p">]()</span>
+<span class="c1">#proto = pylqt.Protocols.CurrentClamp()</span>
+</pre></div>
+</div>
+<p>The next critical component in every simulation is the <code class="xref py py-class docutils literal notranslate"><span class="pre">Cell</span></code>, this
+is the model which will be run. The <code class="xref py py-class docutils literal notranslate"><span class="pre">Cell</span></code> class defines the species
+and tissue type. The cell models available in PyLongQt have been validated and
+peer-reviewed. To find information on their citations see
+py:meth:<cite>Cell.citation</cite>. The easiest way to see what cells are available
+is to use the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Protocol.cellOptions()</span></code> method.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cellOptions</span><span class="p">()</span> <span class="c1">#Change this things name?</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;Canine Ventricular (Hund-Rudy 2009)&#39;, &#39;Canine Ventricular Border Zone (Hund-Rudy 2009)&#39;, &#39;Coupled Inexcitable Cell&#39;, &#39;Human Atrial (Courtemanche 1998)&#39;, &#39;Human Atrial (Grandi 2011)&#39;, &#39;Human Atrial (Koivumaki 2011)&#39;, &#39;Human Atrial (Onal 2017)&#39;, &#39;Human Ventricular (Grandi 10)&#39;, &#39;Human Ventricular (Ten Tusscher 2004)&#39;, &quot;Human Ventricular Endocardium (O&#39;Hara-Rudy 2011)&quot;, &quot;Human Ventricular Epicardium (O&#39;Hara-Rudy 2011)&quot;, &quot;Human Ventricular Mid Myocardial (O&#39;Hara-Rudy 2011)&quot;, &#39;Mammalian Ventricular (Faber-Rudy 2000)&#39;, &#39;Mouse Sinus Node (Kharche 2011)&#39;, &#39;Mouse Ventricular (Bondarenko 2004)&#39;, &#39;Rabbit Sinus Node (Kurata 2008)&#39;]
+</pre></div>
+</div>
+<p>Once a <code class="xref py py-class docutils literal notranslate"><span class="pre">Cell</span></code> has been chosen, the cell can be set using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">Protocol.setCellByName()</span></code>, with the name from
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">Protocol.cellOptions()</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">setCellByName</span><span class="p">(</span><span class="s1">&#39;Human Atrial (Onal 2017)&#39;</span><span class="p">)</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">cell</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Cell Type=&#39;Human Atrial (Onal 2017)&#39;&gt;
+</pre></div>
+</div>
+<p>Once a cell has been chosen, the cell model can be customized further using
+the cell options, which can be found in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">Cell.optionsMap()</span></code>. These
+options are additional changes which are specific to that cell model. Typically
+these represent the presence of different drugs or mutations as is the case
+for this Human Atrial model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">optionsMap</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;ISO&#39;: False, &#39;S2814A&#39;: False, &#39;S2814D&#39;: False, &#39;S571A&#39;: False, &#39;S571E&#39;: False}
+</pre></div>
+</div>
+<p>Now we will set one of these options, in this case the option for a genetic
+mutation to the RyR2.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="s1">&#39;S2814A&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">optionsMap</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;ISO&#39;: False, &#39;S2814A&#39;: True, &#39;S2814D&#39;: False, &#39;S571A&#39;: False, &#39;S571E&#39;: False}
+</pre></div>
+</div>
+<p>But when we try and add the <cite>S2814D</cite> option, this overwrote the <cite>S2814A</cite>! This
+is becuase some combinations of options may not be possible, in this case
+these two options are both point mutations at the same location in the RyR2,
+so it would not be possible for a model to have both at once.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="s1">&#39;S2814D&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">optionsMap</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;ISO&#39;: False, &#39;S2814A&#39;: False, &#39;S2814D&#39;: True, &#39;S571A&#39;: False, &#39;S571E&#39;: False}
+</pre></div>
+</div>
+<p>The next setup is the protocol’s settings. For the current clamp
+protocol these control the pacing: how often to pace, how long each stimulus
+is for, …. A more complete description of each of these, along with their
+units can be found in the API portion of the documentation. Below we set
+<code class="docutils literal notranslate"><span class="pre">bcl</span></code> the number of milliseconds between each stimulus, <code class="docutils literal notranslate"><span class="pre">stimt</span></code> the time
+of the first stimulus, <code class="docutils literal notranslate"><span class="pre">tMax</span></code> the length of the simulation, <code class="docutils literal notranslate"><span class="pre">numstims</span></code> the
+number of stimuli that will be applied and <code class="docutils literal notranslate"><span class="pre">meastime</span></code> the time at which
+measuring will begin (to be discussed in more detail later on in this example).
+Finally, <code class="docutils literal notranslate"><span class="pre">datadir</span></code> is where the output files for the simulation will be
+written. This directory name does not need to exist but should be unique
+as multiple files will be written into that directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">bcl</span> <span class="o">=</span> <span class="mi">800</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">stimt</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">tMax</span> <span class="o">=</span> <span class="mi">50_000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">numstims</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">meastime</span> <span class="o">=</span> <span class="mi">1_000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">writetime</span> <span class="o">=</span> <span class="mi">45_000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">datadir</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;C:/Users/grat05/Documents/data091721-1647&#39;
+</pre></div>
+</div>
+<p>The rest of the setup deals with choosing which variables to save, and what
+infomation about them to save. The first options are for controlling which
+variables have traces saved, which are records of that variable’s value
+throughout the simulation. By default time and voltage are traced, time being
+critical for most common plots that are made with traces.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">variableSelection</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;t&#39;, &#39;vOld&#39;}
+</pre></div>
+</div>
+<p>It is possible to remove time and voltage, but for now we will just add the
+sodium current <code class="docutils literal notranslate"><span class="pre">iNa</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">varSel</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">variableSelection</span>
+<span class="n">varSel</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;iNa&#39;</span><span class="p">)</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">variableSelection</span> <span class="o">=</span> <span class="n">varSel</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">variableSelection</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;t&#39;, &#39;vOld&#39;, &#39;iNa&#39;}
+</pre></div>
+</div>
+<p>To change which variables are being traced it is necessary to copy the
+selection into a separate variable, modify it and reassign the
+selection to the model. This is an unfortunate limitation of the python
+bindings.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">writeint</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>20
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">writeint</span></code> variable controls how frequently
+traces are saved. The value of 20 indicates that every 20:sup:<code class="docutils literal notranslate"><span class="pre">th</span></code> step of
+the model will be saved. The step size may vary throughout the simulation,
+depending on the cell model, so the time between points in the trace will not
+be constant. Smaller values of <code class="docutils literal notranslate"><span class="pre">writeint</span></code> will save a more
+detailed trace, but at the expense of causing the simulation to run slower.</p>
+<p>Finally, there are the measure settings. Measures write out values once per
+action potential, and record functions of the trace, such as the minimum value,
+the peak or the action potential duration. The main advantage of using measures
+is that they are called every time-step and so can use the full resolution
+of the simulation without needing to save every point (as this can be very
+slow). The measure manager <code class="docutils literal notranslate"><span class="pre">measureMgr</span></code> is used to select which measures
+there are and preform the necessary setup.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">percrepol</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">cellVariables</span><span class="p">())[:</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">measureOptions</span><span class="p">(</span><span class="s1">&#39;vOld&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;derivt&#39;, &#39;durtime1&#39;, &#39;deriv2ndt&#39;, &#39;maxderiv&#39;, &#39;maxt&#39;, &#39;ddr&#39;, &#39;amp&#39;, &#39;mint&#39;, &#39;dur&#39;, &#39;peak&#39;, &#39;vartakeoff&#39;, &#39;cl&#39;, &#39;min&#39;}
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">measureOptions</span><span class="p">(</span><span class="s1">&#39;iNa&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;derivt&#39;, &#39;maxderiv&#39;, &#39;maxt&#39;, &#39;amp&#39;, &#39;avg&#39;, &#39;mint&#39;, &#39;peak&#39;, &#39;stdev&#39;, &#39;min&#39;}
+</pre></div>
+</div>
+<p>There are different measure options for different variables, at this time
+the only variable with other options is <code class="docutils literal notranslate"><span class="pre">vOld</span></code> and all other variables have
+the same options to choose from. We will add measures for the peak voltage,
+the min voltage and the cycle length. For <code class="docutils literal notranslate"><span class="pre">iNa</span></code> we will measure the minimum
+and avgerage current.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;peak&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;cl&#39;</span><span class="p">})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;iNa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">selection</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;iNa&#39;: {&#39;min&#39;, &#39;avg&#39;}, &#39;vOld&#39;: {&#39;cl&#39;, &#39;peak&#39;, &#39;min&#39;}}
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-the-simulation">
+<h2>Run the simulation<a class="headerlink" href="#run-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>Now that the simulation is all setup we can run it, by constructing a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">RunSim</span></code> object and adding the configured protocol to it.
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.run()</span></code> wont stop the python script from continuing after the
+simulation has started, so <code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.wait()</span></code> is called to pause
+the script until the simulations are finished. For a progress bar use
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.printProgressLoop()</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim_runner</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">RunSim</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">setSims</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Before or after the simulation is run we may want to save the simulation
+settings we selected so that the simulation may be recreated without
+re-running this code file. To read or write settings use the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">SettingsIO</span></code> object.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">settings</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">SettingsIO</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">writeSettings</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">datadir</span> <span class="o">+</span> <span class="s1">&#39;/simvars.xml&#39;</span><span class="p">,</span> <span class="n">proto</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plot-the-results">
+<h2>Plot the Results<a class="headerlink" href="#plot-the-results" title="Permalink to this headline">¶</a></h2>
+<p>Disable future warnings to avoid excess outputs from plotting
+(this is for reducing clutter in the example and is not generally</p>
+<blockquote>
+<div><p>advisable)</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once a simulation is run it will place all the saved data into
+<code class="xref py py-data docutils literal notranslate"><span class="pre">Protocol.datadir</span></code>, where it can be read using functions in
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PyLongQt.DataReader</span></code>. <code class="xref py py-meth docutils literal notranslate"><span class="pre">DataReader.readAsDataFrame()</span></code> reads
+the data directory and returns the chosen traces and measures each in
+<code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="p">[</span><span class="n">trace</span><span class="p">],</span> <span class="p">[</span><span class="n">meas</span><span class="p">]</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">DataReader</span><span class="o">.</span><span class="n">readAsDataFrame</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">datadir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">readAsDataFrame()</span></code> returns two lists of :py:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>DataFrame`s for
+the traces and measures, respectively. Each element in the list is its own
+trial, so for this example where only one trial was run there is only one
+element in each list.</p>
+<p>After extrating the data we will use <code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> to make a
+few plots of the data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trace</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (mV)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot 1 current clamp simple example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_1_current_clamp_simple_example_001.png" />
+<p>Using the saved data we can plot the traces for the variables we selected.
+We can also modify the data for analysis or to produce different plots
+as seen below for iNa where we subset the data to only plot the last sodium
+current peak.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trace_subset</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">49_300</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">trace</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">49_320</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;iNa&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trace_subset</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Sodium Current (pA/pF)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">locator_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot 1 current clamp simple example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_1_current_clamp_simple_example_002.png" />
+<p>We can make a plots from the measured variables, such as
+seeing how the peak sodium current varies beat to beat throughout the
+simulation.</p>
+<p>First we will enumerate the beats starting with 2 as we skipped the
+first beat using <code class="xref py py-data docutils literal notranslate"><span class="pre">proto.meastime</span></code>, then we will plot the beat
+vs peak sodium current, which in this case is captured by the <cite>min</cite> measure
+as sodium current is always negative</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">beat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;Peak Sodium Current vs Beat&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">beat</span><span class="p">,</span> <span class="n">meas</span><span class="p">[(</span><span class="s1">&#39;iNa&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Peak Sodium Current (pA/pF)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Beat&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="plot 1 current clamp simple example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_1_current_clamp_simple_example_003.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  20.506 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-1-current-clamp-simple-example-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/5e233f085b2c41416b9474e170144574/plot_1_current_clamp_simple_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_1_current_clamp_simple_example.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/f04e755ab0d82b83227b5e82303437f6/plot_1_current_clamp_simple_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_1_current_clamp_simple_example.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">PyLongQt</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../toplevel.html">Top-level functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols.html">Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../measures.html">Measures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pvars.html">Cell Parameter Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Starter Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Simple Current Clamp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_2_voltage_clamp_simple_example.html">2. Simple Voltage Clamp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_3_1D_grid_simple_example.html">3. 1D Grid Simulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Starter Examples</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Starter Examples</a></li>
+      <li>Next: <a href="plot_2_voltage_clamp_simple_example.html" title="next chapter">2. Simple Voltage Clamp</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Thomas Hund.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/auto_examples/plot_1_current_clamp_simple_example.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

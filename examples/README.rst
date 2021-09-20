@@ -1,5 +1,5 @@
 ==================
-PyLongQt Examples
+Starter Examples
 ==================
 
 These examples illustrate the basic usage of PyLongQt to 
