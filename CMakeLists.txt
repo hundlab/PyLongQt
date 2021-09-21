@@ -11,8 +11,17 @@ project(PyLongQt VERSION 0.2)
 # Find includes in corresponding build directories
 set(CMAKE_CXX_STANDARD 17)
 
+
+if(NOT DEFINED LongQt_subdir)
+    set(LongQt_subdir FALSE)
+endif()
+
 add_subdirectory(pybind11)
-find_package(LongQt-model REQUIRED)
+if(NOT ${LongQt_subdir})
+    find_package(LongQt-model REQUIRED)
+else()
+    add_subdirectory(../LongQt-model LongQt-model)
+endif()
 find_package(Qt5 COMPONENTS Core REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -23,7 +32,7 @@ set(PyLongQt_includes
 include_directories(${PyLongQt_includes})
 
 set(PyLongQt_sources
-        "src/pylongqt.cpp"
+    "src/pylongqt.cpp"
     "src/cells.cpp"
     "src/protocols.cpp"
     "src/structures.cpp"
