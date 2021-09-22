@@ -40,6 +40,12 @@ set(PyLongQt_sources
     "src/pvars.cpp"
 )
 
+set(PyLongQt_python
+    "__init__.py"
+    "src/_runsim.py"
+    "src/_converters.py"
+)
+
 #link_directories(${modellib_LIBRARY})
 
 add_library(PyLongQt MODULE ${PyLongQt_sources})
@@ -53,3 +59,4 @@ set_target_properties(PyLongQt PROPERTIES
 )
 
 install(TARGETS PyLongQt DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(FILES ${PyLongQt_python} DESTINATION ${CMAKE_INSTALL_PREFIX}) 
