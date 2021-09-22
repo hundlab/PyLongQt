@@ -44,6 +44,7 @@ set(PyLongQt_python
     "__init__.py"
     "src/_runsim.py"
     "src/_converters.py"
+    "src/_grid.py"
 )
 
 #link_directories(${modellib_LIBRARY})
