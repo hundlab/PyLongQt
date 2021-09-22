@@ -9,3 +9,4 @@ __doc__ = _PyLongQt.__doc__
 # and convert them
 from . import _converters
 from . import _runsim
+from . import _grid

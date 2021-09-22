@@ -35,7 +35,11 @@ n_cols = 10
 proto.grid.addRow()
 proto.grid.addColumns(n_cols)
 
-proto.grid
+#%%
+# We can also use the :py:meth:`Grid.simpleGrid` to get a representation
+# of the grid that is easier to visualize
+
+proto.grid.simpleGrid()
 
 #%%
 # When new cells are added to the grid, they are automatically filled with a 
@@ -65,7 +69,7 @@ for col in range(proto.grid.columnCount()):
     node = proto.grid[0,col]
     node.setCellByName('Canine Ventricular (Hund-Rudy 2009)')
 
-proto.grid
+proto.grid.simpleGrid()
 
 #%%
 # Now that all the cells have been setup we can configure the stimulus settings.

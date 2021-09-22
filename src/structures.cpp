@@ -100,6 +100,8 @@ void init_structures(py::module& m) {
           "shape",
           [](Grid& g) { return make_tuple(g.rowCount(), g.columnCount()); },
         "The shape of the grid (rows, columns)")
+      .def_property_readonly("size",
+          [](Grid& g) { return g.rowCount()* g.columnCount(); })
       .def_readwrite("dx", &Grid::dx, "The length of each node in the grid")
       .def_readwrite("dy", &Grid::dy, "The width of each cell in the grid")
       .def_readwrite("np", &Grid::np, "WHAT IS THIS")
