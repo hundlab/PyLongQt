@@ -20,7 +20,7 @@ add_subdirectory(pybind11)
 if(NOT ${LongQt_subdir})
     find_package(LongQt-model REQUIRED)
 else()
-    add_subdirectory(../LongQt-model LongQt-model)
+  add_subdirectory(../LongQt-model LongQt-model EXCLUDE_FROM_ALL)
 endif()
 find_package(Qt5 COMPONENTS Core REQUIRED)
 set(CMAKE_AUTOMOC ON)
@@ -41,7 +41,7 @@ set(PyLongQt_sources
 )
 
 set(PyLongQt_python
-    "__init__.py"
+    "src/__init__.py"
     "src/_runsim.py"
     "src/_converters.py"
     "src/_grid.py"
@@ -53,11 +53,11 @@ add_library(PyLongQt MODULE ${PyLongQt_sources})
 
 target_link_libraries(PyLongQt PUBLIC LongQt-model Qt5::Core pybind11::module)
 
-set_target_properties(PyLongQt PROPERTIES 
-	PREFIX "${PYTHON_MODULE_PREFIX}"
-        SUFFIX "${PYTHON_MODULE_EXTENSION}"
-	OUTPUT_NAME "_PyLongQt"
+set_target_properties(PyLongQt PROPERTIES
+  PREFIX "${PYTHON_MODULE_PREFIX}"
+  SUFFIX "${PYTHON_MODULE_EXTENSION}"
+  OUTPUT_NAME "_PyLongQt"
 )
 
 install(TARGETS PyLongQt DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES ${PyLongQt_python} DESTINATION ${CMAKE_INSTALL_PREFIX}) 
+install(FILES ${PyLongQt_python} DESTINATION ${CMAKE_INSTALL_PREFIX})
