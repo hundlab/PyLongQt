@@ -30,6 +30,18 @@ development as it allows for a simpler build and install setup with QtCreator or
 The pip build is for producing a package that can be installed in python, this is used by
 the github workflow system to build the pacakges distributed on PyPI.
 
+### Requirements
+
+- Qt version 5.12:  https://www.qt.io/
+  - windows: install the MSVC compiled version
+- c++17 or greater compliant compiler
+  - linux:      gcc
+  - windows:    MSVC 2019
+  - OS X:       clang
+- cmake
+- optional:
+  - QtCreator
+
 ### Development Build
 
 To start both the PyLongQt project and LongQt-model project need to be cloned from github into
@@ -43,7 +55,7 @@ the following directory structure
 Be sure to recursively clone PyLongQt so that pybind11 is cloned as a subdirectory. PyLongQt needs
 to be built with different build systems depending on the platform, for windows use MSVC 2019,
 for linux use gcc (or clang), and for mac use clang. On windows MSCV 2019 can be installed as
-a standalone package or as a part of the visual studio IDE. Qt5 Core needs to be installed, and
+a standalone package or as a part of the visual studio IDE. Qt 5.12 Core needs to be installed, and
 optionally QtCreator.
 
 To build PyLongQt, cmake needs to be told to look for LongQt-model as a subdirectory, this is why
@@ -75,6 +87,6 @@ run `python setup.py build bdist_wheel -- -DLongQt_subdir:BOOL=TRUE` on windows 
 specify the generator as well by adding `-G "Visual Studio 16 2019"`.
 
 Once built, a wheel file (.whl) will be created in PyLongQt/dist. This file can be installed by
-running using pip by passing in the full file name (ending in .whl) to pip install. If rebuilding
+using pip and passing in the full file name (ending in .whl) to pip install. If rebuilding
 PyLongQt it will be necessary to uninstall the pacakge using `pip uninstall hundlab_pylongqt` before
 attempting to reinstall.
