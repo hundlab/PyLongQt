@@ -71,7 +71,7 @@ proto.cell.optionsMap()
 
 #%%
 # But when we try and add the `S2814D` option, this overwrote the `S2814A`! This
-# is becuase some combinations of options may not be possible, in this case
+# is because some combinations of options may not be possible, in this case
 # these two options are both point mutations at the same location in the RyR2,
 # so it would not be possible for a model to have both at once.
 
@@ -103,7 +103,7 @@ proto.datadir
 
 #%%
 # The rest of the setup deals with choosing which variables to save, and what
-# infomation about them to save. The first options are for controlling which 
+# information about them to save. The first options are for controlling which 
 # variables have traces saved, which are records of that variable's value
 # throughout the simulation. By default time and voltage are traced, time being
 # critical for most common plots that are made with traces.
@@ -173,7 +173,7 @@ proto.measureMgr.selection
 #
 # Now that the simulation is all setup we can run it, by constructing a 
 # :py:class:`RunSim` object and adding the configured protocol to it. 
-# :py:meth:`RunSim.run` wont stop the python script from continuing after the
+# :py:meth:`RunSim.run` wont stop the python script from continuing after the
 # simulation has started, so :py:meth:`RunSim.wait` is called to pause
 # the script until the simulations are finished. For a progress bar use
 # :py:meth:`RunSim.printProgressLoop`
@@ -224,7 +224,7 @@ import matplotlib.pyplot as plt
 # trial, so for this example where only one trial was run there is only one
 # element in each list.
 #
-# After extrating the data we will use :py:mod:`matplotlib.pyplot` to make a 
+# After extracting the data we will use :py:mod:`matplotlib.pyplot` to make a 
 # few plots of the data.
 
 plt.figure()
@@ -263,3 +263,4 @@ plt.figure('Peak Sodium Current vs Beat')
 plt.scatter(beat, meas[('iNa', 'min')])
 plt.ylabel('Peak Sodium Current (pA/pF)')
 _ = plt.xlabel('Beat')
+

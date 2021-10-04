@@ -147,8 +147,6 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="protocols.html#PyLongQt.Protocols.Protocol.basedir">basedir() (PyLongQt.Protocols.Protocol property)</a>
-</li>
       <li><a href="protocols.html#PyLongQt.Protocols.CurrentClamp.bcl">bcl() (PyLongQt.Protocols.CurrentClamp property)</a>
 </li>
   </ul></td>
@@ -208,6 +206,8 @@
 </li>
       </ul></li>
       <li><a href="cells.html#PyLongQt.Cells.CellKernel.Cm">Cm() (PyLongQt.Cells.CellKernel property)</a>
+</li>
+      <li><a href="structures.html#PyLongQt.Structures.Node.column">column() (PyLongQt.Structures.Node property)</a>
 </li>
       <li><a href="structures.html#PyLongQt.Structures.Grid.columnCount">columnCount() (PyLongQt.Structures.Grid method)</a>
 </li>
@@ -285,7 +285,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="structures.html#PyLongQt.Structures.Grid.getColumn">getColumn() (PyLongQt.Structures.Grid method)</a>
 </li>
-      <li><a href="structures.html#PyLongQt.Structures.Node.getCondConst">getCondConst() (PyLongQt.Structures.Node method)</a>
+      <li><a href="structures.html#PyLongQt.Structures.Node.getConductivity">getConductivity() (PyLongQt.Structures.Node method)</a>
 </li>
       <li><a href="cells.html#PyLongQt.Cells.CellKernel.getOption">getOption() (PyLongQt.Cells.CellKernel method)</a>
 </li>
@@ -437,8 +437,6 @@
         <li><a href="pvars.html#PyLongQt.CellParameters.PvarsCell.Distribution.normal">(PyLongQt.CellParameters.PvarsCell.Distribution attribute)</a>
 </li>
       </ul></li>
-      <li><a href="structures.html#PyLongQt.Structures.Grid.np">np() (PyLongQt.Structures.Grid property)</a>
-</li>
       <li><a href="protocols.html#PyLongQt.Protocols.Protocol.numruns">numruns() (PyLongQt.Protocols.Protocol property)</a>
 </li>
       <li><a href="protocols.html#PyLongQt.Protocols.CurrentClamp.numstims">numstims() (PyLongQt.Protocols.CurrentClamp property)</a>
@@ -551,11 +549,13 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="structures.html#PyLongQt.Structures.Node.resetCondConst">resetCondConst() (PyLongQt.Structures.Node method)</a>
+      <li><a href="structures.html#PyLongQt.Structures.Node.resetConductivity">resetConductivity() (PyLongQt.Structures.Node method)</a>
 </li>
       <li><a href="cells.html#PyLongQt.Cells.CellKernel.RGAS">RGAS() (PyLongQt.Cells.CellKernel property)</a>
 </li>
       <li><a href="cells.html#PyLongQt.Cells.CellKernel.Rmyo">Rmyo() (PyLongQt.Cells.CellKernel property)</a>
+</li>
+      <li><a href="structures.html#PyLongQt.Structures.Node.row">row() (PyLongQt.Structures.Node property)</a>
 </li>
       <li><a href="structures.html#PyLongQt.Structures.Grid.rowCount">rowCount() (PyLongQt.Structures.Grid method)</a>
 </li>
@@ -583,7 +583,7 @@
         <li><a href="structures.html#PyLongQt.Structures.Node.setCellByName">(PyLongQt.Structures.Node method)</a>
 </li>
       </ul></li>
-      <li><a href="structures.html#PyLongQt.Structures.Node.setCondConst">setCondConst() (PyLongQt.Structures.Node method)</a>
+      <li><a href="structures.html#PyLongQt.Structures.Node.setConductivityDirect">setConductivityDirect() (PyLongQt.Structures.Node method)</a>
 </li>
       <li><a href="protocols.html#PyLongQt.Protocols.Protocol.setDataDir">setDataDir() (PyLongQt.Protocols.Protocol method)</a>
 </li>
@@ -593,14 +593,16 @@
 </li>
       <li><a href="cells.html#PyLongQt.Cells.CellKernel.setOption">setOption() (PyLongQt.Cells.CellKernel method)</a>
 </li>
+      <li><a href="structures.html#PyLongQt.Structures.Node.setResistivity">setResistivity() (PyLongQt.Structures.Node method)</a>
+</li>
       <li><a href="protocols.html#PyLongQt.Protocols.Protocol.setRunAfter">setRunAfter() (PyLongQt.Protocols.Protocol method)</a>
 </li>
       <li><a href="protocols.html#PyLongQt.Protocols.Protocol.setRunBefore">setRunBefore() (PyLongQt.Protocols.Protocol method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="protocols.html#PyLongQt.Protocols.Protocol.setRunDuring">setRunDuring() (PyLongQt.Protocols.Protocol method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pvars.html#PyLongQt.CellParameters.PvarsGrid.setStartCells">setStartCells() (PyLongQt.CellParameters.PvarsGrid method)</a>
 </li>
       <li><a href="cells.html#PyLongQt.Cells.CellKernel.setV">setV() (PyLongQt.Cells.CellKernel method)</a>
@@ -611,7 +613,11 @@
 </li>
       <li><a href="toplevel.html#PyLongQt.Side">Side (class in PyLongQt)</a>
 </li>
+      <li><a href="structures.html#PyLongQt.Structures.Grid.simpleGrid">simpleGrid() (PyLongQt.Structures.Grid method)</a>
+</li>
       <li><a href="protocols.html#PyLongQt.Protocols.Protocol.simvarfile">simvarfile() (PyLongQt.Protocols.Protocol property)</a>
+</li>
+      <li><a href="structures.html#PyLongQt.Structures.Grid.size">size() (PyLongQt.Structures.Grid property)</a>
 </li>
       <li><a href="pvars.html#PyLongQt.CellParameters.PvarsGrid.MIonChanParam.startCells">startCells() (PyLongQt.CellParameters.PvarsGrid.MIonChanParam property)</a>
 </li>

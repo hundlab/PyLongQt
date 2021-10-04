@@ -13,20 +13,20 @@ one (or more) cell parameter, such as sodium ion channel conductance, on one
 will stick to one cell parameter and one output, however the technique is not
 changed when preforming this analysis for many inputs possible outputs, except
 that a larger number of simulations may be required. The approach of this
-analysis can be devided into 3 parts:
+analysis can be divided into 3 parts:
 
 1. Generate a population of cells. The cells in this population are not all the
    same and instead vary randomly with respect to the parameters of interest.
-   Typically they are genereated from a normal or lognormal distribution,
+   Typically they are generated from a normal or lognormal distribution,
    who's spread is tuned to cover a reasonable range of possible inputs.
-   The definition of a reasonable range depends on the purpose of the anlysis,
+   The definition of a reasonable range depends on the purpose of the analysis,
    for example if the goal is to understand the parameter's effect in healthy
-   cells, then the population genereated should correspond to a range of plausable
+   cells, then the population generated should correspond to a range of plausible
    values for healthy cells.
 2. Run a simulation for each cell in the generated population and measure the
-   resulting outpus.
+   resulting outputs.
 3. Conduct a linear regression using the parameters as predictors and the 
-   measured output as the response. This creates a linear model who's coefficants
+   measured output as the response. This creates a linear model who's coefficients
    indicated the effect of a change in a parameter to a change in response.
    
 For this example we will specifically be looking at the effect of sodium
@@ -73,7 +73,7 @@ list(proto.cell.pars.keys())[:5]
 
 #%%
 # Parameter names that end in Factor scale the parameter, so that 1 is the
-# default value for all factors, and their resonable range is 0 to infinity.
+# default value for all factors, and their reasonable range is 0 to infinity.
 #
 # The factor we need is `InaFactor`, and to set up the pvars entry we need
 # to specify the distribution that will be used to generate the values
@@ -137,12 +137,12 @@ last_meas = pd.DataFrame([
     for i,meas in enumerate(meases)])
 
 #%%
-# A detailed explaination for those unfamiliar with python classes
+# A detailed explanation for those unfamiliar with python classes
 # 
 #   To unpack a little about how this line of code works, it uses a generator
 #   expression `[...]` to generate a list of series which pandas then compiles
 #   back into a dataframe. More specifically, ``for i,meas in enumerate(meases)`` 
-#   gets each indivdual measure (which we name `meas`) dataframe from the `meases` 
+#   gets each individual measure (which we name `meas`) dataframe from the `meases` 
 #   list and enumerates them, 1...20, which we name `i`. Then, we get the last 
 #   row from each `meas`, using ``meas.loc[meas.index[-1]]``. Finally, we need to 
 #   rename the :py:class:`Pandas.Series` (the row from the dataframe) so that it
@@ -152,7 +152,7 @@ last_meas = pd.DataFrame([
 
 #%%
 # Next we would like to have a copy of the parameter values used in the
-# simulations, which we will get in the same manor as shown earlier.
+# simulations, which we will get in the same manner as shown earlier.
 
 parameters = pd.Series(proto.pvars['InaFactor'].trials, name='InaFactor')
 
@@ -178,7 +178,8 @@ print(res.summary())
 _ = sns.regplot(last_meas[('vOld', 'peak')], parameters)
 
 #%%
-# This model naturally fits quite well. In other senerios it may be necessary
+# This model naturally fits quite well. In other scenarios it may be necessary
 # preform a more complete linear regression with model diagnostics, etc
 # to insure model quality. There are many tutorials on linear regression
 # that cover the appropriate steps for running a regression.
+

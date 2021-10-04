@@ -47,8 +47,8 @@ to download the full example code</p>
 while it is running. In this case we will show how this can be used
 to change the pacing frequency (basic cycle length), however in general this
 can be applied to change any parameter during runtime.</p>
-<div class="section" id="inital-setup">
-<h2>Inital Setup<a class="headerlink" href="#inital-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="initial-setup">
+<h2>Initial Setup<a class="headerlink" href="#initial-setup" title="Permalink to this headline">¶</a></h2>
 <p>First we will setup paced current clamp simulation with any of the options
 we would like.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
@@ -73,7 +73,7 @@ we would like.</p>
 <span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;cl&#39;</span><span class="p">,</span> <span class="s1">&#39;peak&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
-<p>Now that the basic setup is complete we will use an additonal feature
+<p>Now that the basic setup is complete we will use an additional feature
 of <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Protocol.setRunDuring()</span></code>, which allows
 us to set a function to be called periodically while the simulation is
 running. The settings for the run durring function are the first time
@@ -82,18 +82,18 @@ for the function to be called <cite>firstRun</cite> (in ms), how often it should
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>There are two other features which similarly allow for a user defined
-function to be run durring the simulation: <cite>setRunBefore</cite> and <cite>setRunAfter</cite>.
-As the names imply these will be run at the begining and end of a simulation.</p>
+function to be run during the simulation: <cite>setRunBefore</cite> and <cite>setRunAfter</cite>.
+As the names imply these will be run at the beginning and end of a simulation.</p>
 </div>
 </div>
-<div class="section" id="define-the-run-durring-function">
-<h2>Define the run durring function<a class="headerlink" href="#define-the-run-durring-function" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="define-the-run-during-function">
+<h2>Define the run during function<a class="headerlink" href="#define-the-run-during-function" title="Permalink to this headline">¶</a></h2>
 <p>The user defined function we will supply to the method will be a special one.
 In python it is possible to define a class which can act like a function,
 and we will do that in order to allow our ‘function’ to store all of the
 <a href="#id1"><span class="problematic" id="id2">`</span></a>bcl`s.</p>
 <p>To do this we will define the class <cite>IterateBCLs</cite>, which will take the list
-of <cite>bcl</cite>s we want to use, and then update the protocol everytime it is called
+of <cite>bcl</cite>s we want to use, and then update the protocol every time it is called
 as a function.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">IterateBCLs</span><span class="p">():</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bcls</span><span class="p">):</span>
@@ -114,10 +114,10 @@ as a function.</p>
             <span class="n">proto</span><span class="o">.</span><span class="n">paceflag</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
-<p>A detailed explaination for those unfamiliar with python classes</p>
+<p>A detailed explanation for those unfamiliar with python classes</p>
 <blockquote>
 <div><p>The <cite>__init__</cite> method is the one that is
-called when <cite>IterateBCLs</cite> is created. In our case it initalizes the
+called when <cite>IterateBCLs</cite> is created. In our case it initializes the
 <cite>proto_lookup</cite> table, and saves the <cite>bcl</cite>s for use later. To call this method
 run <code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">=</span> <span class="pre">IterateBCLs([1000,500])</span></code>. The <cite>__len__</cite>
 function returns the number of <cite>bcl</cite>s that are stored, and could be called
@@ -137,9 +137,9 @@ otherwise it instructs the protocol to stop pacing.</p></li>
 multiple simulations using <cite>numtrials</cite>. That is not the case in this example,
 but this allows the <cite>IterateBCLs</cite> class to be more generally useful. The
 lookup table is needed to ensure that <cite>IterateBCLs</cite> keeps track of the number
-of calls each simulation made independantly of the others. When the simulations
+of calls each simulation made independently of the others. When the simulations
 are run the protocol is copied once for each simulation, so its location
-in memory can be used to uniquly identify it.</p>
+in memory can be used to uniquely identify it.</p>
 <p>Now that the <cite>IterateBCLs</cite> class is defined we can create an instance of it
 and add it to the protocol</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bcls</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
@@ -185,7 +185,7 @@ and we will follow it up with the measured cycle length</p>
 </pre></div>
 </div>
 <img alt="plot variable frequency" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_variable_frequency_002.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.748 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.291 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-advanced-examples-plot-variable-frequency-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/def6a3dc667c44d421ea14a3127a35df/plot_variable_frequency.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_variable_frequency.py</span></code></a></p>
@@ -224,6 +224,7 @@ and we will follow it up with the measured cycle length</p>
 <li class="toctree-l1"><a class="reference internal" href="../../pvars.html">Cell Parameter Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Starter Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html#advanced-examples">Advanced Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_2D_grid_factors_conductances.html">2D Grid with factors and conductances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_parameter_sensitivity_analysis.html">Parameter Sensitivity Analysis</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Variable Pacing Frequency</a></li>
 </ul>

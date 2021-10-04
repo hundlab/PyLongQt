@@ -29,20 +29,20 @@ one (or more) cell parameter, such as sodium ion channel conductance, on one
 will stick to one cell parameter and one output, however the technique is not
 changed when preforming this analysis for many inputs possible outputs, except
 that a larger number of simulations may be required. The approach of this
-analysis can be devided into 3 parts:
+analysis can be divided into 3 parts:
 
 1. Generate a population of cells. The cells in this population are not all the
    same and instead vary randomly with respect to the parameters of interest.
-   Typically they are genereated from a normal or lognormal distribution,
+   Typically they are generated from a normal or lognormal distribution,
    who's spread is tuned to cover a reasonable range of possible inputs.
-   The definition of a reasonable range depends on the purpose of the anlysis,
+   The definition of a reasonable range depends on the purpose of the analysis,
    for example if the goal is to understand the parameter's effect in healthy
-   cells, then the population genereated should correspond to a range of plausable
+   cells, then the population generated should correspond to a range of plausible
    values for healthy cells.
 2. Run a simulation for each cell in the generated population and measure the
-   resulting outpus.
+   resulting outputs.
 3. Conduct a linear regression using the parameters as predictors and the 
-   measured output as the response. This creates a linear model who's coefficants
+   measured output as the response. This creates a linear model who's coefficients
    indicated the effect of a change in a parameter to a change in response.
    
 For this example we will specifically be looking at the effect of sodium
@@ -129,14 +129,14 @@ To get a list of the possible parameters use :py:class:`Cell.pars`
  .. code-block:: none
 
 
-    ['dtmin', 'InacaFactorss', 'IkpFactor', 'dtmax', 'IcabFactor']
+    ['AGeo', 'Rcg', 'FDAY', 'InacaFactorbulk', 'Ito2Factor']
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 75-82
 
 Parameter names that end in Factor scale the parameter, so that 1 is the
-default value for all factors, and their resonable range is 0 to infinity.
+default value for all factors, and their reasonable range is 0 to infinity.
 
 The factor we need is `InaFactor`, and to set up the pvars entry we need
 to specify the distribution that will be used to generate the values
@@ -215,7 +215,7 @@ first 5 values
  .. code-block:: none
 
 
-    [0.734625169057192, 0.8649447874032845, 1.1347025661404377, 1.2728872855289446, 2.1089860926185326]
+    [1.534903253124452, 0.7789928077395771, 1.0263547171177279, 1.2129733201298847, 0.9115086295274883]
 
 
 
@@ -293,12 +293,12 @@ its own DataFrame first
 
 .. GENERATED FROM PYTHON SOURCE LINES 140-152
 
-A detailed explaination for those unfamiliar with python classes
+A detailed explanation for those unfamiliar with python classes
 
   To unpack a little about how this line of code works, it uses a generator
   expression `[...]` to generate a list of series which pandas then compiles
   back into a dataframe. More specifically, ``for i,meas in enumerate(meases)`` 
-  gets each indivdual measure (which we name `meas`) dataframe from the `meases` 
+  gets each individual measure (which we name `meas`) dataframe from the `meases` 
   list and enumerates them, 1...20, which we name `i`. Then, we get the last 
   row from each `meas`, using ``meas.loc[meas.index[-1]]``. Finally, we need to 
   rename the :py:class:`Pandas.Series` (the row from the dataframe) so that it
@@ -309,7 +309,7 @@ A detailed explaination for those unfamiliar with python classes
 .. GENERATED FROM PYTHON SOURCE LINES 154-156
 
 Next we would like to have a copy of the parameter values used in the
-simulations, which we will get in the same manor as shown earlier.
+simulations, which we will get in the same manner as shown earlier.
 
 .. GENERATED FROM PYTHON SOURCE LINES 156-159
 
@@ -370,38 +370,36 @@ using the statsmodels pacakge
       return f(*args, **kwds)
                                 OLS Regression Results                            
     ==============================================================================
-    Dep. Variable:       ('vOld', 'peak')   R-squared:                       0.933
-    Model:                            OLS   Adj. R-squared:                  0.930
-    Method:                 Least Squares   F-statistic:                     252.6
-    Date:                Mon, 20 Sep 2021   Prob (F-statistic):           4.88e-12
-    Time:                        17:42:36   Log-Likelihood:                -37.606
-    No. Observations:                  20   AIC:                             79.21
-    Df Residuals:                      18   BIC:                             81.20
+    Dep. Variable:       ('vOld', 'peak')   R-squared:                       0.983
+    Model:                            OLS   Adj. R-squared:                  0.982
+    Method:                 Least Squares   F-statistic:                     1059.
+    Date:                Mon, 04 Oct 2021   Prob (F-statistic):           1.91e-17
+    Time:                        16:27:48   Log-Likelihood:                -19.488
+    No. Observations:                  20   AIC:                             42.98
+    Df Residuals:                      18   BIC:                             44.97
     Df Model:                           1                                         
     Covariance Type:            nonrobust                                         
     ==============================================================================
                      coef    std err          t      P>|t|      [0.025      0.975]
     ------------------------------------------------------------------------------
-    const         29.5860      1.319     22.424      0.000      26.814      32.358
-    InaFactor     17.8438      1.123     15.893      0.000      15.485      20.203
+    const         23.3579      0.753     31.019      0.000      21.776      24.940
+    InaFactor     23.8657      0.734     32.535      0.000      22.325      25.407
     ==============================================================================
-    Omnibus:                        2.704   Durbin-Watson:                   1.938
-    Prob(Omnibus):                  0.259   Jarque-Bera (JB):                2.220
-    Skew:                          -0.732   Prob(JB):                        0.330
-    Kurtosis:                       2.279   Cond. No.                         7.01
+    Omnibus:                        5.869   Durbin-Watson:                   1.368
+    Prob(Omnibus):                  0.053   Jarque-Bera (JB):                3.579
+    Skew:                          -0.962   Prob(JB):                        0.167
+    Kurtosis:                       3.769   Cond. No.                         9.87
     ==============================================================================
 
     Warnings:
     [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-    C:\Users\grat05\AppData\Roaming\Python\Python37\site-packages\seaborn\_decorators.py:43: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
-      FutureWarning
 
 
 
 
 .. GENERATED FROM PYTHON SOURCE LINES 181-185
 
-This model naturally fits quite well. In other senerios it may be necessary
+This model naturally fits quite well. In other scenarios it may be necessary
 preform a more complete linear regression with model diagnostics, etc
 to insure model quality. There are many tutorials on linear regression
 that cover the appropriate steps for running a regression.
@@ -409,7 +407,7 @@ that cover the appropriate steps for running a regression.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.602 seconds)
+   **Total running time of the script:** ( 0 minutes  4.684 seconds)
 
 
 .. _sphx_glr_download_auto_examples_advanced_examples_plot_parameter_sensitivity_analysis.py:

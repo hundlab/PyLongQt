@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Variable Pacing Frequency" href="plot_variable_frequency.html" />
-    <link rel="prev" title="3. 1D Grid Simulation" href="../plot_3_1D_grid_simple_example.html" />
+    <link rel="prev" title="2D Grid with factors and conductances" href="plot_2D_grid_factors_conductances.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -51,20 +51,20 @@ one (or more) cell parameter, such as sodium ion channel conductance, on one
 will stick to one cell parameter and one output, however the technique is not
 changed when preforming this analysis for many inputs possible outputs, except
 that a larger number of simulations may be required. The approach of this
-analysis can be devided into 3 parts:</p>
+analysis can be divided into 3 parts:</p>
 <ol class="arabic simple">
 <li><p>Generate a population of cells. The cells in this population are not all the
 same and instead vary randomly with respect to the parameters of interest.
-Typically they are genereated from a normal or lognormal distribution,
+Typically they are generated from a normal or lognormal distribution,
 who’s spread is tuned to cover a reasonable range of possible inputs.
-The definition of a reasonable range depends on the purpose of the anlysis,
+The definition of a reasonable range depends on the purpose of the analysis,
 for example if the goal is to understand the parameter’s effect in healthy
-cells, then the population genereated should correspond to a range of plausable
+cells, then the population generated should correspond to a range of plausible
 values for healthy cells.</p></li>
 <li><p>Run a simulation for each cell in the generated population and measure the
-resulting outpus.</p></li>
+resulting outputs.</p></li>
 <li><p>Conduct a linear regression using the parameters as predictors and the
-measured output as the response. This creates a linear model who’s coefficants
+measured output as the response. This creates a linear model who’s coefficients
 indicated the effect of a change in a parameter to a change in response.</p></li>
 </ol>
 <p>For this example we will specifically be looking at the effect of sodium
@@ -101,11 +101,11 @@ each simulation.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;dtmin&#39;, &#39;InacaFactorss&#39;, &#39;IkpFactor&#39;, &#39;dtmax&#39;, &#39;IcabFactor&#39;]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;AGeo&#39;, &#39;Rcg&#39;, &#39;FDAY&#39;, &#39;InacaFactorbulk&#39;, &#39;Ito2Factor&#39;]
 </pre></div>
 </div>
 <p>Parameter names that end in Factor scale the parameter, so that 1 is the
-default value for all factors, and their resonable range is 0 to infinity.</p>
+default value for all factors, and their reasonable range is 0 to infinity.</p>
 <p>The factor we need is <cite>InaFactor</cite>, and to set up the pvars entry we need
 to specify the distribution that will be used to generate the values
 we will use lognormal, so we will also need to specify the mean and
@@ -136,7 +136,7 @@ first 5 values</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0.734625169057192, 0.8649447874032845, 1.1347025661404377, 1.2728872855289446, 2.1089860926185326]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[1.534903253124452, 0.7789928077395771, 1.0263547171177279, 1.2129733201298847, 0.9115086295274883]
 </pre></div>
 </div>
 </div>
@@ -169,12 +169,12 @@ its own DataFrame first</p>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">meas</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">meases</span><span class="p">)])</span>
 </pre></div>
 </div>
-<p>A detailed explaination for those unfamiliar with python classes</p>
+<p>A detailed explanation for those unfamiliar with python classes</p>
 <blockquote>
 <div><p>To unpack a little about how this line of code works, it uses a generator
 expression <cite>[…]</cite> to generate a list of series which pandas then compiles
 back into a dataframe. More specifically, <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">i,meas</span> <span class="pre">in</span> <span class="pre">enumerate(meases)</span></code>
-gets each indivdual measure (which we name <cite>meas</cite>) dataframe from the <cite>meases</cite>
+gets each individual measure (which we name <cite>meas</cite>) dataframe from the <cite>meases</cite>
 list and enumerates them, 1…20, which we name <cite>i</cite>. Then, we get the last
 row from each <cite>meas</cite>, using <code class="docutils literal notranslate"><span class="pre">meas.loc[meas.index[-1]]</span></code>. Finally, we need to
 rename the <code class="xref py py-class docutils literal notranslate"><span class="pre">Pandas.Series</span></code> (the row from the dataframe) so that it
@@ -183,7 +183,7 @@ will have the correct index when they are all compiled into a new dataframe
 dataframe would have the same index.</p>
 </div></blockquote>
 <p>Next we would like to have a copy of the parameter values used in the
-simulations, which we will get in the same manor as shown earlier.</p>
+simulations, which we will get in the same manner as shown earlier.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parameters</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="p">[</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">trials</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -213,38 +213,36 @@ using the statsmodels pacakge</p>
   return f(*args, **kwds)
                             OLS Regression Results
 ==============================================================================
-Dep. Variable:       (&#39;vOld&#39;, &#39;peak&#39;)   R-squared:                       0.933
-Model:                            OLS   Adj. R-squared:                  0.930
-Method:                 Least Squares   F-statistic:                     252.6
-Date:                Mon, 20 Sep 2021   Prob (F-statistic):           4.88e-12
-Time:                        17:42:36   Log-Likelihood:                -37.606
-No. Observations:                  20   AIC:                             79.21
-Df Residuals:                      18   BIC:                             81.20
+Dep. Variable:       (&#39;vOld&#39;, &#39;peak&#39;)   R-squared:                       0.983
+Model:                            OLS   Adj. R-squared:                  0.982
+Method:                 Least Squares   F-statistic:                     1059.
+Date:                Mon, 04 Oct 2021   Prob (F-statistic):           1.91e-17
+Time:                        16:27:48   Log-Likelihood:                -19.488
+No. Observations:                  20   AIC:                             42.98
+Df Residuals:                      18   BIC:                             44.97
 Df Model:                           1
 Covariance Type:            nonrobust
 ==============================================================================
                  coef    std err          t      P&gt;|t|      [0.025      0.975]
 ------------------------------------------------------------------------------
-const         29.5860      1.319     22.424      0.000      26.814      32.358
-InaFactor     17.8438      1.123     15.893      0.000      15.485      20.203
+const         23.3579      0.753     31.019      0.000      21.776      24.940
+InaFactor     23.8657      0.734     32.535      0.000      22.325      25.407
 ==============================================================================
-Omnibus:                        2.704   Durbin-Watson:                   1.938
-Prob(Omnibus):                  0.259   Jarque-Bera (JB):                2.220
-Skew:                          -0.732   Prob(JB):                        0.330
-Kurtosis:                       2.279   Cond. No.                         7.01
+Omnibus:                        5.869   Durbin-Watson:                   1.368
+Prob(Omnibus):                  0.053   Jarque-Bera (JB):                3.579
+Skew:                          -0.962   Prob(JB):                        0.167
+Kurtosis:                       3.769   Cond. No.                         9.87
 ==============================================================================
 
 Warnings:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-C:\Users\grat05\AppData\Roaming\Python\Python37\site-packages\seaborn\_decorators.py:43: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
-  FutureWarning
 </pre></div>
 </div>
-<p>This model naturally fits quite well. In other senerios it may be necessary
+<p>This model naturally fits quite well. In other scenarios it may be necessary
 preform a more complete linear regression with model diagnostics, etc
 to insure model quality. There are many tutorials on linear regression
 that cover the appropriate steps for running a regression.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.602 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.684 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-advanced-examples-plot-parameter-sensitivity-analysis-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4fe4b34b4145ddc3285e20bb6cde778b/plot_parameter_sensitivity_analysis.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_parameter_sensitivity_analysis.py</span></code></a></p>
@@ -283,6 +281,7 @@ that cover the appropriate steps for running a regression.</p>
 <li class="toctree-l1"><a class="reference internal" href="../../pvars.html">Cell Parameter Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Starter Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html#advanced-examples">Advanced Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_2D_grid_factors_conductances.html">2D Grid with factors and conductances</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Parameter Sensitivity Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_variable_frequency.html">Variable Pacing Frequency</a></li>
 </ul>
@@ -294,7 +293,7 @@ that cover the appropriate steps for running a regression.</p>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">Starter Examples</a><ul>
-      <li>Previous: <a href="../plot_3_1D_grid_simple_example.html" title="previous chapter">3. 1D Grid Simulation</a></li>
+      <li>Previous: <a href="plot_2D_grid_factors_conductances.html" title="previous chapter">2D Grid with factors and conductances</a></li>
       <li>Next: <a href="plot_variable_frequency.html" title="next chapter">Variable Pacing Frequency</a></li>
   </ul></li>
   </ul></li>

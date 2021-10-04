@@ -122,3 +122,4 @@ plt.figure()
 plt.plot('t', 'iNa', data=trace_subset)
 plt.ylabel('Sodium Current (pA/pF)')
 plt.xlabel('Time (ms)')
+

@@ -9,7 +9,7 @@ This example illustrates how to setup and run a simple 1D grid simulation,
 also known as a fiber simulation with a row of cells. These simulations
 show how the cell models interact rather than examining them in isolation. 2D
 grids can be setup in the same fashion as 1D fibers, and there is also a more
-advanced tutorial on seting up a 2D grid showing the possible customizations.
+advanced tutorial on setting up a 2D grid showing the possible customizations.
 """
 
 #%%
@@ -27,7 +27,7 @@ proto = pylqt.protoMap['Grid Protocol']()
 
 #%%
 # To configure the size of the Fiber we will add one row and the number of
-# columns we would like to have for the simulation. Due to the detialed nature
+# columns we would like to have for the simulation. Due to the detailed nature
 # of many of the cell models, larger fibers/grids may be very slow and 
 # computationally demanding.
 
@@ -80,7 +80,7 @@ proto.grid.simpleGrid()
 proto.stimNodes = {(0,0), (0,1)}
 
 #%%
-# To select which cells will be stimulated create a set of touples with the
+# To select which cells will be stimulated create a set of tuples with the
 # positions of cells to be stimulated as shown above.
 #
 # The rest of the settings can be modified in the same fashion as before.
@@ -180,4 +180,5 @@ for i in range(n_cols):
              label=str(i))
 plt.xlabel('Time (ms)')
 _ = plt.ylabel('Voltage (mV)')
+
 

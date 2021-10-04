@@ -111,7 +111,7 @@ mutation to the RyR2.</p>
 </pre></div>
 </div>
 <p>But when we try and add the <cite>S2814D</cite> option, this overwrote the <cite>S2814A</cite>! This
-is becuase some combinations of options may not be possible, in this case
+is because some combinations of options may not be possible, in this case
 these two options are both point mutations at the same location in the RyR2,
 so it would not be possible for a model to have both at once.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">setOption</span><span class="p">(</span><span class="s1">&#39;S2814D&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -143,11 +143,11 @@ as multiple files will be written into that directory.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;C:/Users/grat05/Documents/data091721-1647&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;C:\\Users\\grat05\\Documents\\data100421-1627&#39;
 </pre></div>
 </div>
 <p>The rest of the setup deals with choosing which variables to save, and what
-infomation about them to save. The first options are for controlling which
+information about them to save. The first options are for controlling which
 variables have traces saved, which are records of that variable’s value
 throughout the simulation. By default time and voltage are traced, time being
 critical for most common plots that are made with traces.</p>
@@ -200,14 +200,14 @@ there are and preform the necessary setup.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;derivt&#39;, &#39;durtime1&#39;, &#39;deriv2ndt&#39;, &#39;maxderiv&#39;, &#39;maxt&#39;, &#39;ddr&#39;, &#39;amp&#39;, &#39;mint&#39;, &#39;dur&#39;, &#39;peak&#39;, &#39;vartakeoff&#39;, &#39;cl&#39;, &#39;min&#39;}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;ddr&#39;, &#39;mint&#39;, &#39;dur&#39;, &#39;derivt&#39;, &#39;maxt&#39;, &#39;cl&#39;, &#39;durtime1&#39;, &#39;deriv2ndt&#39;, &#39;amp&#39;, &#39;peak&#39;, &#39;min&#39;, &#39;vartakeoff&#39;, &#39;maxderiv&#39;}
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">measureOptions</span><span class="p">(</span><span class="s1">&#39;iNa&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;derivt&#39;, &#39;maxderiv&#39;, &#39;maxt&#39;, &#39;amp&#39;, &#39;avg&#39;, &#39;mint&#39;, &#39;peak&#39;, &#39;stdev&#39;, &#39;min&#39;}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;mint&#39;, &#39;maxt&#39;, &#39;derivt&#39;, &#39;amp&#39;, &#39;peak&#39;, &#39;avg&#39;, &#39;stdev&#39;, &#39;min&#39;, &#39;maxderiv&#39;}
 </pre></div>
 </div>
 <p>There are different measure options for different variables, at this time
@@ -221,7 +221,7 @@ and avgerage current.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;iNa&#39;: {&#39;min&#39;, &#39;avg&#39;}, &#39;vOld&#39;: {&#39;cl&#39;, &#39;peak&#39;, &#39;min&#39;}}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;iNa&#39;: {&#39;min&#39;, &#39;avg&#39;}, &#39;vOld&#39;: {&#39;min&#39;, &#39;peak&#39;, &#39;cl&#39;}}
 </pre></div>
 </div>
 </div>
@@ -229,7 +229,7 @@ and avgerage current.</p>
 <h2>Run the simulation<a class="headerlink" href="#run-the-simulation" title="Permalink to this headline">¶</a></h2>
 <p>Now that the simulation is all setup we can run it, by constructing a
 <code class="xref py py-class docutils literal notranslate"><span class="pre">RunSim</span></code> object and adding the configured protocol to it.
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.run()</span></code> wont stop the python script from continuing after the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.run()</span></code> wont stop the python script from continuing after the
 simulation has started, so <code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.wait()</span></code> is called to pause
 the script until the simulations are finished. For a progress bar use
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">RunSim.printProgressLoop()</span></code></p>
@@ -275,7 +275,7 @@ the data directory and returns the chosen traces and measures each in
 the traces and measures, respectively. Each element in the list is its own
 trial, so for this example where only one trial was run there is only one
 element in each list.</p>
-<p>After extrating the data we will use <code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> to make a
+<p>After extracting the data we will use <code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> to make a
 few plots of the data.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">trace</span><span class="p">)</span>
@@ -314,7 +314,7 @@ as sodium current is always negative</p>
 </pre></div>
 </div>
 <img alt="plot 1 current clamp simple example" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_1_current_clamp_simple_example_003.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  20.506 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  19.865 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-1-current-clamp-simple-example-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/5e233f085b2c41416b9474e170144574/plot_1_current_clamp_simple_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_1_current_clamp_simple_example.py</span></code></a></p>

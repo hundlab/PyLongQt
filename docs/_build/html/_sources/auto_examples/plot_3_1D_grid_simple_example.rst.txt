@@ -26,7 +26,7 @@ This example illustrates how to setup and run a simple 1D grid simulation,
 also known as a fiber simulation with a row of cells. These simulations
 show how the cell models interact rather than examining them in isolation. 2D
 grids can be setup in the same fashion as 1D fibers, and there is also a more
-advanced tutorial on seting up a 2D grid showing the possible customizations.
+advanced tutorial on setting up a 2D grid showing the possible customizations.
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-23
 
@@ -57,11 +57,11 @@ individual cell.
 .. GENERATED FROM PYTHON SOURCE LINES 29-33
 
 To configure the size of the Fiber we will add one row and the number of
-columns we would like to have for the simulation. Due to the detialed nature
+columns we would like to have for the simulation. Due to the detailed nature
 of many of the cell models, larger fibers/grids may be very slow and 
 computationally demanding.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 33-38
 
 .. code-block:: default
 
@@ -70,7 +70,24 @@ computationally demanding.
     proto.grid.addRow()
     proto.grid.addColumns(n_cols)
 
-    proto.grid
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 39-41
+
+We can also use the :py:meth:`Grid.simpleGrid` to get a representation
+of the grid that is easier to visualize
+
+.. GENERATED FROM PYTHON SOURCE LINES 41-44
+
+.. code-block:: default
+
+
+    proto.grid.simpleGrid()
 
 
 
@@ -83,11 +100,11 @@ computationally demanding.
  .. code-block:: none
 
 
-    Grid([Fiber([<Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>, <Node <Cell Type='Inexcitable Cell'>>])])
+    (array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]), {'Inexcitable Cell': 0})
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-46
+.. GENERATED FROM PYTHON SOURCE LINES 45-50
 
 When new cells are added to the grid, they are automatically filled with a 
 cell model called 'Inexcitable Cell', this cell acts like the edge of the
@@ -95,11 +112,11 @@ grid. It is not excited by its neighbors and cannot pass any signal between
 them. To replace these cells with more interesting cells, we will create new
 cell objects and place them in the grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 To get the possible options for a node in a grid use
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-52
+.. GENERATED FROM PYTHON SOURCE LINES 53-56
 
 .. code-block:: default
 
@@ -121,11 +138,11 @@ To get the possible options for a node in a grid use
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 rather than
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-57
+.. GENERATED FROM PYTHON SOURCE LINES 58-61
 
 .. code-block:: default
 
@@ -147,7 +164,7 @@ rather than
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-63
+.. GENERATED FROM PYTHON SOURCE LINES 62-67
 
 as the cell cannot be set at the protocol level when there is a grid structure.
 
@@ -155,7 +172,7 @@ as the cell cannot be set at the protocol level when there is a grid structure.
    At this time all nodes will have the same options, so it is not necessary to
    check each node individually.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-70
+.. GENERATED FROM PYTHON SOURCE LINES 67-74
 
 .. code-block:: default
 
@@ -164,7 +181,7 @@ as the cell cannot be set at the protocol level when there is a grid structure.
         node = proto.grid[0,col]
         node.setCellByName('Canine Ventricular (Hund-Rudy 2009)')
 
-    proto.grid
+    proto.grid.simpleGrid()
 
 
 
@@ -177,18 +194,18 @@ as the cell cannot be set at the protocol level when there is a grid structure.
  .. code-block:: none
 
 
-    Grid([Fiber([<Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>, <Node <Cell Type='Canine Ventricular (Hund-Rudy 2009)'>>])])
+    (array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]), {'Canine Ventricular (Hund-Rudy 2009)': 0})
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-75
+.. GENERATED FROM PYTHON SOURCE LINES 75-79
 
 Now that all the cells have been setup we can configure the stimulus settings.
 Many of the settings are the same, however now we must also select the cells
 that we want to stimulate. Typically this is one edge or one corner of the
 grid, but it can be any cells as desired.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-78
+.. GENERATED FROM PYTHON SOURCE LINES 79-82
 
 .. code-block:: default
 
@@ -202,14 +219,14 @@ grid, but it can be any cells as desired.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-83
+.. GENERATED FROM PYTHON SOURCE LINES 83-87
 
-To select which cells will be stimulated create a set of touples with the
+To select which cells will be stimulated create a set of tuples with the
 positions of cells to be stimulated as shown above.
 
 The rest of the settings can be modified in the same fashion as before.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-86
+.. GENERATED FROM PYTHON SOURCE LINES 87-90
 
 .. code-block:: default
 
@@ -223,11 +240,11 @@ The rest of the settings can be modified in the same fashion as before.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 By detault the simulation will be 5000 ms
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 92-95
 
 .. code-block:: default
 
@@ -249,7 +266,7 @@ By detault the simulation will be 5000 ms
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-97
+.. GENERATED FROM PYTHON SOURCE LINES 96-101
 
 Measures and traces can also be taken, the setup is largely similar to single
 cell simulations with the addition of selecting the nodes to be measured.
@@ -257,7 +274,7 @@ These nodes can be selected using the :py:class:`MeasureManager` and are the
 same nodes used for saving traces and taking measurements. For this example
 we will selected every node.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-104
+.. GENERATED FROM PYTHON SOURCE LINES 101-108
 
 .. code-block:: default
 
@@ -279,15 +296,15 @@ we will selected every node.
  .. code-block:: none
 
 
-    {'iNa': {'min', 'avg'}, 'vOld': {'cl', 'peak', 'min'}}
+    {'iNa': {'min', 'avg'}, 'vOld': {'min', 'peak', 'cl'}}
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-106
+.. GENERATED FROM PYTHON SOURCE LINES 109-110
 
 The traces can be set in the same way as before using :py:data:`Protocol.cell`
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-109
+.. GENERATED FROM PYTHON SOURCE LINES 110-113
 
 .. code-block:: default
 
@@ -301,11 +318,11 @@ The traces can be set in the same way as before using :py:data:`Protocol.cell`
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+.. GENERATED FROM PYTHON SOURCE LINES 114-115
 
 Now the simulation is all setup and can be run.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-117
+.. GENERATED FROM PYTHON SOURCE LINES 115-121
 
 .. code-block:: default
 
@@ -322,14 +339,14 @@ Now the simulation is all setup and can be run.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-122
+.. GENERATED FROM PYTHON SOURCE LINES 122-126
 
 Plot the Results
 ----------------
 
 Disable future warnings to avoid excess outputs from plotting
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-127
+.. GENERATED FROM PYTHON SOURCE LINES 127-131
 
 .. code-block:: default
 
@@ -344,11 +361,11 @@ Disable future warnings to avoid excess outputs from plotting
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 132-133
 
 The data can once again be read using :py:class:`DataReader`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-136
+.. GENERATED FROM PYTHON SOURCE LINES 133-140
 
 .. code-block:: default
 
@@ -366,12 +383,12 @@ The data can once again be read using :py:class:`DataReader`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-139
+.. GENERATED FROM PYTHON SOURCE LINES 141-143
 
 The trace DataFrame's columns now have two levels, one for the cell's position and 
 one for the variable name.
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-142
+.. GENERATED FROM PYTHON SOURCE LINES 143-146
 
 .. code-block:: default
 
@@ -389,21 +406,21 @@ one for the variable name.
  .. code-block:: none
 
 
-    MultiIndex([((0, 7),  'iNa'),
-                ((0, 7),    't'),
-                ((0, 7), 'vOld'),
-                ((0, 9),  'iNa'),
-                ((0, 9),    't')],
+    MultiIndex([((0, 2),  'iNa'),
+                ((0, 2),    't'),
+                ((0, 2), 'vOld'),
+                ((0, 5),  'iNa'),
+                ((0, 5),    't')],
                names=['Cell', 'Variable'])
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-145
+.. GENERATED FROM PYTHON SOURCE LINES 147-149
 
 Similarly the measure DataFrame's columns have an additional level for the
 cell's position
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-149
+.. GENERATED FROM PYTHON SOURCE LINES 149-153
 
 .. code-block:: default
 
@@ -431,12 +448,12 @@ cell's position
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-152
+.. GENERATED FROM PYTHON SOURCE LINES 154-156
 
 We can use the trace Dataframe to produce traces of each of the action
 potenitals in the fiber and color them by their location in the fiber
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-166
+.. GENERATED FROM PYTHON SOURCE LINES 156-170
 
 .. code-block:: default
 
@@ -465,11 +482,11 @@ potenitals in the fiber and color them by their location in the fiber
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-168
+.. GENERATED FROM PYTHON SOURCE LINES 171-172
 
 Then let's create one more plot to show the action potential propagation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-180
+.. GENERATED FROM PYTHON SOURCE LINES 172-185
 
 .. code-block:: default
 
@@ -488,6 +505,7 @@ Then let's create one more plot to show the action potential propagation.
 
 
 
+
 .. image:: /auto_examples/images/sphx_glr_plot_3_1D_grid_simple_example_002.png
     :alt: plot 3 1D grid simple example
     :class: sphx-glr-single-img
@@ -499,7 +517,7 @@ Then let's create one more plot to show the action potential propagation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.415 seconds)
+   **Total running time of the script:** ( 0 minutes  5.446 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_3_1D_grid_simple_example.py:

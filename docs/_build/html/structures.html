@@ -184,12 +184,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="PyLongQt.Structures.Grid.np">
-<em class="property">property </em><code class="sig-name descname">np</code><a class="headerlink" href="#PyLongQt.Structures.Grid.np" title="Permalink to this definition">¶</a></dt>
-<dd><p>WHAT IS THIS</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="PyLongQt.Structures.Grid.removeColumn">
 <code class="sig-name descname">removeColumn</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Grid</em>, <em class="sig-param">index: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Grid.removeColumn" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
@@ -265,6 +259,19 @@
 <dd><p>The shape of the grid (rows, columns)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.simpleGrid">
+<code class="sig-name descname">simpleGrid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PyLongQt.Structures.Grid.simpleGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a simplified representation of the grid. Each node is replaced by a
+number to make visualization easier. A lookup table between the cell’s types
+and the number used in the simplified grid is also returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Grid.size">
+<em class="property">property </em><code class="sig-name descname">size</code><a class="headerlink" href="#PyLongQt.Structures.Grid.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -283,8 +290,13 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="PyLongQt.Structures.Node.getCondConst">
-<code class="sig-name descname">getCondConst</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#PyLongQt.Structures.Node.getCondConst" title="Permalink to this definition">¶</a></dt>
+<dt id="PyLongQt.Structures.Node.column">
+<em class="property">property </em><code class="sig-name descname">column</code><a class="headerlink" href="#PyLongQt.Structures.Node.column" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.getConductivity">
+<code class="sig-name descname">getConductivity</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#PyLongQt.Structures.Node.getConductivity" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Get the conductivity of a side</dt><dd><dl class="field-list simple">
 <dt class="field-odd">side</dt>
@@ -296,9 +308,17 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="PyLongQt.Structures.Node.resetCondConst">
-<code class="sig-name descname">resetCondConst</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side = -1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Node.resetCondConst" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dt id="PyLongQt.Structures.Node.resetConductivity">
+<code class="sig-name descname">resetConductivity</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#PyLongQt.Structures.Node.resetConductivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>resetConductivity(self: PyLongQt._PyLongQt.Structures.Node) -&gt; None</p></li>
+</ol>
+<p>Reset the conductivity of every side</p>
+<ol class="arabic simple" start="2">
+<li><p>resetConductivity(self: PyLongQt._PyLongQt.Structures.Node, side: PyLongQt._PyLongQt.Side) -&gt; None</p></li>
+</ol>
+<dl class="simple">
 <dt>Reset the conductivity of a side</dt><dd><dl class="field-list simple">
 <dt class="field-odd">side</dt>
 <dd class="field-odd"><p>The side to reset (if left as the default option all sides will be reset)</p>
@@ -307,6 +327,11 @@
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.row">
+<em class="property">property </em><code class="sig-name descname">row</code><a class="headerlink" href="#PyLongQt.Structures.Node.row" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="PyLongQt.Structures.Node.setCellByName">
@@ -322,18 +347,31 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="PyLongQt.Structures.Node.setCondConst">
-<code class="sig-name descname">setCondConst</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em>, <em class="sig-param">perc: bool = True</em>, <em class="sig-param">value: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Node.setCondConst" title="Permalink to this definition">¶</a></dt>
+<dt id="PyLongQt.Structures.Node.setConductivityDirect">
+<code class="sig-name descname">setConductivityDirect</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em>, <em class="sig-param">value: float</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Node.setConductivityDirect" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>Set the conductivity (what are the units) of a side to a value</dt><dd><dl class="field-list simple">
+<dt>Set the conductivity (what are the units) of a side to a value directly</dt><dd><dl class="field-list simple">
 <dt class="field-odd">side</dt>
 <dd class="field-odd"><p>The side to set</p>
 </dd>
-<dt class="field-even">perc</dt>
-<dd class="field-even"><p>If the value is a precentage or raw</p>
+<dt class="field-even">value</dt>
+<dd class="field-even"><p>The conductivity value to set</p>
 </dd>
-<dt class="field-odd">value</dt>
-<dd class="field-odd"><p>The value</p>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="PyLongQt.Structures.Node.setResistivity">
+<code class="sig-name descname">setResistivity</code><span class="sig-paren">(</span><em class="sig-param">self: PyLongQt._PyLongQt.Structures.Node</em>, <em class="sig-param">side: PyLongQt._PyLongQt.Side</em>, <em class="sig-param">percentage: float = 100</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#PyLongQt.Structures.Node.setResistivity" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set the resistivity of the node</dt><dd><dl class="field-list simple">
+<dt class="field-odd">side</dt>
+<dd class="field-odd"><p>The side to set</p>
+</dd>
+<dt class="field-even">percentage</dt>
+<dd class="field-even"><p>The percentage to change the resistivity</p>
 </dd>
 </dl>
 </dd>

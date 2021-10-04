@@ -12,7 +12,7 @@ can be applied to change any parameter during runtime.
 """
 
 #%%
-# Inital Setup
+# Initial Setup
 # -------------
 #
 # First we will setup paced current clamp simulation with any of the options
@@ -40,7 +40,7 @@ proto.writetime = 0
 proto.measureMgr.addMeasure('vOld', {'cl', 'peak'})
 
 #%%
-# Now that the basic setup is complete we will use an additonal feature
+# Now that the basic setup is complete we will use an additional feature
 # of :py:class:`Protocol`, :py:meth:`Protocol.setRunDuring`, which allows
 # us to set a function to be called periodically while the simulation is
 # running. The settings for the run durring function are the first time
@@ -49,11 +49,11 @@ proto.measureMgr.addMeasure('vOld', {'cl', 'peak'})
 #
 # .. note::
 #    There are two other features which similarly allow for a user defined
-#    function to be run durring the simulation: `setRunBefore` and `setRunAfter`.
-#    As the names imply these will be run at the begining and end of a simulation.
+#    function to be run during the simulation: `setRunBefore` and `setRunAfter`.
+#    As the names imply these will be run at the beginning and end of a simulation.
 
 #%%
-# Define the run durring function
+# Define the run during function
 # --------------------------------
 #
 # The user defined function we will supply to the method will be a special one.
@@ -63,7 +63,7 @@ proto.measureMgr.addMeasure('vOld', {'cl', 'peak'})
 
 #%%
 # To do this we will define the class `IterateBCLs`, which will take the list
-# of `bcl`\ s we want to use, and then update the protocol everytime it is called
+# of `bcl`\ s we want to use, and then update the protocol every time it is called
 # as a function.
 
 class IterateBCLs():
@@ -85,10 +85,10 @@ class IterateBCLs():
             proto.paceflag = False
 
 #%%
-# A detailed explaination for those unfamiliar with python classes
+# A detailed explanation for those unfamiliar with python classes
 #
 #   The `__init__` method is the one that is
-#   called when `IterateBCLs` is created. In our case it initalizes the 
+#   called when `IterateBCLs` is created. In our case it initializes the 
 #   `proto_lookup` table, and saves the `bcl`\ s for use later. To call this method
 #   run ``func = IterateBCLs([1000,500])``. The `__len__`
 #   function returns the number of `bcl`\ s that are stored, and could be called
@@ -108,9 +108,9 @@ class IterateBCLs():
 # multiple simulations using `numtrials`. That is not the case in this example,
 # but this allows the `IterateBCLs` class to be more generally useful. The
 # lookup table is needed to ensure that `IterateBCLs` keeps track of the number
-# of calls each simulation made independantly of the others. When the simulations
+# of calls each simulation made independently of the others. When the simulations
 # are run the protocol is copied once for each simulation, so its location 
-# in memory can be used to uniquly identify it.
+# in memory can be used to uniquely identify it.
 #
 # Now that the `IterateBCLs` class is defined we can create an instance of it
 # and add it to the protocol

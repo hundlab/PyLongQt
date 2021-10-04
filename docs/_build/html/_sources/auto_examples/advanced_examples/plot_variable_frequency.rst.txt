@@ -29,7 +29,7 @@ can be applied to change any parameter during runtime.
 
 .. GENERATED FROM PYTHON SOURCE LINES 15-20
 
-Inital Setup
+Initial Setup
 -------------
 
 First we will setup paced current clamp simulation with any of the options
@@ -70,7 +70,7 @@ we would like.
 
 .. GENERATED FROM PYTHON SOURCE LINES 43-54
 
-Now that the basic setup is complete we will use an additonal feature
+Now that the basic setup is complete we will use an additional feature
 of :py:class:`Protocol`, :py:meth:`Protocol.setRunDuring`, which allows
 us to set a function to be called periodically while the simulation is
 running. The settings for the run durring function are the first time
@@ -79,12 +79,12 @@ for the function to be called `firstRun` (in ms), how often it should be run
 
 .. note::
    There are two other features which similarly allow for a user defined
-   function to be run durring the simulation: `setRunBefore` and `setRunAfter`.
-   As the names imply these will be run at the begining and end of a simulation.
+   function to be run during the simulation: `setRunBefore` and `setRunAfter`.
+   As the names imply these will be run at the beginning and end of a simulation.
 
 .. GENERATED FROM PYTHON SOURCE LINES 56-63
 
-Define the run durring function
+Define the run during function
 --------------------------------
 
 The user defined function we will supply to the method will be a special one.
@@ -95,7 +95,7 @@ and we will do that in order to allow our 'function' to store all of the
 .. GENERATED FROM PYTHON SOURCE LINES 65-68
 
 To do this we will define the class `IterateBCLs`, which will take the list
-of `bcl`\ s we want to use, and then update the protocol everytime it is called
+of `bcl`\ s we want to use, and then update the protocol every time it is called
 as a function.
 
 .. GENERATED FROM PYTHON SOURCE LINES 68-87
@@ -130,10 +130,10 @@ as a function.
 
 .. GENERATED FROM PYTHON SOURCE LINES 88-117
 
-A detailed explaination for those unfamiliar with python classes
+A detailed explanation for those unfamiliar with python classes
 
   The `__init__` method is the one that is
-  called when `IterateBCLs` is created. In our case it initalizes the 
+  called when `IterateBCLs` is created. In our case it initializes the 
   `proto_lookup` table, and saves the `bcl`\ s for use later. To call this method
   run ``func = IterateBCLs([1000,500])``. The `__len__`
   function returns the number of `bcl`\ s that are stored, and could be called
@@ -153,9 +153,9 @@ For step 1, we need to use a lookup table for the case where we are running
 multiple simulations using `numtrials`. That is not the case in this example,
 but this allows the `IterateBCLs` class to be more generally useful. The
 lookup table is needed to ensure that `IterateBCLs` keeps track of the number
-of calls each simulation made independantly of the others. When the simulations
+of calls each simulation made independently of the others. When the simulations
 are run the protocol is copied once for each simulation, so its location 
-in memory can be used to uniquly identify it.
+in memory can be used to uniquely identify it.
 
 Now that the `IterateBCLs` class is defined we can create an instance of it
 and add it to the protocol
@@ -288,7 +288,7 @@ and we will follow it up with the measured cycle length
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.748 seconds)
+   **Total running time of the script:** ( 0 minutes  1.291 seconds)
 
 
 .. _sphx_glr_download_auto_examples_advanced_examples_plot_variable_frequency.py:

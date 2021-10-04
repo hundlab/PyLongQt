@@ -5,10 +5,12 @@
 
 Computation times
 =================
-**00:01.748** total execution time for **auto_examples_advanced_examples** files:
+**00:22.116** total execution time for **auto_examples_advanced_examples** files:
 
 +-------------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_advanced_examples_plot_variable_frequency.py` (``plot_variable_frequency.py``)                         | 00:01.748 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_advanced_examples_plot_2D_grid_factors_conductances.py` (``plot_2D_grid_factors_conductances.py``)     | 00:16.142 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_advanced_examples_plot_parameter_sensitivity_analysis.py` (``plot_parameter_sensitivity_analysis.py``) | 00:00.000 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_advanced_examples_plot_parameter_sensitivity_analysis.py` (``plot_parameter_sensitivity_analysis.py``) | 00:04.684 | 0.0 MB |
++-------------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_advanced_examples_plot_variable_frequency.py` (``plot_variable_frequency.py``)                         | 00:01.291 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------------------------+-----------+--------+

@@ -102,6 +102,27 @@ best to start off there.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to setup and run a 2D grid simulation, using  options to modify co...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/advanced_examples/images/thumb/sphx_glr_plot_2D_grid_factors_conductances_thumb.png
+     :alt: 2D Grid with factors and conductances
+
+     :ref:`sphx_glr_auto_examples_advanced_examples_plot_2D_grid_factors_conductances.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/advanced_examples/plot_2D_grid_factors_conductances
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to conduct parameter sensitivity analysis. The  purpose of conduci...">
 
 .. only:: html
