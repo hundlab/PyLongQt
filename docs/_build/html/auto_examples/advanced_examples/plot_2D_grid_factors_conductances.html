@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>2D Grid with factors and conductances &#8212; PyLongQt 0.5 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Parameter Sensitivity Analysis" href="plot_parameter_sensitivity_analysis.html" />
+    <link rel="prev" title="3. 1D Grid Simulation" href="../plot_3_1D_grid_simple_example.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-advanced-examples-plot-2d-grid-factors-conductances-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="d-grid-with-factors-and-conductances">
+<span id="sphx-glr-auto-examples-advanced-examples-plot-2d-grid-factors-conductances-py"></span><h1>2D Grid with factors and conductances<a class="headerlink" href="#d-grid-with-factors-and-conductances" title="Permalink to this headline">¶</a></h1>
+<p>This example illustrates how to setup and run a 2D grid simulation, using
+options to modify conductances and parameters for each cell. For this example
+we will setup a grid with a non-conducting center.</p>
+<div class="section" id="setup-run-the-simulation">
+<h2>Setup &amp; Run the Simulation<a class="headerlink" href="#setup-run-the-simulation" title="Permalink to this headline">¶</a></h2>
+<p>First we will setup the simulation so that the border cells are all conducting
+cells while the internal cells are not excitable, creating a ring of excitable
+cells</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">PyLongQt</span> <span class="k">as</span> <span class="nn">pylqt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">proto</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">protoMap</span><span class="p">[</span><span class="s1">&#39;Grid Protocol&#39;</span><span class="p">]()</span>
+
+<span class="n">n_cols</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_rows</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">addRows</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">addColumns</span><span class="p">(</span><span class="n">n_cols</span><span class="p">)</span>
+
+<span class="n">border_cells</span> <span class="o">=</span> <span class="p">{(</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)}</span> <span class="o">|</span> \
+    <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span><span class="p">)}</span> <span class="o">|</span> \
+    <span class="p">{(</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)}</span> <span class="o">|</span> \
+    <span class="p">{(</span><span class="mi">4</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cols</span><span class="p">)}</span>
+
+<span class="k">for</span> <span class="n">row</span><span class="p">,</span><span class="n">col</span> <span class="ow">in</span> <span class="n">border_cells</span><span class="p">:</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">]</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">setCellByName</span><span class="p">(</span><span class="s1">&#39;Canine Ventricular (Hund-Rudy 2009)&#39;</span><span class="p">)</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">simpleGrid</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(array([[0, 0, 0, 0, 0],
+       [0, 1, 1, 1, 0],
+       [0, 1, 1, 1, 0],
+       [0, 1, 1, 1, 0],
+       [0, 0, 0, 0, 0]]), {&#39;Canine Ventricular (Hund-Rudy 2009)&#39;: 0, &#39;Inexcitable Cell&#39;: 1})
+</pre></div>
+</div>
+<p>Lets only stimulate the middle cell in the 1st column</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">stimNodes</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)}</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">stimt</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">stimval</span> <span class="o">=</span> <span class="o">-</span><span class="mi">150</span>
+</pre></div>
+</div>
+<p>And add some measures for each of the excitable cells</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">dataNodes</span> <span class="o">=</span> <span class="n">border_cells</span>
+
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;peak&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;cl&#39;</span><span class="p">})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">addMeasure</span><span class="p">(</span><span class="s1">&#39;iNa&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">measureMgr</span><span class="o">.</span><span class="n">selection</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;iNa&#39;: {&#39;min&#39;, &#39;avg&#39;}, &#39;vOld&#39;: {&#39;min&#39;, &#39;peak&#39;, &#39;cl&#39;}}
+</pre></div>
+</div>
+<p>and some traces</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">variableSelection</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;vOld&#39;</span><span class="p">,</span> <span class="s1">&#39;iNa&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>There are a few further customizations which we will show for the grid (they
+are also available for a fiber). The first is the cell constants (called pvars,
+such as the Factors used in the parameter sensitivity analysis example) which
+allow for values of the parameters to be set. Unlike for the single cell,
+the parameters are not for running multiple simulations, rather they are for
+the spatial positioning of the parameter values across the grid.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="p">[</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="o">.</span><span class="n">IonChanParam</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="o">.</span><span class="n">Distribution</span><span class="o">.</span><span class="n">none</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="o">.</span><span class="n">setStartCells</span><span class="p">(</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">,</span> <span class="p">{(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)})</span>
+<span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="o">.</span><span class="n">setMaxDistAndVal</span><span class="p">(</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first line above adds a rule for the sodium current. The first argument is
+the starting value and the second is how much the value should decrease for
+each node of distance it moves away from the starting cell. The starting cell
+has not yet been set and the default behavior is for every cell to be a start
+cell. To fix this we set a single start cell on the next line using the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">setStartCells()</span></code> method.</p>
+<p>We can also set limitations on the cells that will be effected, by limiting
+the maximum distance at which the rule will be applied, and the maximum
+value that the rule will apply. These are the first and second arguments of
+the next line restricting the distance to two steps away, and not changing
+the maximum value.</p>
+<p>Now lets create a small visualization of how all these rules will be applied</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">cells_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="p">[</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">idx_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">cells_list</span><span class="p">))</span>
+<span class="n">vis</span><span class="p">[</span><span class="n">idx_list</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">pvars</span><span class="p">[</span><span class="s1">&#39;InaFactor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="n">vis</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[1.  , 0.9 , 0.95, 1.  , 0.95],
+       [1.  , 1.  , 1.  , 1.  , 0.9 ],
+       [1.  , 1.  , 1.  , 1.  , 1.  ],
+       [1.  , 1.  , 1.  , 1.  , 1.  ],
+       [1.  , 1.  , 1.  , 1.  , 1.  ]])
+</pre></div>
+</div>
+<p>Notice that the rule is not being applied to the inexcitable cells. This is
+because PyLongQt checks whether each cell has the ion channel constant and only
+applies the rule to those cells.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The pvars settings can also be used to apply arbitrary values to the cells
+during the setup process by manually changing
+<cite>proto.pvars[‘InaFactor’].cells</cite>. In this case the rules may indicate that
+a change will be applied to a cell, which doesn’t have that ion channel. That
+assignment will be ignored when the simulation is being run.</p>
+</div>
+<p>The other optional configuration is to change the conductances between cells.
+Setting conductances to smaller values will reduce the influence of cells on
+their neighbor, while setting them to larger values will do the oppisite.
+Choosing to set a conductance to 0 will completely remove any effect of those
+two cells on each other. Conductances are also symmetric, so a cell’s right
+side conductance is its right-hand neighbors left conductance. When setting
+conductances this will be updated automatically. Conductances on the boarder
+of the Grid will always be 0, and cannot be changed. Similarly, inexcitable
+cells will always have a conductance of 0 with all of their neighbors. For
+this example we will reduce the conductance between the nodes on the top and
+bottom of our ring of cells. One way to accomplish this is to set the
+conductivitiy value directly using <code class="xref py py-meth docutils literal notranslate"><span class="pre">Node.setConductivityDirect()</span></code>.
+This is a direct method as the value is set given the provided value regardless
+of the cell’s properties. Another way to change the conductance is to set
+the resistivity using <code class="xref py py-meth docutils literal notranslate"><span class="pre">Node.setResistivity()</span></code>. Using this method,
+we change the gap junction resistance by a percentage which will impact the
+conductivity while still using a physiological calculation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">node</span><span class="o">.</span><span class="n">setResistivity</span><span class="p">(</span><span class="n">pylqt</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">percentage</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now the simulation is all setup and can be run.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sim_runner</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">RunSim</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">setSims</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">sim_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plot-the-results">
+<h2>Plot the Results<a class="headerlink" href="#plot-the-results" title="Permalink to this headline">¶</a></h2>
+<p>Disable future warnings to avoid excess outputs from plotting</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The data can once again be read using <code class="xref py py-class docutils literal notranslate"><span class="pre">DataReader</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">trace</span><span class="p">],</span> <span class="p">[</span><span class="n">meas</span><span class="p">]</span> <span class="o">=</span> <span class="n">pylqt</span><span class="o">.</span><span class="n">DataReader</span><span class="o">.</span><span class="n">readAsDataFrame</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">datadir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we will calculate the distance from the simulus for each border cell</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dists</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">stim_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">border_cells</span><span class="p">:</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">-</span> <span class="n">stim_cell</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+    <span class="n">dists</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span>
+</pre></div>
+</div>
+<p>We can use the trace Dataframe to produce traces of each of the action
+potenitals in the fiber and color them by their location in the fiber</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet_r</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">dists</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">border_cells</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dists</span><span class="p">[</span><span class="n">x</span><span class="p">]):</span>
+    <span class="n">trace_subset</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[</span><span class="n">trace</span><span class="p">[(</span><span class="n">cell</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">)]</span> <span class="o">&lt;</span> <span class="mi">4_250</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trace_subset</span><span class="p">[(</span><span class="n">cell</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">)],</span>
+             <span class="n">trace_subset</span><span class="p">[(</span><span class="n">cell</span><span class="p">,</span><span class="s1">&#39;vOld&#39;</span><span class="p">)],</span>
+             <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">dists</span><span class="p">[</span><span class="n">cell</span><span class="p">]],</span>
+             <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (mV)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="plot 2D grid factors conductances" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_2D_grid_factors_conductances_001.png" />
+<p>Then let’s create one more plot to show the action potential propagation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet_r</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">dists</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">border_cells</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dists</span><span class="p">[</span><span class="n">x</span><span class="p">]):</span>
+    <span class="n">trace_subset</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[</span><span class="n">trace</span><span class="p">[(</span><span class="n">cell</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">)]</span> <span class="o">&lt;</span> <span class="mi">4_010</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">trace_subset</span><span class="p">[(</span><span class="n">cell</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">)],</span>
+             <span class="n">trace_subset</span><span class="p">[(</span><span class="n">cell</span><span class="p">,</span><span class="s1">&#39;vOld&#39;</span><span class="p">)],</span>
+             <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">dists</span><span class="p">[</span><span class="n">cell</span><span class="p">]],</span>
+             <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (ms)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Voltage (mV)&#39;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="plot 2D grid factors conductances" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_2D_grid_factors_conductances_002.png" />
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  16.142 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-advanced-examples-plot-2d-grid-factors-conductances-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/e0cb5a0ed52fb29e91f5e623cbebf552/plot_2D_grid_factors_conductances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_2D_grid_factors_conductances.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/3f2c509b9e3333d6bbd2d76b36596608/plot_2D_grid_factors_conductances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2D_grid_factors_conductances.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">PyLongQt</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../toplevel.html">Top-level functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../protocols.html">Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cells.html">Cells</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structures.html">Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../measures.html">Measures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pvars.html">Cell Parameter Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Starter Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html#advanced-examples">Advanced Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2D Grid with factors and conductances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_parameter_sensitivity_analysis.html">Parameter Sensitivity Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_variable_frequency.html">Variable Pacing Frequency</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Starter Examples</a><ul>
+      <li>Previous: <a href="../plot_3_1D_grid_simple_example.html" title="previous chapter">3. 1D Grid Simulation</a></li>
+      <li>Next: <a href="plot_parameter_sensitivity_analysis.html" title="next chapter">Parameter Sensitivity Analysis</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Thomas Hund.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/auto_examples/advanced_examples/plot_2D_grid_factors_conductances.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
