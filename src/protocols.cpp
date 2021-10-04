@@ -110,8 +110,8 @@ void init_protocols(py::module& m) {
            R"pubdoc(Iterate over clamps)pubdoc",
            py::keep_alive<0, 1>())
       .def("__repr__",
-	   [](Clamp_view& v) {
-	   	return py::print(v.clampsList); })	
+       [](Clamp_view& v) {
+        return py::print(v.clampsList); })
       .def("fromList", &Clamp_view::fromList,
            R"pubdoc(Import clamps from a list)pubdoc",
            py::arg("voltageList"));
@@ -238,10 +238,6 @@ void init_protocols(py::module& m) {
                      "Frequency to run runDurring")
       .def_readwrite("firstRun", &Protocol::firstRun,
                      "Time to start running runDurring")
-      .def_property(
-          "basedir", [](Protocol& p) { return p.basedir.absolutePath().toStdString(); },
-          [](Protocol& p, string path) { p.basedir.setPath(path.c_str()); },
-           "The directory in which the datadir will be created")
       .def_property_readonly("pars", [](Protocol* p) { return Pars_view(p); });
 
   py::class_<CurrentClamp, Protocol, std::shared_ptr<CurrentClamp>>(

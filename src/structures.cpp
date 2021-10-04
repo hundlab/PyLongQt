@@ -13,18 +13,26 @@ void init_structures(py::module& m) {
       m_Structures, "Node",
       "The wrapper for a single cell in a multi-dimensional simulation")
       //      .def(py::init<>())
-      .def("setCondConst", &Node::setCondConst,
-           R"pbdoc(Set the conductivity (what are the units) of a side to a value
+      .def("setConductivityDirect", &Node::setConductivityDirect,
+           R"pbdoc(Set the conductivity (what are the units) of a side to a value directly
            :side: The side to set
-           :perc: If the value is a precentage or raw
-           :value: The value)pbdoc", py::arg("side"), py::arg("perc") = true, py::arg("value") = 1)
-      .def("getCondConst", &Node::getCondConst,
+           :value: The conductivity value to set)pbdoc", py::arg("side"), py::arg("value"))
+      .def("setResistivity", &Node::setResistivity,
+           R"pbdoc(Set the resistivity of the node
+           :side: The side to set
+           :percentage: The percentage to change the resistivity)pbdoc",
+           py::arg("side"), py::arg("percentage")=100)
+      .def("getConductivity", &Node::getConductivity,
            R"pbdoc(Get the conductivity of a side
            :side: The side to get)pbdoc", py::arg("side"))
-      .def("resetCondConst", &Node::resetCondConst,
+      .def("resetConductivity", (void (Node::*)(void)) &Node::resetConductivity,
+           R"pbdoc(Reset the conductivity of every side)pbdoc")
+      .def("resetConductivity", (void (Node::*)(CellUtils::Side)) &Node::resetConductivity,
            R"pbdoc(Reset the conductivity of a side
            :side: The side to reset (if left as the default option all sides will be reset)
-           )pbdoc", py::arg("side") = -1)
+           )pbdoc", py::arg("side"))
+      .def_readonly("row", &Node::row)
+      .def_readonly("column", &Node::col)
       .def("cellOptions", &Node::cellOptions)
       .def_property(
           "cell",
@@ -104,7 +112,6 @@ void init_structures(py::module& m) {
           [](Grid& g) { return g.rowCount()* g.columnCount(); })
       .def_readwrite("dx", &Grid::dx, "The length of each node in the grid")
       .def_readwrite("dy", &Grid::dy, "The width of each cell in the grid")
-      .def_readwrite("np", &Grid::np, "WHAT IS THIS")
       .def("rowCount", &Grid::rowCount, "The number of rows")
       .def("columnCount", &Grid::columnCount, "The number of columns")
       .def("findNode", &Grid::findNode,
