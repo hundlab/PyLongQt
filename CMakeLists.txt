@@ -98,5 +98,5 @@ if(WIN32)
   install(
     DIRECTORY
     "${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
-    TYPE BIN)
+    DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
