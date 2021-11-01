@@ -9,12 +9,12 @@ env:
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs: 
+jobs:
 # This workflow contains a single job called "build"
-  build: 
+  build:
 # The type of runner that the job will run on
     name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }} 
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -53,7 +53,7 @@ jobs:
               longqt-model: ./share/cmake/LongQt-model,
               python: python3,
             }
-    
+
     steps:
   #      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -67,6 +67,11 @@ jobs:
           workflow: build.yml
           name: LongQt-model-${{ runner.os }}
           repo: hundlab/LongQt-model
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
       - name: Print env
         run: |
@@ -90,7 +95,7 @@ jobs:
           py -m aqt install 5.15.2 windows desktop win64_msvc2019_64
           cmake --version
           cmd "${{ matrix.config.environment_script }}"
- 
+
       - name: Install dependencies on ubuntu
         if: startsWith(matrix.config.name, 'Ubuntu')
         run: |
