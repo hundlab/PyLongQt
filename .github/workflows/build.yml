@@ -81,7 +81,7 @@ jobs:
       - name: Install python dependencies
         shell: bash
         run: |
-          ${{ matrix.config.python }} -m pip install \
+          python -m pip install \
             aqtinstall \
             setuptools \
             wheel \
