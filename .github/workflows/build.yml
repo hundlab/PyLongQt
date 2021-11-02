@@ -92,7 +92,7 @@ jobs:
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
         run: |
-          py -m aqt install 5.15.2 windows desktop win64_msvc2019_64
+          python -m aqt install 5.15.2 windows desktop win64_msvc2019_64
           cmake --version
           cmd "${{ matrix.config.environment_script }}"
 
@@ -105,14 +105,14 @@ jobs:
             mesa-common-dev \
             libglu1-mesa-dev \
             ninja-build
-          python3 -m aqt install 5.15.2 linux desktop gcc_64
+          python -m aqt install 5.15.2 linux desktop gcc_64
           cmake --version
           gcc --version
 
       - name: Install dependencies on macos
         if: startsWith(matrix.config.os, 'macos')
         run: |
-          python3 -m aqt install 5.15.2 mac desktop clang_64
+          python -m aqt install 5.15.2 mac desktop clang_64
           ninja --version
           cmake --version
           clang --version
@@ -120,7 +120,7 @@ jobs:
       - name: Build Wheel
         shell: bash
         run: |
-          ${{ matrix.config.python }} \
+          python \
             setup.py build bdist_wheel -- \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
             -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }} \
