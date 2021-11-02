@@ -1,5 +1,5 @@
 try:
-  import PyQt5
+  from PyQt5 import QtCore
 except ModuleNotFoundError:
   pass
 
