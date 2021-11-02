@@ -29,7 +29,6 @@ jobs:
               generators: "Visual Studio 16 2019",
               qt5_path: "./5.15.2/msvc2019_64/lib/cmake/Qt5",
               longqt-model: ./cmake,
-              python: py,
             }
 #          - {
 #              name: "Ubuntu_Latest",
@@ -40,7 +39,6 @@ jobs:
 #              generators: "Ninja",
 #              longqt-model: ./share/cmake/LongQt-model,
 #              qt5_path: "./5.15.2/gcc_64/lib/cmake/Qt5",
-#              python: python3,
 #            }
           - {
               name: "macOS Latest Clang",
@@ -51,7 +49,6 @@ jobs:
               generators: "Ninja",
               qt5_path: "./5.15.2/clang_64/lib/cmake/Qt5",
               longqt-model: ./share/cmake/LongQt-model,
-              python: python3,
             }
 
     steps:
