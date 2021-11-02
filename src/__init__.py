@@ -1,3 +1,7 @@
+try:
+  import PyQt5
+except ModuleNotFoundError:
+  pass
 
 # import c++ PyLongQt functions
 from ._PyLongQt import *
