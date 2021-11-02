@@ -123,7 +123,8 @@ jobs:
             -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }} \
             -DQt5_DIR:PATH=${{ matrix.config.qt5_path }} \
             -G "${{ matrix.config.generators }}" \
-            -DPYBIND11_PYTHON_VERSION=3.9
+            -DPYBIND11_PYTHON_VERSION=3.9 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING="10.15"
 
       - name: Upload PyLongQt
         uses: actions/upload-artifact@v2
