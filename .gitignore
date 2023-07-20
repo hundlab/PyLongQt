@@ -21,6 +21,7 @@ CMakeCache.txt
 CMakeFiles/
 _build
 auto_examples/
+dist/
 
 #data files and temp text editor files
 data*/
