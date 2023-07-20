@@ -57,3 +57,5 @@ build.ps1
 .hypothesis
 __pycache__
 
+#don't track version file
+src/PyLongQt/_version.py

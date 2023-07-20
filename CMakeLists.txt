@@ -16,12 +16,11 @@ if(NOT DEFINED LongQt_subdir OR NOT ${LongQt_subdir})
   find_package(LongQt-model)
 endif()
 
-if(NOT DEFINED LongQt-model_FOUND OR NOT ${LongQt-model_FOUND})
+if((NOT DEFINED LongQt-model_FOUND OR NOT ${LongQt-model_FOUND}) AND EXISTS ../LongQt-model)
   add_subdirectory(../LongQt-model LongQt-model EXCLUDE_FROM_ALL)
+else()
+  message(FATAL_ERROR "LongQt-model not found")
 endif()
-#if(NOT DEFINED LongQt-model_FOUND OR NOT ${LongQt-model_FOUND})
-#  message(FATAL_ERROR "LongQt-model not found")
-#endif()
 
 
 find_package(Qt5 COMPONENTS Core REQUIRED)
@@ -89,9 +88,8 @@ elseif(TARGET Qt5::macdeployqt)
 #  )
 endif()
 
-
 install(TARGETS PyLongQt DESTINATION .)
-#
+
 ### Install dependancies for windows and OSX
 #if(WIN32)
 #  install(
