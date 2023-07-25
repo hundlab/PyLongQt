@@ -82,18 +82,18 @@ if(TARGET Qt5::windeployqt)
   )
 elseif(TARGET Qt5::macdeployqt)
 #not working for mac
-#  add_custom_command(TARGET LongQt
+#  add_custom_command(TARGET PyLongQt
 #    POST_BUILD
-#    COMMAND Qt5::macdeployqt "$<TARGET_BUNDLE_DIR:LongQt>"
+#    COMMAND Qt5::macdeployqt -executable="$<TARGET_FILE_DIR:PyLongQt>/$<TARGET_FILE_NAME:PyLongQt>"
 #  )
 endif()
 
 install(TARGETS PyLongQt DESTINATION .)
 
 ### Install dependancies for windows and OSX
-#if(WIN32)
-#  install(
-#    DIRECTORY
-#    "${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
-#    DESTINATION ${CMAKE_INSTALL_PREFIX})
-#endif()
+if(WIN32)
+  install(
+    DIRECTORY
+    "${CMAKE_CURRENT_BINARY_DIR}/libdeploy/"
+    DESTINATION ${CMAKE_INSTALL_PREFIX})
+endif()

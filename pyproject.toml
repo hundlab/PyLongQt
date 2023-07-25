@@ -61,7 +61,7 @@ logging.level = "WARNING"
 
 # Include and exclude patterns, in gitignore syntax. Include overrides exclude.
 # Wheels include packages included in the sdist; CMake has the final say.
-sdist.include = []
+sdist.include = ["src/PyLongQt/_version.py"]
 sdist.exclude = [".github", ".gitignore", ".gitmodules", ".readthedocs.yaml", "docs", "examples", "features.txt", "test_modellib.py"]
 
 # Make reproducible SDists (Python 3.9+ and UNIX recommended). Respects
