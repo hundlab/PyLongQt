@@ -36,9 +36,6 @@ defaultTrials/
 .kdev4/
 *.kdev4
 
-#precompiled version
-versions
-
 #docs
 site/
 #cmake files
@@ -57,6 +54,7 @@ build.ps1
 .cache
 .hypothesis
 __pycache__
+.venv
 
 #don't track version file
 src/PyLongQt/_version.py
