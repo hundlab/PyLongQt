@@ -81,7 +81,7 @@ PYBIND11_MODULE(_PyLongQt, m) {
       .export_values();
   //this relies on a pybind11 detail
   m.def("verbose", &setVerbose, "Set whether all verbose warnings will be printed");
-  m.attr("version") = CellUtils::version;
+  m.attr("__version__") = CellUtils::version;
   m.attr("max_print_lines") = 20;
 
   init_cells(m);
