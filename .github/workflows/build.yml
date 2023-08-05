@@ -41,7 +41,7 @@ jobs:
               name: "macOS Latest Clang",
               os: macos-latest,
               build_type: "Release",
-                # cc: "clang",
+                # cc: "clang",`
                 #              cxx: "clang++",
                 #              generators: "Ninja",
               qt5_path: "./5.15.2/clang_64/lib/cmake/Qt5",
@@ -51,10 +51,10 @@ jobs:
 
     env:
       SKBUILD_CMAKE_ARGS: >-
-        '-DCMAKE_BUILD_TYPE=${{ matrix.build_type }};
+        -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }};
         -DLongQt-model_DIR:PATH=${{ matrix.config.longqt-model }};
         -DQt5_DIR:PATH=${{ matrix.config.qt5_path }};
-        -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING="10.15";'
+        -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING="10.15";
 
     steps:
   #      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -80,7 +80,7 @@ jobs:
           echo github.event.action: ${{ github.event.action }}
           echo github.event_name: ${{ github.event_name }}
           echo python.version: ${{ matrix.python_version }}
-          echo env vars: $SKBUILD_CMAKE_ARGS
+          echo SKBUILD_CMAKE_ARGS: $SKBUILD_CMAKE_ARGS
 
       - name: Install dependencies on windows
         if: startsWith(matrix.config.os, 'windows')
