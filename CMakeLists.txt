@@ -16,10 +16,12 @@ if(NOT DEFINED LongQt_subdir OR NOT ${LongQt_subdir})
   find_package(LongQt-model)
 endif()
 
-if((NOT DEFINED LongQt-model_FOUND OR NOT ${LongQt-model_FOUND}) AND EXISTS ../LongQt-model)
-  add_subdirectory(../LongQt-model LongQt-model EXCLUDE_FROM_ALL)
-else()
-  message(FATAL_ERROR "LongQt-model not found")
+if((NOT DEFINED LongQt-model_FOUND) OR NOT ${LongQt-model_FOUND})
+  if(EXISTS ../LongQt-model)
+    add_subdirectory(../LongQt-model LongQt-model EXCLUDE_FROM_ALL)
+  else()
+    message(FATAL_ERROR "LongQt-model not found")
+  endif() 
 endif()
 
 
@@ -35,7 +37,7 @@ if(WIN32 AND TARGET Qt5::qmake AND NOT TARGET Qt5::windeployqt)
     set_target_properties(Qt5::windeployqt PROPERTIES
       IMPORTED_LOCATION "${qt5_bin_location}/windeployqt.exe")
   endif()
-  message("-- Qt5::windeployqt added")
+  message(STATUS "-- Qt5::windeployqt added")
 elseif(APPLE AND TARGET Qt5::qmake AND NOT TARGET Qt5::macdeployqt)
   get_target_property(_qt5_qmake_location Qt5::qmake IMPORTED_LOCATION)
   get_filename_component(qt5_bin_location ${_qt5_qmake_location} DIRECTORY)
@@ -44,7 +46,7 @@ elseif(APPLE AND TARGET Qt5::qmake AND NOT TARGET Qt5::macdeployqt)
     set_target_properties(Qt5::macdeployqt PROPERTIES
       IMPORTED_LOCATION "${qt5_bin_location}/macdeployqt")
   endif()
-  message("-- Qt5::macdeployqt added")
+  message(STATUS "-- Qt5::macdeployqt added")
 endif()
 
 set(PyLongQt_includes
